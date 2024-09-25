@@ -2,6 +2,7 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
+import Button from "@mui/material/Button";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -23,6 +24,7 @@ function App() {
         </button>
         <p>식빵, 여기는 어플이 아닌 웹입니다, Restin Test Server</p>
       </div>
+      <Button variant="contained">Hello world</Button>
     </>
   );
 }
