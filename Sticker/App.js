@@ -4,7 +4,10 @@ import { StyleSheet } from "react-native";
 
 export default function App() {
   return (
-    <WebView style={styles.container} source={{ uri: "https://expo.dev" }} />
+    <WebView
+      style={styles.container}
+      source={{ uri: "https://syndragod.github.io/Restin/Web/dist/" }}
+    />
   );
 }
 

@@ -19,7 +19,7 @@
 - Front : ? ( MUI / bootstrap )
 - Back : Nodejs
 - Cloud : 집 컴퓨터 (...OR Azure?..) AWS 쓸줄 모름 + 공부하면서 할게 너무많음,
-  집에서 SQL + Node + 웹 서버 돌리다가 추후 AWS 연결
+  집에서 SQL + Node + 웹 서버 돌리다가 추후 AWS 연결 >> Firebase를 알게되어 변경
 
 RIB List
 
