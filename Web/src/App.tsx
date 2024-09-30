@@ -1,54 +1,66 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import Button from "@mui/material/Button";
-import firebaseConfig from "./assets/firebaseConfig.js";
+// import firebaseConfig from "./assets/firebaseConfig.js";
 import { initializeApp } from "firebase/app";
-// import { GoogleAuthProvider } from "firebase/auth";
-
-const app = initializeApp(firebaseConfig);
-const provider = new GoogleAuthProvider();
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+// import { GoogleAuthProvider } from "firebase/auth";
+const firebaseConfig = {
+  apiKey: "AIzaSyDQ16qf4yTL8fOHsqJmWD8EIcRyyRY8QkM",
+  authDomain: "restin-d570e.firebaseapp.com",
+  projectId: "restin-d570e",
+  storageBucket: "restin-d570e.appspot.com",
+  messagingSenderId: "738247474251",
+  appId: "1:738247474251:web:1dabca001c3acc239761ce",
+  measurementId: "G-KSK51QQ9YQ",
+};
 
-const auth = getAuth();
-signInWithPopup(auth, provider)
-  .then((result) => {
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential.accessToken;
-    // The signed-in user info.
-    const user = result.user;
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
-    console.log(result);
-    console.log(user);
-  })
-  .catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-    console.log(error);
-  });
+//const app =
 
 function App() {
-  const [count, setCount] = useState(0);
   // console.log(firebaseConfig);
   return (
     <>
       <h1>Restin</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>식빵, 여기는 어플이 아닌 웹입니다, Restin Test Server</p>
-      </div>
-      <Button variant="contained">Hello world</Button>
+
+      <Button
+        variant="contained"
+        onClick={() => {
+          initializeApp(firebaseConfig);
+          const provider = new GoogleAuthProvider();
+
+          const auth = getAuth();
+          console.log(`befor_auth : `, auth.currentUser);
+          signInWithPopup(auth, provider)
+            .then((result) => {
+              const user = result.user;
+              console.log(user);
+              console.log(`after_auth : `, auth);
+            })
+            .catch((error) => {
+              console.log(
+                `google login Error: ${error.code} \n ${error.message}`
+              );
+            });
+        }}
+      >
+        Google Login
+      </Button>
+      <Button
+        variant="contained"
+        onClick={() => {
+          initializeApp(firebaseConfig);
+          // const provider = new GoogleAuthProvider();
+
+          const auth = getAuth();
+          const user = auth.currentUser;
+          console.log(user);
+        }}
+      >
+        Login State
+      </Button>
+
+      {/* <Button variant="contained">Hello world</Button> */}
     </>
   );
 }
