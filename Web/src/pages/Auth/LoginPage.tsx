@@ -1,6 +1,5 @@
 import { Button } from "@mui/material";
 import { initializeApp } from "firebase/app";
-import React from "react";
 import firebaseConfig from "./firebaseConfig";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 

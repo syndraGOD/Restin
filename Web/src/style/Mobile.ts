@@ -12,14 +12,14 @@ export const MobilePage = styled.div`
     --vh: 100%;
   }
   min-width: 360px;
-  width: 87vw;
-  margin: 0px 6.5%;
+  width: 88vw;
+  /* margin: 0px 6vw; */
   height: calc(var(--vh, 1vh) * 100);
   position: absolute;
   top: 0;
-  /* left: 50%; */
+  left: 50%;
+  transform: translateX(-50%);
   /* transform: translate(-50%, -50%); */
-  /* transform: translateX(-50%); */
   box-sizing: border-box;
 `;
 

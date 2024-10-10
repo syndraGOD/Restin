@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: { theme: string } = {

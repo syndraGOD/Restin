@@ -1,15 +1,15 @@
 import { WelcomeStyle } from "../../../style/WelcomePage";
 import BtnDefault from "../../../components/BtnDefault";
 import BtnFullBox from "../../../components/BtnFullBox";
-import WelcomeImage3 from "../../../assets/images/WelcomeImage3.png";
+import WelcomeImage5 from "../../../assets/images/WelcomeImage5.png";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/css";
 
-const Welcome3 = () => {
+const Welcome5 = () => {
   return (
     <WelcomeStyle>
       <img
-        src={WelcomeImage3}
+        src={WelcomeImage5}
         alt=""
         width={300}
         height={300}
@@ -19,15 +19,16 @@ const Welcome3 = () => {
       />
       <div className="textBox">
         <p>
-          화면을 보여드리고
-          <br />물 한 잔을 받아주세요
+          이제 주변 개인 카페를
+          <br />
+          찾아볼까요?
         </p>
       </div>
       <BtnFullBox>
-        <BtnDefault currentPage="/welcome/4">다음</BtnDefault>
+        <BtnDefault currentPage="/login">다음</BtnDefault>
       </BtnFullBox>
     </WelcomeStyle>
   );
 };
 
-export default Welcome3;
+export default Welcome5;

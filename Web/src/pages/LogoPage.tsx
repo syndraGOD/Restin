@@ -1,4 +1,3 @@
-import React from "react";
 import Logo from "../assets/Logo/logo192.png";
 const LogoPage = () => {
   return (

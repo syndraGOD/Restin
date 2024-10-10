@@ -11,7 +11,10 @@ const Home = () => {
       u a login clear!
       <h1>Restin</h1>
       <h2>Theme : {theme}</h2>
-      <Button variant="contained" onClick={() => dispatch(themeToggle())}>
+      <Button
+        variant="contained"
+        onClick={() => dispatch(themeToggle("undefind"))}
+      >
         Reducer Test
       </Button>
       <Button variant="contained" onClick={() => dispatch(themeToggle("asd"))}>

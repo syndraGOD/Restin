@@ -1,19 +1,25 @@
-import { WelcomeStyle } from "../../../style/Welcome";
+import { WelcomeStyle } from "../../../style/WelcomePage";
 import BtnDefault from "../../../components/BtnDefault";
 import BtnFullBox from "../../../components/BtnFullBox";
+import WelcomeImage1 from "../../../assets/images/WelcomeImage1.png";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/css";
+
 const Welcome1 = () => {
   return (
     <WelcomeStyle>
+      <img
+        src={WelcomeImage1}
+        alt=""
+        width={300}
+        height={300}
+        className={css`
+          /* margin: 30px 0px; */
+        `}
+      />
       <div className="textBox">
         <p>
-          음료주문 없는
-          <br />
-          카페 사용 서비스
-          <br />
-          Restin 에서는
-          <br />
-          <br />
-          자리값만 내고
+          자리 요금만 내고
           <br />
           카페를 사용할 수 있어요
         </p>

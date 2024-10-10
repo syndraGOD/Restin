@@ -67,36 +67,5 @@ const data = [
     toiletWomanPw: "비밀번호 없음",
   },
   //가게 둘
-  {
-    UUID: "", //입력X, 고유인식값
-    id: "2",
-    signDate: null,
-    name: "팔로미노",
-    storeOwnerName: "홍길동",
-    accountHolder: "홍길동",
-    settlementAccount: "00-0000-0000-00",
-    unitPrice: "500",
-    location: "서울 서초구 나루터로 69",
-    subwayStation: "신사",
-    distance: "224",
-    walkingTime: "2",
-    businessTime: {
-      open: "1000",
-      close: "2100",
-    },
-    BusinessState: false,
-    breakTime: {
-      open: "1200",
-      close: "1300",
-    }, // null 입력시 breaktime 없음
-    phone: "02-544-4443",
-    insta: null,
-    wifiId: "CAFE Dassom",
-    wifiPw: "a123456789",
-    toiletManLocation: "입구 왼쪽건물 1층",
-    toiletManPw: "열쇠 가져가세요",
-    toiletWomanLocation: "입구 왼쪽건물 1층",
-    toiletWomanPw: "열쇠 가져가세요",
-  },
 ];
 export default data;
