@@ -2,9 +2,10 @@
 import styled from "@emotion/styled";
 import { Link as RouterLink } from "react-router-dom";
 import { Button } from "@mui/material";
-interface ASD {
-  component: any;
-}
+
+// interface ComponentType {
+//   component: React.ReactElement;
+// }
 const StyledButton = styled(Button)`
   width: 100%;
   height: 100%;
@@ -21,14 +22,14 @@ const StyledButton = styled(Button)`
     color: #fafcfe;
   }
 `;
-
-const BtnDefault = ({
-  children,
-  currentPage,
-}: {
-  children: string;
-  currentPage: string;
-}) => {
+// const BtnDefault = ({
+//   children,
+//   currentPage,
+// }: {
+//   children: string;
+//   currentPage: string;
+// }) => {
+const BtnDefault = ({ children, currentPage }) => {
   return (
     <StyledButton component={RouterLink} to={currentPage}>
       <p className="TEXT_BtnText">{children}</p>

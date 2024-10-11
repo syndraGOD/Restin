@@ -45,7 +45,7 @@ function App() {
   }, []);
   // console.log(firebaseConfig);
   // const navigate = useNavigate();
-  const isLogin = (): boolean => {
+  const isLogin = () => {
     return !!false; //Math.random();
   };
   // const LoginCheckPrivateRoute = ({ children : <React.ReactNode/>}) => {
@@ -97,10 +97,11 @@ function App() {
     </>
   );
 }
-interface ProtectedRouteProps {
-  isLogin: () => boolean;
-}
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ isLogin }) => {
+// interface ProtectedRouteProps {
+//   isLogin: () => boolean;
+// }
+// const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ isLogin }) => {
+const ProtectedRoute = ({ isLogin }) => {
   if (isLogin()) {
     return <Outlet />;
   } else {

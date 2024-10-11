@@ -8,7 +8,8 @@ const StyledBtnBox = styled.div`
   height: 60px;
 `;
 
-const BtnFullBox = ({ children }: { children: React.ReactNode }) => {
+// const BtnFullBox = ({ children }: { children: React.ReactNode }) => {
+const BtnFullBox = ({ children }) => {
   return <StyledBtnBox>{children}</StyledBtnBox>;
 };
 

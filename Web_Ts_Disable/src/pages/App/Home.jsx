@@ -4,7 +4,8 @@ import { themeToggle } from "../../store/modules/themeSlice";
 import { Button } from "@mui/material";
 
 const Home = () => {
-  const theme = useSelector((state: RootState) => state.themeR.theme);
+  // const theme = useSelector((state: RootState) => state.themeR.theme);
+  const theme = useSelector((state) => state.themeR.theme);
   const dispatch = useDispatch();
   return (
     <div>
