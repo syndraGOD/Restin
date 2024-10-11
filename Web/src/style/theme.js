@@ -1,5 +1,10 @@
 import { createTheme } from "@mui/material";
-
+// export const wBox = styled("div", {
+//   name: "MuiDiv",
+//   overridesResolver: (props, styles) => {
+//     return [styles.root];
+//   },
+// })();
 export const theme = createTheme({
   typography: {
     Text_Title: {

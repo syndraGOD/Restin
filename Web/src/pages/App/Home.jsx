@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 // import { Button } from "@mui/material";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { TextHeader2 } from "../../components/designGuide.jsx";
+import { TextBody, TextHeader2 } from "../../components/designGuide.jsx";
 import { Box } from "@mui/material";
 
 const Home = () => {
@@ -16,18 +16,39 @@ const Home = () => {
       height={"100%"}
       css={css`
         justify-content: start;
-        background-color: skyblue;
       `}
     >
       <Box
         css={css`
-          display: flex;
-          justify-content: start;
           align-items: start;
         `}
       >
-        <TextHeader2 color="InfoDark">Restin</TextHeader2>
+        <TextHeader2 sx={{ margin: "5px 0" }} color="InfoDark">
+          Restin
+        </TextHeader2>
+        <Box
+          sx={{
+            flexDirection: "row",
+            margin: "20px 0",
+          }}
+        >
+          <Box sx={{ width: 1 / 2 }}>
+            <img></img>
+            <TextBody
+              color="InfoDark"
+              sx={{
+                borderRight: "2px solid #b0b0b0",
+              }}
+            >
+              혜화
+            </TextBody>
+          </Box>
+          <Box sx={{ width: 1 / 2 }}>
+            <TextBody color="InfoDark">거리 순</TextBody>
+          </Box>
+        </Box>
       </Box>
+      <Box>asd</Box>
       {/* <Button variant="contained" onClick={() => dispatch(themeToggle("asd"))}>
         Reducer Test2
       </Button> */}

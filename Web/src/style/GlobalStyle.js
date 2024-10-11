@@ -19,6 +19,7 @@ export const GlobalStyle = createGlobalStyle`
         align-content: center;
         flex-direction: column;
         text-align: center;
+        width: 100%;
     }
     :root{
         font-family: NotoSansKR, sans-serif, Arial;

@@ -12,7 +12,7 @@ export const MobilePage = styled.div`
     --vh: 100%;
   }
   min-width: 360px;
-  width: 88vw;
+  width: 100vw;
   /* margin: 0px 6vw; */
   height: calc(var(--vh, 1vh) * 100);
   position: absolute;
