@@ -6,18 +6,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { css } from "@emotion/react";
 import { TextBody, TextHeader2 } from "../../components/designGuide.jsx";
 import { Box } from "@mui/material";
-
+import { Page } from "../../components/Page.jsx";
+import image from "../../assets/images/WelcomeImage1.png";
 const Home = () => {
   // const theme = useSelector((state: RootState) => state.themeR.theme);
   // const theme = useSelector((state) => state.themeR.theme);
   // const dispatch = useDispatch();
   return (
-    <Box
-      height={"100%"}
-      css={css`
-        justify-content: start;
-      `}
-    >
+    <Page bgimg="../../assets/images/WelcomeImage1.png">
       <Box
         css={css`
           align-items: start;
@@ -52,7 +48,7 @@ const Home = () => {
       {/* <Button variant="contained" onClick={() => dispatch(themeToggle("asd"))}>
         Reducer Test2
       </Button> */}
-    </Box>
+    </Page>
   );
 };
 
