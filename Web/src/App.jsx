@@ -31,7 +31,7 @@ import { ThemeProvider } from "@mui/material";
 //const app =
 
 function App() {
-  console.log("ㅎㅇ");
+  // console.log("ㅎㅇ");
   const [Loading, setLoading] = useState(true);
   useEffect(() => {
     document.documentElement.style.setProperty(
@@ -40,10 +40,10 @@ function App() {
     );
   });
   useEffect(() => {
-    console.log("로딩시작");
+    // console.log("로딩시작");
     setTimeout(() => {
       setLoading(!Loading);
-      console.log("로딩끝");
+      // console.log("로딩끝");
     }, 500);
   }, []);
   // console.log(firebaseConfig);

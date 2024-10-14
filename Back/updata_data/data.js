@@ -10,7 +10,14 @@ const data = [
     settlementAccount: "00-0000-0000-00",
     unitPrice: 0,
     location: "경기 수원시 팔달구 덕영대로895번길 20 1층 호우수원",
-    subwayStation: "수원",
+    subwayStation: {
+      line1: ["수원", "온수"], // 카페 주변역이 여러개일 경우 여러개 다 입력
+      line7: ["온수"], //온수처럼 여러호선이 곂칠 경우 line1, line7에 전부입력
+    },
+    gps: {
+      Latitude: "", // 위도
+      longitude: "", // 경도
+    },
     distance: 287, // 네이버지도에서 하드넘버 가져오기 or 내위치(GPS)와 location 거리 계산값
     walkingTime: 2, // 분 단위 - distance값 나누기 75_소수점버림
     businessTime: {

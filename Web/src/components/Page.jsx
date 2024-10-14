@@ -12,11 +12,10 @@ export const PageInner = styled(Box)`
   width: 88%;
   height: 100%;
   justify-content: start;
-  display: none;
 `;
 
 export const Page = ({ children, bg, bgimg, ...args }) => {
-  console.log(bgimg);
+  // console.log(bgimg);
   const NewPage = styled(Box)`
     width: 100%;
     height: 100%;
@@ -26,8 +25,8 @@ export const Page = ({ children, bg, bgimg, ...args }) => {
   `;
   return (
     <NewPage
-      // style={{ backgroundImage: `url(${asd})` }}
-      sx={{ backgroundImage: `url(${asd})` }}
+    // style={{ backgroundImage: `url(${asd})` }}
+    // sx={{ backgroundImage: `url(${asd})` }}
     >
       <PageInner {...args}>{children}</PageInner>
     </NewPage>
