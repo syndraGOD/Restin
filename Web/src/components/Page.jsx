@@ -9,9 +9,10 @@ function DeepChild() {
 }
 
 export const PageInner = styled(Box)`
-  width: 88%;
+  width: 100%;
   height: 100%;
   justify-content: start;
+  align-items: center;
 `;
 
 export const Page = ({ children, bg, bgimg, ...args }) => {
@@ -34,8 +35,8 @@ export const Page = ({ children, bg, bgimg, ...args }) => {
 };
 
 export const CenterPageInner = styled(Box)`
-  width: 88%;
-  height: 100%;
+  width: 100%;
+  /* height: 100%; */
   justify-content: center;
   align-content: center;
 `;
@@ -43,7 +44,7 @@ export const CenterPageInner = styled(Box)`
 export const CenterPage = ({ children, bg, ...args }) => {
   const NewPage = styled(Box)`
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     align-items: center;
     /* background: ${bg ? bg : "#000000"}; */
   `;

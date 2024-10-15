@@ -22,6 +22,9 @@ export const GlobalStyle = createGlobalStyle`
         width: 100%;
     }
     :root{
+        a{
+            text-decoration: none;
+        }
         font-family: NotoSansKR, sans-serif, Arial;
         font-size:14px;
         

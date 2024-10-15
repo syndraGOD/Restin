@@ -251,6 +251,7 @@ const data = [
     toiletManPw: "-",
     toiletWomanLocation: "-",
     toiletWomanPw: "-",
+    imgURL: [""],
   },
   {
     UUID: "", //입력X
