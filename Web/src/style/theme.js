@@ -6,6 +6,13 @@ import { createTheme } from "@mui/material";
 //   },
 // })();
 export const theme = createTheme({
+  overrides: {
+    MuiList: {
+      root: {
+        width: "fit-content",
+      },
+    },
+  },
   typography: {
     Text_Title: {
       fontWeight: "700px",

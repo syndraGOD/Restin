@@ -9,7 +9,16 @@ import {
   TextBold,
   TextHeader2,
 } from "../../components/designGuide.jsx";
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  MenuList,
+  Select,
+  Typography,
+} from "@mui/material";
 import { Page } from "@components/Page.jsx";
 // import image from "../../assets/images/WelcomeImage1.png";
 import { useEffect, useState } from "react";
@@ -62,6 +71,7 @@ const Home = () => {
     station: stationList["line1"][0],
   });
   const [FilterPage, setFilterPage] = useState(false);
+  // const [FilterPage, setFilterPage] = useState(false);
   const ToggleFilterPage = () => {
     setFilterPage(!FilterPage);
   };
@@ -74,6 +84,11 @@ const Home = () => {
   const [sortUser, sortUserSet] = useState("");
   const myTheme = useTheme();
 
+  const [age, setAge] = useState("");
+
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
   return (
     <Page
       bgimg="../../assets/images/WelcomeImage1.png"
@@ -102,7 +117,6 @@ const Home = () => {
       <FullBox
         sx={{
           flexDirection: "row",
-          margin: "15px 0",
         }}
       >
         <Box
@@ -111,6 +125,7 @@ const Home = () => {
             borderRadius: "0px",
             borderRight: "2px solid #b0b0b0",
             alignItems: "center",
+            padding: "15px 0px",
           }}
           component={Button}
           onClick={ToggleFilterPage}
@@ -129,8 +144,23 @@ const Home = () => {
           />
           <TextBold color="InfoDark">{filter.station}역</TextBold>
         </Box>
-        <Box sx={{ width: 1 / 2 }}>
-          <TextBold color="InfoDark">거리 순</TextBold>
+        <Box sx={{ width: 1 / 2, padding: "15px 0px" }}>
+          {/* <TextBold color="InfoDark">거리 순</TextBold> */}
+          <FormControl variant="standard" sx={{ minWidth: 1 }}>
+            <InputLabel id="demo-simple-select-autowidth-label">Age</InputLabel>
+            <Select
+              labelId="demo-simple-select-autowidth-label"
+              // id="demo-simple-select-autowidth"
+              value={age}
+              onChange={handleChange}
+              autoWidth
+              label="Age"
+            >
+              <MenuItem value={20}>Twenty</MenuItem>
+              <MenuItem value={21}>Twenty one</MenuItem>
+              <MenuItem value={22}>Twenty</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
       </FullBox>
       {/* contents */}

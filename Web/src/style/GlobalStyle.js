@@ -19,9 +19,12 @@ export const GlobalStyle = createGlobalStyle`
         align-content: center;
         flex-direction: column;
         text-align: center;
-        width: 100%;
+        /* width: 100%; */
     }
     :root{
+        ul{
+            display: inline-block;
+        }
         a{
             text-decoration: none;
         }
