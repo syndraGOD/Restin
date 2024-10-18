@@ -26,6 +26,8 @@ import Sample4 from "./pages/sample/Sample4";
 import Sample5 from "./pages/sample/Sample5";
 import theme from "./style/theme";
 import { ThemeProvider } from "@mui/material";
+import StoreDetail from "./pages/App/Home/StoreDetail";
+import StoreFilterPage from "./components/Home/StoreFilter";
 // import { GoogleAuthProvider } from "firebase/auth";
 
 //const app =
@@ -82,21 +84,24 @@ function App() {
                 </Route>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/welcome">
-                  <Route index path="/welcome/1" element={<Welcome1 />}></Route>
-                  <Route path="/welcome/2" element={<Welcome2 />}></Route>
-                  <Route path="/welcome/3" element={<Welcome3 />}></Route>
-                  <Route path="/welcome/4" element={<Welcome4 />}></Route>
-                  <Route path="/welcome/5" element={<Welcome5 />}></Route>
+                  <Route index path="1" element={<Welcome1 />}></Route>
+                  <Route path="2" element={<Welcome2 />}></Route>
+                  <Route path="3" element={<Welcome3 />}></Route>
+                  <Route path="4" element={<Welcome4 />}></Route>
+                  <Route path="5" element={<Welcome5 />}></Route>
                 </Route>
                 <Route path="/sample">
-                  <Route index path="/sample/1" element={<Sample1 />}></Route>
-                  <Route path="/sample/2" element={<Sample2 />}></Route>
-                  <Route path="/sample/3" element={<Sample3 />}></Route>
-                  <Route path="/sample/4" element={<Sample4 />}></Route>
-                  <Route path="/sample/5" element={<Sample5 />}></Route>
+                  <Route index path="1" element={<Sample1 />}></Route>
+                  <Route path="2" element={<Sample2 />}></Route>
+                  <Route path="3" element={<Sample3 />}></Route>
+                  <Route path="4" element={<Sample4 />}></Route>
+                  <Route path="5" element={<Sample5 />}></Route>
                 </Route>
                 <Route path="/app">
-                  <Route path="/app/home" element={<Home />} />
+                  <Route path="home" element={<Home />}>
+                    <Route path="filter" element={<StoreFilterPage />}></Route>
+                    <Route path="store" element={<StoreDetail />}></Route>
+                  </Route>
                 </Route>
               </Routes>
 

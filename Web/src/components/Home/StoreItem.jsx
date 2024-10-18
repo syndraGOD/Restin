@@ -3,12 +3,18 @@ import React from "react";
 import TestImage from "@assets/images/Test1.png";
 import { TextBody, TextHeader2, TextHeader3 } from "../designGuide";
 import InBox from "../common/InBox";
-const StoreItem = ({ item, userDistance }) => {
+import { Link } from "react-router-dom";
+const StoreItem = ({ item, userDistance, onClick }) => {
   const { id, imgURL, name, unitPrice } = item;
   return (
     <Box className="StoreItem">
       {/* ImageBox */}
       <Box
+        component={Link}
+        // onClick={() => {}}
+        to={{
+          pathname: "/app/home/store",
+        }}
         sx={{
           width: "100%",
           height: "327px",

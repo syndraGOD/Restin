@@ -5,7 +5,12 @@ import { TextBody, TextBold, TextHeader2, TextHeader3 } from "../designGuide";
 import { RxCross2 } from "react-icons/rx";
 import { Box, Button, Select, useTheme } from "@mui/material";
 
-const StoreFilter = ({ filter, setFilter, stationList, ToggleFilterPage }) => {
+const StoreFilterPage = ({
+  filter,
+  setFilter,
+  stationList,
+  ToggleFilterPage,
+}) => {
   //   const { line, station } = filter;
   // stationList = stationList.
   const myTheme = useTheme();
@@ -153,4 +158,4 @@ const StoreFilter = ({ filter, setFilter, stationList, ToggleFilterPage }) => {
   );
 };
 
-export default StoreFilter;
+export default StoreFilterPage;
