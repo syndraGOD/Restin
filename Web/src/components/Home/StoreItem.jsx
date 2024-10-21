@@ -1,20 +1,22 @@
-import { Box, css } from "@mui/material";
+import { Box, Button, css } from "@mui/material";
 import React from "react";
 import TestImage from "@assets/images/Test1.png";
 import { TextBody, TextHeader2, TextHeader3 } from "../designGuide";
 import InBox from "../common/InBox";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const StoreItem = ({ item, userDistance, onClick }) => {
   const { id, imgURL, name, unitPrice } = item;
+  const navigate = useNavigate();
+  const onClickStore = () => {
+    // console.log(item);
+    navigate("store", { state: { item } });
+  };
   return (
     <Box className="StoreItem">
       {/* ImageBox */}
       <Box
-        component={Link}
-        // onClick={() => {}}
-        to={{
-          pathname: "/app/home/store",
-        }}
+        component={Button}
+        onClick={onClickStore}
         sx={{
           width: "100%",
           height: "327px",
@@ -36,11 +38,11 @@ const StoreItem = ({ item, userDistance, onClick }) => {
       </Box>
       {/* TextBox */}
       <Box
-        className="TextBox"
+        className="TextBox divJCC"
         sx={{ flexDirection: "row", marginBottom: "20px" }}
       >
         <Box
-          className="LeftBox"
+          className="LeftBox divJCC"
           sx={{ flexDirection: "column", width: "50%", alignItems: "start" }}
         >
           <TextHeader3 color="InfoDark">{name}</TextHeader3>
@@ -49,7 +51,7 @@ const StoreItem = ({ item, userDistance, onClick }) => {
           </TextBody>
         </Box>
         <Box
-          className="RightBox"
+          className="RightBox divJCC"
           sx={{
             alignItems: "end",
             flexDirection: "row",

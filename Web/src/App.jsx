@@ -28,6 +28,8 @@ import theme from "./style/theme";
 import { ThemeProvider } from "@mui/material";
 import StoreDetail from "./pages/App/Home/StoreDetail";
 import StoreFilterPage from "./components/Home/StoreFilter";
+import { Provider as Reducer } from "react-redux";
+import { store } from "@/store";
 // import { GoogleAuthProvider } from "firebase/auth";
 
 //const app =
@@ -59,57 +61,62 @@ function App() {
   return (
     <>
       <GlobalStyle />
-      <ThemeProvider theme={theme}>
-        {Loading ? (
-          <LogoPage />
-        ) : (
-          <MobilePage>
-            <BrowserRouter>
-              <Routes>
-                <Route
-                  path="/"
-                  element={
-                    isLogin() ? (
-                      <Navigate to="/app" />
-                    ) : (
-                      <Navigate to="/welcome/1" />
-                    )
-                  }
-                />
-                <Route
-                  path="/app"
-                  element={<ProtectedRoute isLogin={isLogin} />}
-                >
-                  <Route index element={<Home />} />
-                </Route>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/welcome">
-                  <Route index path="1" element={<Welcome1 />}></Route>
-                  <Route path="2" element={<Welcome2 />}></Route>
-                  <Route path="3" element={<Welcome3 />}></Route>
-                  <Route path="4" element={<Welcome4 />}></Route>
-                  <Route path="5" element={<Welcome5 />}></Route>
-                </Route>
-                <Route path="/sample">
-                  <Route index path="1" element={<Sample1 />}></Route>
-                  <Route path="2" element={<Sample2 />}></Route>
-                  <Route path="3" element={<Sample3 />}></Route>
-                  <Route path="4" element={<Sample4 />}></Route>
-                  <Route path="5" element={<Sample5 />}></Route>
-                </Route>
-                <Route path="/app">
-                  <Route path="home" element={<Home />}>
-                    <Route path="filter" element={<StoreFilterPage />}></Route>
-                    <Route path="store" element={<StoreDetail />}></Route>
+      <Reducer store={store}>
+        <ThemeProvider theme={theme}>
+          {Loading ? (
+            <LogoPage />
+          ) : (
+            <MobilePage>
+              <BrowserRouter>
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      isLogin() ? (
+                        <Navigate to="/app" />
+                      ) : (
+                        <Navigate to="/welcome/1" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/app"
+                    element={<ProtectedRoute isLogin={isLogin} />}
+                  >
+                    <Route index element={<Home />} />
                   </Route>
-                </Route>
-              </Routes>
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/welcome">
+                    <Route index path="1" element={<Welcome1 />}></Route>
+                    <Route path="2" element={<Welcome2 />}></Route>
+                    <Route path="3" element={<Welcome3 />}></Route>
+                    <Route path="4" element={<Welcome4 />}></Route>
+                    <Route path="5" element={<Welcome5 />}></Route>
+                  </Route>
+                  <Route path="/sample">
+                    <Route index path="1" element={<Sample1 />}></Route>
+                    <Route path="2" element={<Sample2 />}></Route>
+                    <Route path="3" element={<Sample3 />}></Route>
+                    <Route path="4" element={<Sample4 />}></Route>
+                    <Route path="5" element={<Sample5 />}></Route>
+                  </Route>
+                  <Route path="/app">
+                    <Route path="home" element={<Home />}>
+                      <Route
+                        path="filter"
+                        element={<StoreFilterPage />}
+                      ></Route>
+                      <Route path="store" element={<StoreDetail />}></Route>
+                    </Route>
+                  </Route>
+                </Routes>
 
-              {/* <Button variant="contained">Hello world</Button> */}
-            </BrowserRouter>
-          </MobilePage>
-        )}
-      </ThemeProvider>
+                {/* <Button variant="contained">Hello world</Button> */}
+              </BrowserRouter>
+            </MobilePage>
+          )}
+        </ThemeProvider>
+      </Reducer>
     </>
   );
 }

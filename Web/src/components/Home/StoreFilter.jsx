@@ -4,19 +4,29 @@ import InBox from "../common/InBox";
 import { TextBody, TextBold, TextHeader2, TextHeader3 } from "../designGuide";
 import { RxCross2 } from "react-icons/rx";
 import { Box, Button, Select, useTheme } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { setFilter } from "../../store/modules/filterSlice";
+import { Navigate, useNavigate } from "react-router-dom";
+import { stationList } from "../../api/stationList";
 
-const StoreFilterPage = ({
-  filter,
-  setFilter,
-  stationList,
-  ToggleFilterPage,
-}) => {
+const StoreFilterPage = () => {
+  // console.log("ㅎㅇ");
   //   const { line, station } = filter;
   // stationList = stationList.
+  // const location = useLocation();
+  // console.log(location);
+  // const { filter, setFilter, stationList, ToggleFilterPage } =
+  //   location.state || {};
+  // console.log(filter, setFilter, stationList, ToggleFilterPage);
+
+  const filter = useSelector((state) => state.filterR.filter);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const myTheme = useTheme();
   const [select, setSelect] = useState(filter);
   return (
     <FullBox
+      className="divJCC"
       sx={{
         position: "absolute",
         height: "100%",
@@ -27,6 +37,7 @@ const StoreFilterPage = ({
     >
       {/* h2 */}
       <FullBox
+        className="divJCC"
         sx={{
           alignItems: "center",
           position: "relative",
@@ -37,7 +48,9 @@ const StoreFilterPage = ({
       >
         <Box
           component={Button}
-          onClick={ToggleFilterPage}
+          onClick={() => {
+            navigate(-1);
+          }}
           sx={{ position: "absolute", lineHeight: "70px", left: "10px" }}
         >
           <RxCross2 size={"40px"} color={myTheme.palette.InfoDark.main} />
@@ -50,9 +63,10 @@ const StoreFilterPage = ({
         </TextHeader3>
       </FullBox>
       {/* Fillter */}
-      <FullBox sx={{ flexDirection: "row", flexGrow: 1 }}>
+      <FullBox className="divJCC" sx={{ flexDirection: "row", flexGrow: 1 }}>
         {/* line */}
         <Box
+          className="divJCC"
           sx={{
             flexDirection: "column",
             backgroundColor: `${myTheme.palette.MainBackground.main}`,
@@ -117,6 +131,7 @@ const StoreFilterPage = ({
         </Box>
         {/* station */}
         <Box
+          className="divJCC"
           sx={{
             flexDirection: "column",
             marginLeft: "5%",
@@ -138,11 +153,14 @@ const StoreFilterPage = ({
                 }}
                 component={Button}
                 onClick={() => {
-                  setFilter({
-                    ...select,
-                    station,
-                  });
-                  ToggleFilterPage();
+                  dispatch(
+                    setFilter({
+                      ...select,
+                      station,
+                    })
+                  );
+                  // ToggleFilterPage();
+                  navigate(-1);
                 }}
                 key={idx}
               >

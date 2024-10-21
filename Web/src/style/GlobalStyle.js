@@ -13,12 +13,13 @@ import { Button } from "@mui/material";
 
 export const GlobalStyle = createGlobalStyle`
     ${reset}
-    div{
+    .divJCC{
         display: flex;
         justify-content: center;
         align-content: center;
         flex-direction: column;
         text-align: center;
+        
         /* width: 100%; */
     }
     :root{

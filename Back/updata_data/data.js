@@ -11,15 +11,12 @@ const data = [
     unitPrice: 0,
     location: "경기 수원시 팔달구 덕영대로895번길 20 1층 호우수원",
     subwayStation: {
-      line1: ["수원", "온수"], // 카페 주변역이 여러개일 경우 여러개 다 입력
-      line7: ["온수"], //온수처럼 여러호선이 곂칠 경우 line1, line7에 전부입력
+      line1: ["수원"],
     },
     gps: {
-      Latitude: "", // 위도
-      longitude: "", // 경도
+      Latitude: "37.2692324", // 위도
+      longitude: "127.0005632", // 경도
     },
-    distance: 287, // 네이버지도에서 하드넘버 가져오기 or 내위치(GPS)와 location 거리 계산값
-    walkingTime: 2, // 분 단위 - distance값 나누기 75_소수점버림
     businessTime: {
       //null 이면 그날 휴무,
       // open : null 이면 close도 null이어야함
@@ -58,6 +55,7 @@ const data = [
     toiletManPw: "비밀번호 없음",
     toiletWomanLocation: "출입문 오른쪽 건물",
     toiletWomanPw: "비밀번호 없음",
+    imgURL: [""],
   },
   //가게 둘부턴 여기서 작성
   {
@@ -70,9 +68,14 @@ const data = [
     settlementAccount: "539101-01-051753",
     unitPrice: 0,
     location: "서울 영등포구 당산로48길 2 지하 1층 1층",
-    subwayStation: "당산",
-    distance: 33,
-    walkingTime: 1,
+    subwayStation: {
+      line2: ["당산"],
+      line9: ["당산"],
+    },
+    gps: {
+      Latitude: "37.5340826",
+      longitude: "126.9025598",
+    },
     businessTime: {
       monopen: "0800",
       monclose: "2100",
@@ -107,54 +110,61 @@ const data = [
     toiletManPw: "-",
     toiletWomanLocation: "-",
     toiletWomanPw: "-",
+    imgURL: [""],
   },
   {
     UUID: "", //입력X
     id: 3,
     signDate: null, //수정X
-    name: "모먼트커피",
-    storeOwnerName: "다무개",
-    accountHolder: "다무개",
-    settlementAccount: "000000-00-000000",
+    name: "도콘",
+    storeOwnerName: "정보경",
+    accountHolder: "정보경",
+    settlementAccount: "110-324-722386",
     unitPrice: 0,
-    location: "경기 수원시 팔달구 매산로 2 모먼트 커피",
-    subwayStation: "수원",
-    distance: 11,
-    walkingTime: 1,
+    location: "서울 중구 다산로40길 18 1층 104호",
+    subwayStation: {
+      line2: ["신당"],
+      line6: ["신당"],
+    },
+    gps: {
+      Latitude: "37.5637435",
+      longitude: "127.0170079",
+    },
     businessTime: {
       monopen: "1100",
-      monclose: "2100",
+      monclose: "2200",
       monbreak: [],
-      tueopen: "1100",
-      tueclose: "2100",
+      tueopen: null,
+      tueclose: null,
       tuebreak: [],
       wedopen: "1100",
-      wedclose: "2100",
+      wedclose: "2200",
       wedbreak: [],
       thuopen: "1100",
-      thuclose: "2100",
+      thuclose: "2200",
       thubreak: [],
       friopen: "1100",
-      friclose: "2100",
+      friclose: "2200",
       fribreak: [],
       satopen: "1100",
-      satclose: "2100",
+      satclose: "2200",
       satbreak: [],
       sunopen: "1100",
-      sunclose: "2100",
+      sunclose: "1800",
       sunbreak: [],
     },
     BusinessState: true,
     BusinessAdminPause: ["1999.10.11", 1], //설정x
-    ownerCall: "010-0000-0000",
-    storeCall: "0507-1492-1429",
-    insta: "@our_moment_coffee",
-    wifiId: "-",
-    wifiPw: "-",
-    toiletManLocation: "-",
-    toiletManPw: "-",
-    toiletWomanLocation: "-",
-    toiletWomanPw: "-",
+    ownerCall: "010-4005-0318",
+    storeCall: "0507-1478-0388",
+    insta: "@dokon_sindang",
+    wifiId: "Dokon_5G",
+    wifiPw: "dokon987654321",
+    toiletManLocation: "우측 건물 1, 2층",
+    toiletManPw: "비밀번호 없음",
+    toiletWomanLocation: "우측 건물 1, 3층",
+    toiletWomanPw: "비밀번호 없음",
+    imgURL: [""],
   },
   {
     UUID: "", //입력X
@@ -166,9 +176,13 @@ const data = [
     settlementAccount: "000000-00-000000",
     unitPrice: 0,
     location: "서울 서초구 나루터로 69",
-    subwayStation: "신사",
-    distance: 224,
-    walkingTime: 2,
+    subwayStation: {
+      line3: ["신사"],
+    },
+    gps: {
+      Latitude: "37.5157400",
+      longitude: "127.0173969",
+    },
     businessTime: {
       monopen: "1000",
       monclose: "2100",
@@ -203,6 +217,7 @@ const data = [
     toiletManPw: "-",
     toiletWomanLocation: "-",
     toiletWomanPw: "-",
+    imgURL: [""],
   },
   {
     UUID: "", //입력X
@@ -214,9 +229,13 @@ const data = [
     settlementAccount: "000000-00-000000",
     unitPrice: 0,
     location: "서울 성동구 금호로13길 3",
-    subwayStation: "신금호",
-    distance: 48,
-    walkingTime: 1,
+    subwayStation: {
+      line5: ["신금호"],
+    },
+    gps: {
+      Latitude: "37.5550472",
+      longitude: "127.0196660",
+    },
     businessTime: {
       monopen: null, //격주 월 휴무
       monclose: null,
@@ -263,9 +282,13 @@ const data = [
     settlementAccount: "000000-00-000000",
     unitPrice: 0,
     location: "서울 성동구 금호로13길 20 카페나임",
-    subwayStation: "신금호",
-    distance: 171,
-    walkingTime: 2,
+    subwayStation: {
+      line5: ["신금호"],
+    },
+    gps: {
+      Latitude: "37.5538862",
+      longitude: "127.0184781",
+    },
     businessTime: {
       monopen: null,
       monclose: null,
@@ -300,6 +323,7 @@ const data = [
     toiletManPw: "-",
     toiletWomanLocation: "-",
     toiletWomanPw: "-",
+    imgURL: [""],
   },
   {
     UUID: "", //입력X
@@ -311,9 +335,14 @@ const data = [
     settlementAccount: "000000-00-000000",
     unitPrice: 0,
     location: "서울 성동구 마조로9길 18 1/2층 어질인",
-    subwayStation: "왕십리",
-    distance: 46,
-    walkingTime: 1,
+    subwayStation: {
+      line2: ["왕십리"],
+      line5: ["왕십리"],
+    },
+    gps: {
+      Latitude: "37.5613464",
+      longitude: "127.0395549",
+    },
     businessTime: {
       monopen: "0900",
       monclose: "2300",
@@ -348,6 +377,7 @@ const data = [
     toiletManPw: "비밀번호 없음",
     toiletWomanLocation: "오른쪽 상가 1층 복도",
     toiletWomanPw: "*1234*",
+    imgURL: [""],
   },
   {
     UUID: "", //입력X
@@ -359,9 +389,14 @@ const data = [
     settlementAccount: "000000-00-000000",
     unitPrice: 0,
     location: "서울 성동구 마조로11길 11-1 1층",
-    subwayStation: "왕십리",
-    distance: 142,
-    walkingTime: 2,
+    subwayStation: {
+      line2: ["왕십리"],
+      line5: ["왕십리"],
+    },
+    gps: {
+      Latitude: "37.5617040",
+      longitude: "127.0401171",
+    },
     businessTime: {
       monopen: "1100",
       monclose: "2300",
@@ -396,6 +431,7 @@ const data = [
     toiletManPw: "-",
     toiletWomanLocation: "-",
     toiletWomanPw: "-",
+    imgURL: [""],
   },
   {
     UUID: "", //입력X
@@ -407,9 +443,14 @@ const data = [
     settlementAccount: "000000-00-000000",
     unitPrice: 0,
     location: "서울 성동구 고산자로12길 15 너디블루 버로우",
-    subwayStation: "왕십리",
-    distance: 221,
-    walkingTime: 2,
+    subwayStation: {
+      line2: ["왕십리"],
+      line5: ["왕십리"],
+    },
+    gps: {
+      Latitude: "37.5597096",
+      longitude: "127.0359741",
+    },
     businessTime: {
       monopen: "1200",
       monclose: "2200",
@@ -444,6 +485,7 @@ const data = [
     toiletManPw: "-",
     toiletWomanLocation: "-",
     toiletWomanPw: "-",
+    imgURL: [""],
   },
   {
     UUID: "", //입력X
@@ -455,9 +497,13 @@ const data = [
     settlementAccount: "000000-00-000000",
     unitPrice: 0,
     location: "경기 군포시 공단로 296 1층",
-    subwayStation: "금정",
-    distance: 143,
-    walkingTime: 2,
+    subwayStation: {
+      line1: ["금정"],
+    },
+    gps: {
+      Latitude: "37.3706485",
+      longitude: "126.9449313",
+    },
     businessTime: {
       monopen: "0900",
       monclose: "1800",
@@ -492,6 +538,61 @@ const data = [
     toiletManPw: "-",
     toiletWomanLocation: "-",
     toiletWomanPw: "-",
+    imgURL: [""],
+  },
+  {
+    UUID: "", //입력X
+    id: 11,
+    signDate: null, //수정X
+    name: "스탠다드커피",
+    storeOwnerName: "김형준",
+    accountHolder: "김형준",
+    settlementAccount: "000000-00-000000",
+    unitPrice: 0,
+    location: "서울 중구 퇴계로 397 1층",
+    subwayStation: {
+      line2: ["신당"],
+      line6: ["신당"],
+    },
+    gps: {
+      Latitude: "37.5655141",
+      longitude: "127.0158482",
+    },
+    businessTime: {
+      monopen: "0800",
+      monclose: "2000",
+      monbreak: [],
+      tueopen: "0800",
+      tueclose: "2000",
+      tuebreak: [],
+      wedopen: "0800",
+      wedclose: "2000",
+      wedbreak: [],
+      thuopen: "0800",
+      thuclose: "2000",
+      thubreak: [],
+      friopen: "0800",
+      friclose: "2000",
+      fribreak: [],
+      satopen: null,
+      satclose: null,
+      satbreak: [],
+      sunopen: null,
+      sunclose: null,
+      sunbreak: [],
+    },
+    BusinessState: true,
+    BusinessAdminPause: ["1999.10.11", 1], //설정x
+    ownerCall: "010-3025-7615",
+    storeCall: "0507-1376-6622",
+    insta: "@stddcoffee",
+    wifiId: "stddcoffee",
+    wifiPw: "stdd22326622",
+    toiletManLocation: "-",
+    toiletManPw: "-",
+    toiletWomanLocation: "-",
+    toiletWomanPw: "-",
+    imgURL: [""],
   },
 ];
 export default data;

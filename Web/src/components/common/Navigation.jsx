@@ -16,6 +16,7 @@ const Navigation = ({ select }) => {
         flexDirection: "row",
         overflowY: "hidden",
       }}
+      className="divJCC"
     >
       {/* home */}
       <Box
