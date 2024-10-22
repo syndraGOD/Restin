@@ -28,12 +28,15 @@ import { FaRegClock } from "react-icons/fa";
 import { BiPhoneCall } from "react-icons/bi";
 import { FaInstagram } from "react-icons/fa";
 import BtnDefault from "../../../components/BtnDefault";
+import { today } from "../../../api/timeCheck";
 const StoreDetail = () => {
   const innerBoxIconSize = "18px";
   const innerBoxWidth = "26px";
   const myTheme = useTheme();
   const location = useLocation();
   const { item } = location.state || {};
+  const todayDate = today();
+  console.log(todayDate);
   const innerSize = "12px";
   const settings = {
     dots: true,
@@ -44,7 +47,30 @@ const StoreDetail = () => {
     useCSS: true,
   };
   // console.log(location);
-  console.log(item);
+  const timeForText = (open, close, breakTime) => {
+    if (open && close) {
+      if (breakTime.length === 0) {
+        return (
+          "   " +
+          open[0] +
+          open[1] +
+          ":" +
+          open[2] +
+          open[3] +
+          " " +
+          "~" +
+          " " +
+          close[0] +
+          close[1] +
+          ":" +
+          close[2] +
+          close[3]
+        );
+      }
+    } else {
+      return "   " + "휴무일";
+    }
+  };
   return (
     <Page className="divJCC">
       <FullBox
@@ -79,21 +105,13 @@ const StoreDetail = () => {
           `}
         >
           <Slider {...settings}>
-            <div>
-              <img src={Test1} alt="" width={"100%"} />
-            </div>
-            <div>
-              <img src={Test2} alt="" width={"100%"} />
-            </div>
-            <div>
-              <img src={Test3} alt="" width={"100%"} />
-            </div>
-            <div>
-              <img src={Test4} alt="" width={"100%"} />
-            </div>
-            <div>
-              <img src={Test5} alt="" width={"100%"} />
-            </div>
+            {item.imgURL.map((URL) => {
+              return (
+                <div key={URL}>
+                  <img src={URL} alt="cafeImage" width={"100%"} />
+                </div>
+              );
+            })}
           </Slider>
         </FullBox>
         {/* Contents */}
@@ -106,13 +124,16 @@ const StoreDetail = () => {
               }}
             >
               <TextHeader2 color="InfoDark" sx={{ mt: 2, mb: 2 }}>
-                다솜 카페
+                {item.name}
               </TextHeader2>
               <InnerBox
                 text={
                   <GrMapLocation
                     color={myTheme.palette.SubText.main}
                     size={innerBoxIconSize}
+                    css={css`
+                      top: 0.1em !important;
+                    `}
                   />
                 }
                 w={innerBoxWidth}
@@ -124,7 +145,7 @@ const StoreDetail = () => {
                     `}
                     color="PrimaryBrand"
                   >
-                    걸어서 1분{" "}
+                    걸어서 {1}분
                   </TextBold>
                   <TextBody
                     css={css`
@@ -132,9 +153,10 @@ const StoreDetail = () => {
                     `}
                     color="MainText"
                   >
-                    · 70m
+                    {" "}
+                    · {70}m
                   </TextBody>
-                  <TextBody color="MainText">주소</TextBody>
+                  <TextBody color="MainText">{item.location}</TextBody>
                 </Box>
               </InnerBox>
               <Box
@@ -149,7 +171,9 @@ const StoreDetail = () => {
                 bgcolor={myTheme.palette.MainBackground.main}
               >
                 <TextBodyLarge color="MainText">10분당</TextBodyLarge>
-                <TextHeader2 color="PrimaryBrand">?원</TextHeader2>
+                <TextHeader2 color="PrimaryBrand">
+                  {item.unitPrice}원
+                </TextHeader2>
               </Box>
             </InBox>
           </FullBox>
@@ -198,16 +222,82 @@ const StoreDetail = () => {
                   `}
                 >
                   <Box>
-                    <TextBold color="PrimaryBrand">영업 전</TextBold>
+                    <TextBold color="PrimaryBrand">
+                      {0 ? "영업 중" : "준비 중"}
+                    </TextBold>
                     <TextBody color="MainText"> · 12:00에 영업 시작</TextBody>
                   </Box>
-                  <TextBody color="MainText">월요일</TextBody>
-                  <TextBody color="MainText">월요일</TextBody>
-                  <TextBody color="MainText">월요일</TextBody>
-                  <TextBody color="MainText">월요일</TextBody>
-                  <TextBody color="MainText">월요일</TextBody>
-                  <TextBody color="MainText">월요일</TextBody>
-                  <TextBody color="MainText">월요일</TextBody>
+
+                  <TextBody
+                    color={todayDate.day === 1 ? "PrimaryBrand" : "MainText"}
+                  >
+                    월요일
+                    {timeForText(
+                      item.businessTime.monopen,
+                      item.businessTime.monclose,
+                      item.businessTime.monbreak
+                    )}
+                  </TextBody>
+                  <TextBody
+                    color={todayDate.day === 2 ? "PrimaryBrand" : "MainText"}
+                  >
+                    화요일
+                    {timeForText(
+                      item.businessTime.tueopen,
+                      item.businessTime.tueclose,
+                      item.businessTime.tuebreak
+                    )}
+                  </TextBody>
+                  <TextBody
+                    color={todayDate.day === 3 ? "PrimaryBrand" : "MainText"}
+                  >
+                    수요일
+                    {timeForText(
+                      item.businessTime.wedopen,
+                      item.businessTime.wedclose,
+                      item.businessTime.wedbreak
+                    )}
+                  </TextBody>
+                  <TextBody
+                    color={todayDate.day === 4 ? "PrimaryBrand" : "MainText"}
+                  >
+                    목요일
+                    {timeForText(
+                      item.businessTime.thuopen,
+                      item.businessTime.thuclose,
+                      item.businessTime.thubreak
+                    )}
+                  </TextBody>
+                  <TextBody
+                    color={todayDate.day === 5 ? "PrimaryBrand" : "MainText"}
+                  >
+                    금요일
+                    {timeForText(
+                      item.businessTime.friopen,
+                      item.businessTime.friclose,
+                      item.businessTime.fribreak
+                    )}
+                  </TextBody>
+                  <TextBody
+                    color={todayDate.day === 6 ? "PrimaryBrand" : "MainText"}
+                  >
+                    토요일
+                    {timeForText(
+                      item.businessTime.satopen,
+                      item.businessTime.satclose,
+                      item.businessTime.satbreak
+                    )}
+                  </TextBody>
+                  <TextBody
+                    color={todayDate.day === 0 ? "PrimaryBrand" : "MainText"}
+                  >
+                    일요일
+                    {timeForText(
+                      item.businessTime.sunopen,
+                      item.businessTime.sunclose,
+                      item.businessTime.sunbreak
+                    )}
+                  </TextBody>
                 </Box>
               </InnerBox>
               <InnerBox
@@ -219,7 +309,7 @@ const StoreDetail = () => {
                   />
                 }
               >
-                <TextBody color="MainText">02-1234-5678</TextBody>
+                <TextBody color="MainText">{item.storeCall}</TextBody>
               </InnerBox>
               <InnerBox
                 w={innerBoxWidth}
@@ -230,7 +320,7 @@ const StoreDetail = () => {
                   />
                 }
               >
-                <TextBody color="MainText">Dassom_coffee</TextBody>
+                <TextBody color="MainText">{item.insta}</TextBody>
               </InnerBox>
             </InBox>
           </FullBox>

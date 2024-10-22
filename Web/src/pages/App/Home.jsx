@@ -49,46 +49,58 @@ import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { stationList } from "../../api/stationList.js";
 // import { useSelector, useDispatch } from "react-redux";
 import { setFilter } from "../../store/modules/filterSlice.js";
-import { getImg } from "../../api/fsImgDown.js";
+import { getImg, getImgList } from "../../api/fsImgDown.js";
+import { setStoreData } from "../../store/modules/storeSlice.js";
 // import asd from "../../assets/subwayicons/";
 const Home = () => {
   // const theme = useSelector((state: RootState) => state.themeR.theme);
   // const theme = useSelector((state) => state.themeR.theme);
   // const dispatch = useDispatch();
   const filter = useSelector((state) => state.filterR.filter);
+  const storeData = useSelector((state) => state.storeR.storeData);
+  const dispatch = useDispatch();
+
   const storeListGetAll = async (db) => {
     const colName = "STORE";
     const col = collection(db, colName);
 
     const temps = await getDocs(col);
-    const temparr = [];
+    const resData = [];
     temps.forEach((item) => {
-      temparr.push(item.data());
+      resData.push(item.data());
     });
-    setFetchData(temparr);
-
-    const newData = fetchData.filter((item, idx) => {
-      const arrSet = new Set(...Object.values(item.subwayStation));
-      return arrSet.has(filter.station);
-    });
-    setData(newData);
-    setLoading(true);
+    // console.log(resData);
+    setFetchData(resData);
+    const getItemImgList = async (array) => {
+      const newImgList = await Promise.all(
+        array.map(async (item) => {
+          let imgArr = [];
+          const ref = `StoreImage/store(${item.id})`;
+          const itemImgList = await getImgList(ref);
+          await Promise.all(
+            itemImgList.items.map(async (img) => {
+              const imgURL = await getImg(img.fullPath);
+              imgArr.push(imgURL);
+            })
+          );
+          return { ...item, imgURL: imgArr };
+        })
+      );
+      dispatch(setStoreData(newImgList));
+    };
+    getItemImgList(resData);
   };
+
   const storeListFilltering = async () => {
-    const newData = fetchData?.filter((item, idx) => {
+    // if (!fetchData) return;
+    // return await newImgList;
+    // const temp = await getItemImgList(fetchData);
+    let newData = storeData.filter((item, idx) => {
       const arrSet = new Set(...Object.values(item.subwayStation));
       return arrSet.has(filter.station);
     });
-
-    // return (
-    //   <div className="flex flex-col gap-3 ml-5">
-    //     <img src={url} alt="1" width={200} height={200} />
-    //   </div>
-    // );
-    const ref = `StoreImage/store(2)/img1.jpg`;
-    const a = await getImg(ref);
-
     setData(newData);
+    if (newData.length === 0) setData();
   };
   // useEffect(() => {
   //   const
@@ -115,7 +127,8 @@ const Home = () => {
   };
   let noRenderFill = 0;
   const [Loading, setLoading] = useState(false);
-  const [fetchData, setFetchData] = useState([]);
+  const [fetchData, setFetchData] = useState();
+  // let fetchData;
   const [data, setData] = useState();
   const [FilterPage, setFilterPage] = useState(false);
   const [SortPage, setSortPage] = useState(false);
@@ -136,19 +149,21 @@ const Home = () => {
     // storeListFilltering();
   }, []);
   useEffect(() => {
-    if (!noRenderFill) {
-      console.log(1);
-      storeListFilltering();
-    } else {
-      noRenderFill--;
+    storeListFilltering();
+  }, [filter]);
+  useEffect(() => {
+    storeListFilltering();
+  }, [storeData]);
+
+  useEffect(() => {
+    // console.log(storeData);
+    if (!Loading && Array.isArray(data) && data.length !== 0) {
+      setLoading(true);
     }
-  }, [filter, fetchData]);
-  // useEffect(() => {
-  //   storeListFilltering();
-  // }, [fetchData]);
+  }, [data]);
   return (
     <>
-      {Loading && data ? (
+      {Loading ? (
         <Page
           className="divJCC"
           // bgimg="../../assets/images/WelcomeImage1.png"
@@ -178,7 +193,7 @@ const Home = () => {
               sx={{
                 width: 1 / 2,
                 borderRadius: "0px",
-                borderRight: "2px solid #b0b0b0",
+                borderRight: "1px solid #b0b0b0",
                 alignItems: "center",
                 padding: "15px 0px",
                 display: "flex",
@@ -211,16 +226,18 @@ const Home = () => {
             >
               {SortPage ? (
                 <Box
+                  className="divJCC"
                   sx={{
                     position: "absolute",
                     width: "100%",
-                    height: "300%",
-                    height: `${Object.keys(sortList).length * 100}%`,
-                    top: "51px",
+                    // height: "300%",
+                    height: `${Object.keys(sortList).length * 90}%`,
+                    top: "52px",
+                    right: "-1px",
                     zIndex: 1,
                     backgroundColor: "white",
                     borderRadius: "0px 0px 15px 15px",
-                    border: "1px solid #e0e0e0",
+                    border: "1px solid #b0b0b0",
                   }}
                 >
                   <FormControl
@@ -245,7 +262,9 @@ const Home = () => {
                           margin: 0;
                           flex: 1;
                           justify-content: center;
-                          margin-left: -30px;
+                          /* margin-left: px; */
+                          border-bottom: 1px solid #e0e0e0;
+                          white-space: "pre-wrap";
                         }
                       `}
                     >
@@ -258,7 +277,7 @@ const Home = () => {
                             key={item[1].identifier}
                             value={item[1].identifier}
                             control={<Radio />}
-                            label={item[1].text}
+                            label={item[1].text + `      `}
                           />
                         );
                       })}
@@ -304,7 +323,9 @@ const Home = () => {
               }}
             >
               <Box textAlign={"start"} margin={"15px 0px"}>
-                <TextBody color="MainText">{data.length}개의 카페</TextBody>
+                <TextBody color="MainText">
+                  {data ? data.length : 0}개의 카페
+                </TextBody>
               </Box>
               <Box
                 sx={{
@@ -327,7 +348,14 @@ const Home = () => {
             </InBox>
           </FullBox>
           {/* navigation */}
-          <Box>
+          <Box
+            bgcolor={myTheme.palette.MainBackground.main}
+            sx={
+              {
+                // borderRadius: "15px 15px 0 0",
+              }
+            }
+          >
             <Navigation select="home" />
           </Box>
           {/* <Button variant="contained" onClick={() => dispatch(themeToggle("asd"))}>

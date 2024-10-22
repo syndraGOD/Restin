@@ -15,6 +15,8 @@ const Navigation = ({ select }) => {
         height: "80px",
         flexDirection: "row",
         overflowY: "hidden",
+        borderRadius: "15px 15px 0 0",
+        backgroundColor: "white",
       }}
       className="divJCC"
     >

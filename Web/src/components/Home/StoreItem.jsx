@@ -8,7 +8,6 @@ const StoreItem = ({ item, userDistance, onClick }) => {
   const { id, imgURL, name, unitPrice } = item;
   const navigate = useNavigate();
   const onClickStore = () => {
-    // console.log(item);
     navigate("store", { state: { item } });
   };
   return (
@@ -24,17 +23,13 @@ const StoreItem = ({ item, userDistance, onClick }) => {
           alignItems: "center",
           borderRadius: "5%",
           overflow: "hidden",
-          backgroundImage: `url(${imgURL ? imgURL[0] : TestImage})`,
+          backgroundImage: `url("${imgURL[0]}")`,
           backgroundSize: "100% 100%",
           marginBottom: "5px",
         }}
       >
-        {/* <img
-          // src={imgURL ? imgURL[0] : TestImage}
-          alt="CafeDefaultImage"
-          width={327}
-          height={327}
-        /> */}
+        {/* {console.log(imgURL)} */}
+        {/* <img src={imgURL[0]} alt="CafeTypicalImage" width={327} height={327} /> */}
       </Box>
       {/* TextBox */}
       <Box

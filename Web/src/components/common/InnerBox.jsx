@@ -21,9 +21,16 @@ export const InnerBox = ({ children, w, text, ...args }) => {
       `}
     >
       <Box
+        className="svgBox"
         css={css`
           width: ${w ? w : defaultWidth};
+          position: relative;
           /* display: inline-block; */
+          svg {
+            position: absolute;
+            top: 0.4em;
+            left: 0;
+          }
         `}
       >
         {text ? text : null}

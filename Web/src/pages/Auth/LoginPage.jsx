@@ -14,8 +14,8 @@ import {
 
 const LoginPage = () => {
   return (
-    <>
-      <Box>
+    <Box className="divJCC">
+      <Box className="divJCC">
         <Box sx={{ flexDirection: "row", alignItems: "center" }}>
           <img src={Logo} alt="" width={50} height={50} />
           <TextHeader1 color="">Restin</TextHeader1>
@@ -69,7 +69,7 @@ const LoginPage = () => {
       <Link component={RouterLink} to="/app/home">
         <TextBody sx={{ m: 5 }}>로그인하지 않고 둘러보기</TextBody>
       </Link>
-    </>
+    </Box>
   );
 };
 

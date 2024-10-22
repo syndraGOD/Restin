@@ -7,7 +7,7 @@ import { css } from "@emotion/css";
 
 const Welcome4 = () => {
   return (
-    <WelcomeStyle>
+    <WelcomeStyle className="divJCC">
       <img
         src={WelcomeImage4}
         alt=""
