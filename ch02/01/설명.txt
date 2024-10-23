@@ -1,0 +1,13 @@
+1. npm init
+2. npm install express --save
+3. main.js / index.js
+4. localhost:port
+5. 내용수정 => 서버끄고 재가동
+6. 서버재가동 : nodemon
+    npm i nodemon -g --save-dev
+7. package.json
+    scripts {} 안에 단축어 지정
+    "dev" : "nodemon 파일명.js"
+    "dev" : "nodemon ./경로/파일명.js"
+    "start" : "nodemon ./경로/파일명.js"
+    실행 : yarn dev, npm dev

@@ -29,14 +29,15 @@ import { BiPhoneCall } from "react-icons/bi";
 import { FaInstagram } from "react-icons/fa";
 import BtnDefault from "../../../components/BtnDefault";
 import { today } from "../../../api/timeCheck";
+import { FaAngleDown } from "react-icons/fa6";
+import { useState } from "react";
 const StoreDetail = () => {
   const innerBoxIconSize = "18px";
   const innerBoxWidth = "26px";
   const myTheme = useTheme();
   const location = useLocation();
   const { item } = location.state || {};
-  const todayDate = today();
-  console.log(todayDate);
+  const [accordionIsVisible, setAccordionIsVisible] = useState(false);
   const innerSize = "12px";
   const settings = {
     dots: true,
@@ -46,31 +47,145 @@ const StoreDetail = () => {
     slidesToScroll: 1,
     useCSS: true,
   };
+
   // console.log(location);
   const timeForText = (open, close, breakTime) => {
+    const Forkey = ({ children }) => {
+      return <>{children}</>;
+    };
+    let resultText = "";
+    let plusComponent = [];
     if (open && close) {
-      if (breakTime.length === 0) {
-        return (
-          "   " +
-          open[0] +
-          open[1] +
-          ":" +
-          open[2] +
-          open[3] +
-          " " +
-          "~" +
-          " " +
-          close[0] +
-          close[1] +
-          ":" +
-          close[2] +
-          close[3]
-        );
+      resultText =
+        "   " +
+        open.substring(0, 2) +
+        ":" +
+        open.substring(2, 4) +
+        " ~ " +
+        close.substring(0, 2) +
+        ":" +
+        close.substring(2, 4);
+      if (breakTime.length !== 0) {
+        breakTime.map((breakOne, idx) => {
+          plusComponent.push(
+            <Forkey key={idx}>
+              <br />
+              <span
+                css={css`
+                  color: white;
+                `}
+              >
+                살려줘
+              </span>
+              {"   "}
+              <span>
+                {breakOne.substring(0, 2) +
+                  ":" +
+                  breakOne.substring(2, 4) +
+                  " ~ " +
+                  breakOne.substring(4, 6) +
+                  ":" +
+                  breakOne.substring(6, 8)}
+                {"   피크타임"}
+              </span>
+            </Forkey>
+          );
+        });
       }
     } else {
-      return "   " + "휴무일";
+      resultText = "   " + "휴무일";
     }
+    return (
+      <>
+        {resultText}
+        {plusComponent ? <>{plusComponent}</> : null}
+      </>
+    );
   };
+  // const c = today().now;
+  // const a = today(c).now;
+  // c.setDate(a.getDate() - 7);
+  // console.log(c);
+  const StoreOpeningText = () => {
+    const for0To9ToText = (num) => {
+      if (num < 10) {
+        return `0${num}`;
+      } else {
+        return `${num}`;
+      }
+    };
+    const openData = item.businessTime;
+    const today = new Date();
+    const todayText = String(today).substring(0, 3).toLowerCase();
+    const todayHourMin = `${for0To9ToText(today.getHours())}${for0To9ToText(
+      today.getMinutes()
+    )}`;
+
+    // console.log(todayHourMinText);
+    const isClose = (todayText) => {
+      const open = openData[`${todayText}open`];
+      const close = openData[`${todayText}close`];
+      if (open === null && close === null) {
+        nextButtonText = "휴무일이에요";
+        return ["휴무일", ""];
+      }
+      const breaks = openData[`${todayText}break`];
+      let result = [
+        "사용가능",
+        `${
+          open.substring(0, 2) +
+          ":" +
+          open.substring(2, 4) +
+          " ~ " +
+          close.substring(0, 2) +
+          ":" +
+          close.substring(2, 4)
+        }`,
+      ];
+
+      if (!(open < todayHourMin && todayHourMin < close)) {
+        result = [
+          "사용시간 전",
+          `${
+            open.substring(0, 2) +
+            ":" +
+            open.substring(2, 4) +
+            " ~ " +
+            close.substring(0, 2) +
+            ":" +
+            close.substring(2, 4)
+          }`,
+        ];
+        nextButtonText = `${
+          open.substring(0, 2) + ":" + open.substring(2, 4)
+        } 부터 사용할 수 있어요`;
+      }
+      breaks.map((breakOne) => {
+        const breakOpen = breakOne.substring(0, 4);
+        const breakClose = breakOne.substring(4, 8);
+        if (breakOpen < todayHourMin && todayHourMin < breakClose) {
+          result = [
+            "사용시간 전",
+            `${
+              breakOne.substring(0, 2) +
+              ":" +
+              breakOne.substring(2, 4) +
+              " ~ " +
+              breakOne.substring(4, 6) +
+              ":" +
+              breakOne.substring(6, 8) +
+              "   피크타임"
+            }`,
+          ];
+        }
+      });
+      return result;
+    };
+    return isClose(todayText);
+  };
+  let nextButtonText = "사용 시작하기";
+  const [storeState, storeCloseReason] = StoreOpeningText();
+
   return (
     <Page className="divJCC">
       <FullBox
@@ -221,83 +336,112 @@ const StoreDetail = () => {
                     text-align: start;
                   `}
                 >
-                  <Box>
-                    <TextBold color="PrimaryBrand">
-                      {0 ? "영업 중" : "준비 중"}
-                    </TextBold>
-                    <TextBody color="MainText"> · 12:00에 영업 시작</TextBody>
+                  <Box
+                    css={css`
+                      position: relative;
+                    `}
+                  >
+                    {}
+                    <TextBold color="PrimaryBrand">{storeState}</TextBold>
+                    <TextBody color="MainText"> · {storeCloseReason}</TextBody>
+                    <Box
+                      color={myTheme.palette.SubText.main}
+                      css={css`
+                        position: absolute;
+                        display: inline-block;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        margin-left: 0.5em;
+                        padding: 3px;
+                        /* margin: auto 0; */
+                      `}
+                      onClick={() => {
+                        setAccordionIsVisible(!accordionIsVisible);
+                      }}
+                    >
+                      <FaAngleDown size={18} />
+                    </Box>
                   </Box>
-
-                  <TextBody
-                    color={todayDate.day === 1 ? "PrimaryBrand" : "MainText"}
-                  >
-                    월요일
-                    {timeForText(
-                      item.businessTime.monopen,
-                      item.businessTime.monclose,
-                      item.businessTime.monbreak
-                    )}
-                  </TextBody>
-                  <TextBody
-                    color={todayDate.day === 2 ? "PrimaryBrand" : "MainText"}
-                  >
-                    화요일
-                    {timeForText(
-                      item.businessTime.tueopen,
-                      item.businessTime.tueclose,
-                      item.businessTime.tuebreak
-                    )}
-                  </TextBody>
-                  <TextBody
-                    color={todayDate.day === 3 ? "PrimaryBrand" : "MainText"}
-                  >
-                    수요일
-                    {timeForText(
-                      item.businessTime.wedopen,
-                      item.businessTime.wedclose,
-                      item.businessTime.wedbreak
-                    )}
-                  </TextBody>
-                  <TextBody
-                    color={todayDate.day === 4 ? "PrimaryBrand" : "MainText"}
-                  >
-                    목요일
-                    {timeForText(
-                      item.businessTime.thuopen,
-                      item.businessTime.thuclose,
-                      item.businessTime.thubreak
-                    )}
-                  </TextBody>
-                  <TextBody
-                    color={todayDate.day === 5 ? "PrimaryBrand" : "MainText"}
-                  >
-                    금요일
-                    {timeForText(
-                      item.businessTime.friopen,
-                      item.businessTime.friclose,
-                      item.businessTime.fribreak
-                    )}
-                  </TextBody>
-                  <TextBody
-                    color={todayDate.day === 6 ? "PrimaryBrand" : "MainText"}
-                  >
-                    토요일
-                    {timeForText(
-                      item.businessTime.satopen,
-                      item.businessTime.satclose,
-                      item.businessTime.satbreak
-                    )}
-                  </TextBody>
-                  <TextBody
-                    color={todayDate.day === 0 ? "PrimaryBrand" : "MainText"}
-                  >
-                    일요일
-                    {timeForText(
-                      item.businessTime.sunopen,
-                      item.businessTime.sunclose,
-                      item.businessTime.sunbreak
-                    )}
-                  </TextBody>
+                  {accordionIsVisible ? (
+                    <Box
+                      css={css`
+                        display: flex;
+                        flex-direction: column;
+                        text-align: start;
+                      `}
+                    >
+                      <TextBody
+                        color={today().day === 1 ? "PrimaryBrand" : "MainText"}
+                      >
+                        월요일
+                        {timeForText(
+                          item.businessTime.monopen,
+                          item.businessTime.monclose,
+                          item.businessTime.monbreak
+                        )}
+                      </TextBody>
+                      <TextBody
+                        color={today().day === 2 ? "PrimaryBrand" : "MainText"}
+                      >
+                        화요일
+                        {timeForText(
+                          item.businessTime.tueopen,
+                          item.businessTime.tueclose,
+                          item.businessTime.tuebreak
+                        )}
+                      </TextBody>
+                      <TextBody
+                        color={today().day === 3 ? "PrimaryBrand" : "MainText"}
+                      >
+                        수요일
+                        {timeForText(
+                          item.businessTime.wedopen,
+                          item.businessTime.wedclose,
+                          item.businessTime.wedbreak
+                        )}
+                      </TextBody>
+                      <TextBody
+                        color={today().day === 4 ? "PrimaryBrand" : "MainText"}
+                      >
+                        목요일
+                        {timeForText(
+                          item.businessTime.thuopen,
+                          item.businessTime.thuclose,
+                          item.businessTime.thubreak
+                        )}
+                      </TextBody>
+                      <TextBody
+                        color={today().day === 5 ? "PrimaryBrand" : "MainText"}
+                      >
+                        금요일
+                        {timeForText(
+                          item.businessTime.friopen,
+                          item.businessTime.friclose,
+                          item.businessTime.fribreak
+                        )}
+                      </TextBody>
+                      <TextBody
+                        color={today().day === 6 ? "PrimaryBrand" : "MainText"}
+                      >
+                        토요일
+                        {timeForText(
+                          item.businessTime.satopen,
+                          item.businessTime.satclose,
+                          item.businessTime.satbreak
+                        )}
+                      </TextBody>
+                      <TextBody
+                        color={today().day === 0 ? "PrimaryBrand" : "MainText"}
+                      >
+                        일요일
+                        {timeForText(
+                          item.businessTime.sunopen,
+                          item.businessTime.sunclose,
+                          item.businessTime.sunbreak
+                        )}
+                      </TextBody>
+                    </Box>
+                  ) : null}
                 </Box>
               </InnerBox>
               <InnerBox
@@ -334,17 +478,24 @@ const StoreDetail = () => {
           }}
         >
           <InBox>
+            {console.log(storeState)}
             <Box
               component={Button}
               css={css`
                 width: 100%;
                 height: 60px;
-                background: #f6912c;
                 margin: 30px 0px;
                 border-radius: 15px;
+                /* background-color: skyblue; */
               `}
+              disabled={storeState === "사용가능" ? false : true}
+              bgcolor={
+                storeState === "사용가능"
+                  ? myTheme.palette.PrimaryBrand.main
+                  : myTheme.palette.SubText.main
+              }
             >
-              <TextBtnText color="InfoLight">사용 시작하기</TextBtnText>
+              <TextBtnText color="InfoLight">{nextButtonText}</TextBtnText>
             </Box>
           </InBox>
         </FullBox>

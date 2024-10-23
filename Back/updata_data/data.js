@@ -22,27 +22,27 @@ const data = [
       // open : null 이면 close도 null이어야함
       monopen: "1200", //ex : "0930"
       monclose: "2200", //ex : "1800"
-      monbreak: [],
-      //ex : [["1300", "0200",],], 또는 [["1100", "0200",], ["1500", "0100",],],
-      //["break시작시간", "break지속시간"] 위 사례에서는 13시부터 2시간동안 브레이크 타임
+      monbreak: ["11001300", "15001600"],
+      //ex : [["1300", "1500",],], 또는 [["1100", "1300",], ["1500", "1600",],],
+      //["break시작시간", "break종료시간"] 위 사례에서는 13시부터 2시간동안 브레이크 타임
       tueopen: "1200",
       tueclose: "2200",
-      tuebreak: [],
+      tuebreak: ["11001300", "15001600"],
       wedopen: null,
       wedclose: null,
-      wedbreak: [],
+      wedbreak: ["11001300", "15001600"],
       thuopen: "1200",
       thuclose: "2200",
-      thubreak: [],
+      thubreak: ["11001300", "15001600"],
       friopen: "1200",
       friclose: "2200",
-      fribreak: [],
+      fribreak: ["11001300", "15001600"],
       satopen: "1200",
       satclose: "2200",
-      satbreak: [],
+      satbreak: ["11001300", "15001600"],
       sunopen: "1200",
       sunclose: "2200",
-      sunbreak: [],
+      sunbreak: ["11001300", "15001600"],
     },
     BusinessState: true, // true = 기본값, false = 휴폐업 또는 일시정지
     BusinessAdminPause: ["1999.10.11", 1], //설정x 임시휴무일 ex : ["2024.10.11", 기간]
