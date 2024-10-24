@@ -1,0 +1,21 @@
+.TodoInput {
+    text-align: center;
+    padding: 40px 0;
+}
+.TodoInput input {
+    width: 450px;
+    height: 45px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    vertical-align: top;
+    background: #f0f0f0;
+    border: none;
+    outline: none;
+}
+.TodoInput button {
+    width: 100px;
+    height: 45px;
+    background: #000;
+    color: #fff;
+    border: none;
+}

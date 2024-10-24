@@ -30,6 +30,7 @@ import StoreDetail from "./pages/App/Home/StoreDetail";
 import StoreFilterPage from "./components/Home/StoreFilter";
 import { Provider as Reducer } from "react-redux";
 import { store } from "@/store";
+import ServiceUsing from "./pages/App/Home/ServiceUsing";
 // import { GoogleAuthProvider } from "firebase/auth";
 
 //const app =
@@ -108,6 +109,7 @@ function App() {
                       ></Route>
                       <Route path="store" element={<StoreDetail />}></Route>
                     </Route>
+                    <Route path="using" element={<ServiceUsing />}></Route>
                   </Route>
                 </Routes>
 

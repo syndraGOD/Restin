@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import { useLocation } from "react-router-dom";
+import { css } from "@emotion/react";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import FullBox from "../../../components/common/FullBox";
 import Test1 from "@assets/images/Test1.png";
 import Test2 from "@assets/images/Test2.png";
@@ -9,7 +10,6 @@ import Test5 from "@assets/images/Test5.png";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { css } from "@emotion/react";
 import BtnFullBox from "../../../components/BtnFullBox";
 import { Page } from "../../../components/Page";
 import InBox from "../../../components/common/InBox";
@@ -30,7 +30,7 @@ import { FaInstagram } from "react-icons/fa";
 import BtnDefault from "../../../components/BtnDefault";
 import { today } from "../../../api/timeCheck";
 import { FaAngleDown } from "react-icons/fa6";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const StoreDetail = () => {
   const innerBoxIconSize = "18px";
   const innerBoxWidth = "26px";
@@ -48,7 +48,6 @@ const StoreDetail = () => {
     useCSS: true,
   };
 
-  // console.log(location);
   const timeForText = (open, close, breakTime) => {
     const Forkey = ({ children }) => {
       return <>{children}</>;
@@ -102,10 +101,7 @@ const StoreDetail = () => {
       </>
     );
   };
-  // const c = today().now;
-  // const a = today(c).now;
-  // c.setDate(a.getDate() - 7);
-  // console.log(c);
+
   const StoreOpeningText = () => {
     const for0To9ToText = (num) => {
       if (num < 10) {
@@ -186,6 +182,7 @@ const StoreDetail = () => {
   let nextButtonText = "사용 시작하기";
   const [storeState, storeCloseReason] = StoreOpeningText();
 
+  const navigate = useNavigate();
   return (
     <Page className="divJCC">
       <FullBox
@@ -478,7 +475,6 @@ const StoreDetail = () => {
           }}
         >
           <InBox>
-            {console.log(storeState)}
             <Box
               component={Button}
               css={css`
@@ -494,6 +490,9 @@ const StoreDetail = () => {
                   ? myTheme.palette.PrimaryBrand.main
                   : myTheme.palette.SubText.main
               }
+              onClick={() => {
+                navigate("/app/using", { state: { item } });
+              }}
             >
               <TextBtnText color="InfoLight">{nextButtonText}</TextBtnText>
             </Box>
