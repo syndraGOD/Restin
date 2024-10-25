@@ -3,23 +3,26 @@ import { css } from "@emotion/react";
 import TodoLi, { TodoLiRemove, TodoLiUpdate } from "./TodoLi";
 import Button from "./Button";
 import { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setData } from "../store/modules/mainSlice";
 const MyForm = () => {
+  const dispatch = useDispatch();
+  const li = useSelector((state) => state.mainR.innerData);
+  const setli = (props) => {
+    dispatch(setData(props));
+  };
+
   const input = useRef(null);
   // const { val, setval } = useState("");
   const [filter, setFilter] = useState("all");
   const [id, setId] = useState(0);
-  const [li, setli] = useState([]);
   const remove = (removeId) => {
-    setli((item) => {
-      return item.filter((data) => data.id !== removeId);
-    });
+    setli(li.filter((data) => data.id !== removeId));
   };
   const update = (updateId, value) => {
-    setli((item) => {
-      return item.map((data) =>
-        data.id === updateId ? { ...data, text: value } : data
-      );
-    });
+    setli(
+      li.map((data) => (data.id === updateId ? { ...data, text: value } : data))
+    );
   };
   return (
     <div
@@ -100,13 +103,13 @@ const MyForm = () => {
                   data={data}
                   set={update}
                   setCheck={() => {
-                    setli((item) => {
-                      return item.map((checked) =>
+                    setli(
+                      li.map((checked) =>
                         checked.id === data.id
                           ? { ...checked, complete: !checked.complete }
                           : checked
-                      );
-                    });
+                      )
+                    );
                   }}
                 >
                   <TodoLiRemove
