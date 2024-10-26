@@ -31,6 +31,7 @@ import StoreFilterPage from "./components/Home/StoreFilter";
 import { Provider as Reducer } from "react-redux";
 import { store } from "@/store";
 import ServiceUsing from "./pages/App/Home/ServiceUsing";
+import SettingPage from "./pages/Setting/SettingPage";
 // import { GoogleAuthProvider } from "firebase/auth";
 
 //const app =
@@ -111,6 +112,8 @@ function App() {
                     </Route>
                     <Route path="using" element={<ServiceUsing />}></Route>
                   </Route>
+
+                  <Route path="/myInfo" element={<SettingPage />}></Route>
                 </Routes>
 
                 {/* <Button variant="contained">Hello world</Button> */}

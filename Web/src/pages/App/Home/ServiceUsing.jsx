@@ -12,19 +12,30 @@ import {
   TextHeader3,
 } from "../../../components/designGuide";
 import InBox from "../../../components/common/InBox";
-import { Box, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import { useLocation } from "react-router-dom";
 import theme from "../../../style/theme";
 import { PiWifiHighBold } from "react-icons/pi";
 import manImage from "@assets/icons/Icon-ToiletMan-36px-ICE.png";
 import womanImage from "@assets/icons/Icon-ToiletWoman-36px-HOT.png";
+import { useState } from "react";
 
 const ServiceUsing = () => {
   const location = useLocation();
   const { item } = location.state || {};
   const myTheme = useTheme();
-  console.log(item);
+  // console.log(item);
+  const [manDialogOpen, setManDialogOpen] = useState(false);
+  const [womanDialogOpen, setWomanDialogOpen] = useState(false);
   return (
+    // after select cafe, show cafe's detail info
     <Page
       css={css`
         position: relative;
@@ -41,52 +52,59 @@ const ServiceUsing = () => {
         }
       `}
     >
-      <Box
-        sx={{
-          backgroundImage: `url("${item.imgURL[0]}")`,
-          backgroundSize: "100% 100%",
-        }}
-        css={css`
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          filter: blur(0.3em);
-          z-index: -1;
-        `}
-      ></Box>
-      <Box
-        css={css`
-          width: 100%;
-          height: 100%;
-          background-color: black;
-          opacity: 50%;
-          position: absolute;
-          z-index: -1;
-        `}
-      ></Box>
-
-      <FullBox className="center">
+      {/* background Image & blur */}
+      <Box className="BackgroundImageBlur">
+        <Box
+          sx={{
+            backgroundImage: `url("${item.imgURL[0]}")`,
+            backgroundSize: "100% 100%",
+          }}
+          css={css`
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            filter: blur(0.3em);
+            z-index: -1;
+          `}
+        ></Box>
+        <Box
+          css={css`
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            opacity: 50%;
+            position: absolute;
+            z-index: -1;
+          `}
+        ></Box>
+      </Box>
+      {/* Header& h1 사용 중 */}
+      <FullBox className="Header1 center">
         <InBox sx={{ textAlign: "center" }}>
           <TextHeader3 color="InfoLight" sx={{ padding: "15px" }}>
             사용 중
           </TextHeader3>
         </InBox>
       </FullBox>
-      <FullBox className="center">
+      {/* Header& h2 Name */}
+      <FullBox className="Header2 center">
         <InBox>
           <TextHeader2 color="InfoLight" sx={{ padding: "0px 0px 30px 0px" }}>
             다솜 카페
           </TextHeader2>
         </InBox>
       </FullBox>
+      {/* Wifi & Toilet */}
       <FullBox
-        className="center"
+        className="contents1 wifibox center"
         css={css`
           height: 20%;
         `}
       >
         <InBox sx={{ display: "flex", flexDirection: "row", height: "100%" }}>
+          {/* wifi */}
           <Box
+            className="wifi innerBox"
             css={css`
               flex: 1;
               width: 50%;
@@ -94,7 +112,6 @@ const ServiceUsing = () => {
               margin-right: 5px;
               flex-direction: column;
             `}
-            className="innerBox"
           >
             <Box
               css={css`
@@ -117,6 +134,7 @@ const ServiceUsing = () => {
               Pw: {item.wifiPw}
             </TextBodySmall>
           </Box>
+          {/* toilet */}
           <Box
             sx={{
               display: "flex",
@@ -127,7 +145,14 @@ const ServiceUsing = () => {
               marginLeft: "5px",
             }}
           >
-            <Box sx={{ flex: 1, marginBottom: "5px" }} className="innerBox">
+            {/* man */}
+            <Box
+              sx={{ flex: 1, marginBottom: "5px" }}
+              className="innerBox"
+              onClick={() => {
+                setManDialogOpen(true);
+              }}
+            >
               <Box width={"34%"}>
                 <Box
                   css={css`
@@ -160,8 +185,67 @@ const ServiceUsing = () => {
                 <TextBold color="MainText">{item.toiletManPw}</TextBold>
               </Box>
             </Box>
-
-            <Box sx={{ flex: 1, marginTop: "5px" }} className="innerBox">
+            <Dialog
+              open={manDialogOpen}
+              onClose={() => {
+                setManDialogOpen(false);
+              }}
+              css={css`
+                .MuiDialog-paper {
+                  border-radius: 30px;
+                }
+              `}
+            >
+              <Box
+                css={css`
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: center;
+                  align-items: center;
+                  text-align: center;
+                  width: 60vw;
+                  height: 45vw;
+                `}
+              >
+                <Box>
+                  <Box
+                    css={css`
+                      width: 44px;
+                      height: 44px;
+                      background-color: ${theme.palette.SecondaryBrand_Back
+                        .main};
+                      border-radius: 50%;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      margin: 15px;
+                    `}
+                  >
+                    <img src={manImage}></img>
+                  </Box>
+                </Box>
+                <Box>
+                  <TextBold
+                    color="InfoDark"
+                    sx={{
+                      marginRight: "12px",
+                      margin: "5px",
+                    }}
+                  >
+                    {item.toiletManLocation}
+                  </TextBold>
+                  <TextBold color="MainText">{item.toiletManPw}</TextBold>
+                </Box>
+              </Box>
+            </Dialog>
+            {/* woman */}
+            <Box
+              sx={{ flex: 1, marginTop: "5px" }}
+              className="innerBox"
+              onClick={() => {
+                setWomanDialogOpen(true);
+              }}
+            >
               <Box width={"34%"}>
                 <Box
                   css={css`
@@ -194,10 +278,67 @@ const ServiceUsing = () => {
                 <TextBold color="MainText">{item.toiletWomanPw}</TextBold>
               </Box>
             </Box>
+            <Dialog
+              open={womanDialogOpen}
+              onClose={() => {
+                setWomanDialogOpen(false);
+              }}
+              css={css`
+                .MuiDialog-paper {
+                  border-radius: 30px;
+                }
+              `}
+            >
+              <Box
+                css={css`
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: center;
+                  align-items: center;
+                  text-align: center;
+                  width: 60vw;
+                  height: 45vw;
+                `}
+              >
+                <Box>
+                  <Box
+                    css={css`
+                      width: 44px;
+                      height: 44px;
+                      background-color: ${theme.palette.PrimaryBrand_Back.main};
+                      border-radius: 50%;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      margin: 15px;
+                    `}
+                  >
+                    <img src={womanImage}></img>
+                  </Box>
+                </Box>
+                <Box>
+                  <TextBold
+                    color="InfoDark"
+                    sx={{
+                      textWrap: "nowrap",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                      marginRight: "12px",
+                      margin: "5px",
+                    }}
+                  >
+                    {item.toiletWomanLocation}
+                  </TextBold>
+                  <TextBold color="MainText">{item.toiletWomanPw}</TextBold>
+                </Box>
+              </Box>
+            </Dialog>
           </Box>
         </InBox>
       </FullBox>
-      <FullBox className="center">
+      {/* takewater */}
+      <FullBox className="contents2 takewater center">
         <InBox>
           <Box
             className="innerBox"
@@ -220,7 +361,8 @@ const ServiceUsing = () => {
           </Box>
         </InBox>
       </FullBox>
-      <FullBox className="center">
+      {/* useTime &  charged pay*/}
+      <FullBox className="contents3 usetime center">
         <InBox>
           <Box
             className="innerBox"
@@ -242,7 +384,8 @@ const ServiceUsing = () => {
           </Box>
         </InBox>
       </FullBox>
-      <FullBox className="center">
+      {/* end button */}
+      <FullBox className="endbutton center">
         <InBox>
           <Box
             component={Button}

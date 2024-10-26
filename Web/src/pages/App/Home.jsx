@@ -23,6 +23,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Dialog,
 } from "@mui/material";
 import { Page } from "@components/Page.jsx";
 // import image from "../../assets/images/WelcomeImage1.png";
@@ -51,6 +52,7 @@ import { stationList } from "../../api/stationList.js";
 import { setFilter } from "../../store/modules/filterSlice.js";
 import { getImg, getImgList } from "../../api/fsImgDown.js";
 import { setStoreData } from "../../store/modules/storeSlice.js";
+import { DialogList } from "../../components/common/DialogList.jsx";
 // import asd from "../../assets/subwayicons/";
 const Home = () => {
   // const theme = useSelector((state: RootState) => state.themeR.theme);
@@ -131,11 +133,11 @@ const Home = () => {
   // let fetchData;
   const [data, setData] = useState();
   const [FilterPage, setFilterPage] = useState(false);
-  const [SortPage, setSortPage] = useState(false);
+  const [SortPageOpen, setSortPageOpen] = useState(false);
   const [sortUser, sortUserSet] = useState(sortList.recommend);
   const navigate = useNavigate();
 
-  const sort = ["recommend", "distance", "like", "cheap"];
+  // const sort = ["recommend", "distance", "like", "cheap"];
   const myTheme = useTheme();
 
   const [age, setAge] = useState("");
@@ -221,87 +223,24 @@ const Home = () => {
             <Box
               sx={{ width: 1 / 2, padding: "15px 0px", position: "relative" }}
               onClick={() => {
-                setSortPage(!SortPage);
+                setSortPageOpen(true);
               }}
             >
-              {SortPage ? (
-                <Box
-                  className="divJCC"
-                  sx={{
-                    position: "absolute",
-                    width: "100%",
-                    // height: "300%",
-                    height: `${Object.keys(sortList).length * 90}%`,
-                    top: "52px",
-                    right: "-1px",
-                    zIndex: 1,
-                    backgroundColor: "white",
-                    borderRadius: "0px 0px 15px 15px",
-                    border: "1px solid #b0b0b0",
-                  }}
-                >
-                  <FormControl
-                    css={css`
-                      /* background-color: black; */
-                      height: 100%;
-                    `}
-                  >
-                    <RadioGroup
-                      aria-labelledby="demo-radio-buttons-group-label"
-                      defaultValue="female"
-                      name="radio-buttons-group"
-                      value={sortUser.identifier}
-                      onChange={(e) =>
-                        sortUserSet(sortList[e.currentTarget.value])
-                      }
-                      css={css`
-                        height: 100%;
-                        .MuiFormControlLabel-root {
-                          /* background-color: #e0e0e0; */
-                          width: 100%;
-                          margin: 0;
-                          flex: 1;
-                          justify-content: center;
-                          /* margin-left: px; */
-                          border-bottom: 1px solid #e0e0e0;
-                          white-space: "pre-wrap";
-                        }
-                      `}
-                    >
-                      {Object.entries(sortList).map((item) => {
-                        {
-                          console.log(item);
-                        }
-                        return (
-                          <FormControlLabel
-                            key={item[1].identifier}
-                            value={item[1].identifier}
-                            control={<Radio />}
-                            label={item[1].text + `      `}
-                          />
-                        );
-                      })}
-                    </RadioGroup>
-                  </FormControl>
-                </Box>
-              ) : null}
-
               <TextBold color="InfoDark">{sortUser.text}</TextBold>
-              {/* <FormControl variant="standard" sx={{ minWidth: 1 }}>
-              <Select
-  
-                onChange={handleChange}
-                autoWidth
-                label="Age"
-                sx={{ border: "none" }}
-                value={20}
-              >
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={21}>Twenty one</MenuItem>
-                <MenuItem value={22}>Twenty</MenuItem>
-              </Select>
-            </FormControl> */}
             </Box>
+
+            <DialogList
+              title="정렬"
+              data={Object.values(sortList).map((obj) => obj.text)}
+              selectedValue={sortUser.text}
+              open={SortPageOpen}
+              onClose={(value) => {
+                setSortPageOpen(false);
+                sortUserSet(
+                  ...Object.values(sortList).filter((obj) => obj.text === value)
+                );
+              }}
+            ></DialogList>
           </FullBox>
           {/* contents */}
           <FullBox
