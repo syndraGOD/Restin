@@ -12,14 +12,7 @@ import {
   TextHeader3,
 } from "../../../components/designGuide";
 import InBox from "../../../components/common/InBox";
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
+import { Box, Button, Dialog } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import theme from "../../../style/theme";
 import { PiWifiHighBold } from "react-icons/pi";

@@ -18,7 +18,7 @@ const Navigation = ({ select }) => {
         borderRadius: "15px 15px 0 0",
         backgroundColor: "white",
       }}
-      className="divJCC"
+      className="Navigation divJCC"
     >
       {/* home */}
       <Box
@@ -55,7 +55,7 @@ const Navigation = ({ select }) => {
       <Box
         sx={{ flex: 1, height: "100%", alignContent: "center" }}
         component={RouterLink}
-        to="/app/purchase"
+        to="/purchase/listLog"
       >
         <Box sx={{ alignItems: "center", marginBottom: "5px" }}>
           <IoCardOutline
@@ -83,7 +83,7 @@ const Navigation = ({ select }) => {
       <Box
         sx={{ flex: 1, height: "100%", alignContent: "center" }}
         component={RouterLink}
-        to="/app/info"
+        to="/myInfo/home"
       >
         <Box sx={{ alignItems: "center", marginBottom: "5px" }}>
           <IoPersonCircleOutline

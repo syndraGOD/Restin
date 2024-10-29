@@ -13,6 +13,7 @@ export const PageInner = styled(Box)`
   height: 100%;
   justify-content: start;
   align-items: center;
+  overflow: hidden;
 `;
 
 export const Page = ({ children, bg, bgimg, ...args }) => {

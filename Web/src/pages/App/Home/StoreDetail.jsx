@@ -22,6 +22,7 @@ import {
   TextBtnText,
   TextHeader2,
 } from "../../../components/designGuide";
+import { IoIosArrowBack } from "react-icons/io";
 import { Box, Button } from "@mui/material";
 import InnerBox from "../../../components/common/InnerBox";
 import { FaRegClock } from "react-icons/fa";
@@ -31,6 +32,7 @@ import BtnDefault from "../../../components/BtnDefault";
 import { today } from "../../../api/timeCheck";
 import { FaAngleDown } from "react-icons/fa6";
 import { useEffect, useState } from "react";
+import theme from "../../../style/theme";
 const StoreDetail = () => {
   const innerBoxIconSize = "18px";
   const innerBoxWidth = "26px";
@@ -194,6 +196,22 @@ const StoreDetail = () => {
           justifyContent: "start",
         }}
       >
+        {/* BackButton */}
+        <Box
+          component={Button}
+          onClick={() => {
+            navigate(-1);
+          }}
+          sx={{
+            position: "absolute",
+            zIndex: 2,
+            lineHeight: "70px",
+            left: 0,
+            top: 10,
+          }}
+        >
+          <IoIosArrowBack size={"50px"} color={theme.palette.InfoLight.main} />
+        </Box>
         {/* image slider */}
         <FullBox
           className="slider-container"

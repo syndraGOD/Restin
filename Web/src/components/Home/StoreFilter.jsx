@@ -1,13 +1,13 @@
 import { useState } from "react";
 import FullBox from "../common/FullBox";
-import InBox from "../common/InBox";
-import { TextBody, TextBold, TextHeader2, TextHeader3 } from "../designGuide";
-import { RxCross2 } from "react-icons/rx";
+import { TextBody, TextBold } from "../designGuide";
 import { Box, Button, Select, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilter } from "../../store/modules/filterSlice";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { stationList } from "../../api/stationList";
+import HeaderInner from "../common/HeaderInner";
+import theme from "../../style/theme";
 
 const StoreFilterPage = () => {
   // console.log("ㅎㅇ");
@@ -36,34 +36,16 @@ const StoreFilterPage = () => {
       }}
     >
       {/* h2 */}
+      <HeaderInner>필터</HeaderInner>
+      {/* Fillter */}
       <FullBox
         className="divJCC"
         sx={{
-          alignItems: "center",
-          position: "relative",
-          padding: "10px 0px",
-          borderBottom: `1px solid ${myTheme.palette.SubText.main}`,
-          height: "70px",
+          flexDirection: "row",
+          flexGrow: 1,
+          borderTop: `1px solid ${theme.palette.SubText.main}`,
         }}
       >
-        <Box
-          component={Button}
-          onClick={() => {
-            navigate(-1);
-          }}
-          sx={{ position: "absolute", lineHeight: "70px", left: "10px" }}
-        >
-          <RxCross2 size={"40px"} color={myTheme.palette.InfoDark.main} />
-        </Box>
-        <TextHeader3
-          sx={{ margin: "5px 0", alignItems: "center" }}
-          color="InfoDark"
-        >
-          필터
-        </TextHeader3>
-      </FullBox>
-      {/* Fillter */}
-      <FullBox className="divJCC" sx={{ flexDirection: "row", flexGrow: 1 }}>
         {/* line */}
         <Box
           className="divJCC"

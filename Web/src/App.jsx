@@ -31,7 +31,11 @@ import StoreFilterPage from "./components/Home/StoreFilter";
 import { Provider as Reducer } from "react-redux";
 import { store } from "@/store";
 import ServiceUsing from "./pages/App/Home/ServiceUsing";
+import NotionPage from "./components/common/NotionPage";
 import SettingPage from "./pages/Setting/SettingPage";
+import TermsListPage from "./pages/Setting/TermsOfUse/TermsListPage";
+import NotificationSetting from "./pages/Setting/NotificationSetting";
+import PurchaseLogList from "./pages/Purchase/PurchaseLogList";
 // import { GoogleAuthProvider } from "firebase/auth";
 
 //const app =
@@ -112,8 +116,23 @@ function App() {
                     </Route>
                     <Route path="using" element={<ServiceUsing />}></Route>
                   </Route>
-
-                  <Route path="/myInfo" element={<SettingPage />}></Route>
+                  <Route
+                    path="/purchase/listLog"
+                    element={<PurchaseLogList />}
+                  ></Route>
+                  <Route path="/myInfo/home" element={<SettingPage />}></Route>
+                  <Route
+                    path="/myInfo/notifi"
+                    element={<NotificationSetting />}
+                  ></Route>
+                  <Route
+                    path="/myInfo/termsList"
+                    element={<TermsListPage />}
+                  ></Route>
+                  <Route
+                    path="/notionPage/:pageNumber"
+                    element={<NotionPage />}
+                  ></Route>
                 </Routes>
 
                 {/* <Button variant="contained">Hello world</Button> */}

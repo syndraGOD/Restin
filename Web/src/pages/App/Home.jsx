@@ -53,6 +53,8 @@ import { setFilter } from "../../store/modules/filterSlice.js";
 import { getImg, getImgList } from "../../api/fsImgDown.js";
 import { setStoreData } from "../../store/modules/storeSlice.js";
 import { DialogList } from "../../components/common/DialogList.jsx";
+import HeaderText from "../../components/common/HeaderText.jsx";
+
 // import asd from "../../assets/subwayicons/";
 const Home = () => {
   // const theme = useSelector((state: RootState) => state.themeR.theme);
@@ -135,7 +137,6 @@ const Home = () => {
   const [FilterPage, setFilterPage] = useState(false);
   const [SortPageOpen, setSortPageOpen] = useState(false);
   const [sortUser, sortUserSet] = useState(sortList.recommend);
-  const navigate = useNavigate();
 
   // const sort = ["recommend", "distance", "like", "cheap"];
   const myTheme = useTheme();
@@ -176,14 +177,7 @@ const Home = () => {
           {/* [Children] FilterPage, Detail */}
           <Outlet />
           {/* h2 */}
-          <InBox className="divJCC" sx={{ alignItems: "start" }}>
-            <TextHeader2
-              sx={{ margin: "5px 0", alignItems: "start" }}
-              color="InfoDark"
-            >
-              Restin
-            </TextHeader2>
-          </InBox>
+          <HeaderText>Restin</HeaderText>
           {/* header */}
           <FullBox
             className="divJCC"
@@ -297,9 +291,6 @@ const Home = () => {
           >
             <Navigation select="home" />
           </Box>
-          {/* <Button variant="contained" onClick={() => dispatch(themeToggle("asd"))}>
-          Reducer Test2
-        </Button> */}
         </Page>
       ) : null}
     </>

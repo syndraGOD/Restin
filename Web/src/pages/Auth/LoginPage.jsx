@@ -1,7 +1,13 @@
-import { Button, Box, Link } from "@mui/material";
+import { Button, Box, Link, Input } from "@mui/material";
 import { initializeApp } from "firebase/app";
-import firebaseConfig from "./firebaseConfig";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { fbAuth } from "@/api/firebaseConfig.js";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+} from "firebase/auth";
 import Logo from "../../assets/Logo/logo48.png";
 import { css } from "@emotion/css";
 import { Link as RouterLink } from "react-router-dom";
@@ -11,10 +17,70 @@ import {
   TextBodySmall,
   TextHeader1,
 } from "../../components/designGuide";
+import { firebaseConfig } from "../../api/firebaseConfig";
+import { useRef, useState } from "react";
 
 const LoginPage = () => {
+  const AuthGoogleLogin = () => {
+    const userGoogle = fbAuth.currentUser;
+    console.log(userGoogle);
+  };
+  // const phoneNumber = "+1 1042512171";
+  const AuthPhoneSignin = async () => {
+    fbAuth.settings.appVerificationDisabledForTesting = false;
+    let appVerifer = (window.recaptchaVerifier = new RecaptchaVerifier(
+      fbAuth,
+      "recaptcha-container",
+      {
+        size: "invisible",
+        // callback: (response) => {
+        //   console.log("capcha 통과!");
+        // },
+      }
+    ));
+    signInWithPhoneNumber(fbAuth, test, appVerifer)
+      .then((confirmationResult) => {
+        window.confirmationResult = confirmationResult;
+        return true;
+      })
+      .catch((error) => {
+        // window.confirmationResult = null;
+        console.log(`SignInerror! : \n${error}`);
+        grecaptcha.reset(window.recaptchaWidgetId);
+        return false;
+      });
+  };
+  const verifiResult = () => {
+    confirmationResult
+      .confirm(testVerifi)
+      .then((result) => {
+        // User signed in successfully.
+        // const user = result.user;
+        console.log("환영하다 씹새끼야");
+      })
+      .catch((error) => {
+        console.log("인증번호 불일치합니다");
+      });
+  };
+  const AuthLogOut = async () => {
+    let userName;
+    if (fbAuth.currentUser) {
+      userName = fbAuth.currentUser.displayName;
+    }
+    const outed = await fbAuth.signOut();
+    console.log(userName, outed);
+  };
+
+  const [test, setTest] = useState();
+  const [testVerifi, setTestVerifi] = useState();
   return (
-    <Box className="divJCC">
+    <Box className="divJCC" sx={{ position: "relative" }}>
+      <Box
+        id="recaptcha-container"
+        // sx={{ position: "absolute", width: "100px" }}
+      >
+        asd
+      </Box>
       <Box className="divJCC">
         <Box sx={{ flexDirection: "row", alignItems: "center" }}>
           <img src={Logo} alt="" width={50} height={50} />
@@ -29,20 +95,16 @@ const LoginPage = () => {
           </TextBodyLarge>
         </Box>
       </Box>
+      {/* google login */}
       <Button
-        color="HOT.light"
+        color="PrimaryBrand"
         variant="contained"
         onClick={() => {
-          initializeApp(firebaseConfig);
           const provider = new GoogleAuthProvider();
-
-          const auth = getAuth();
-          console.log(`befor_auth : `, auth.currentUser);
-          signInWithPopup(auth, provider)
+          signInWithPopup(fbAuth, provider)
             .then((result) => {
               const user = result.user;
-              console.log(user);
-              console.log(`after_auth : `, auth);
+              console.log(`after_auth : `, user);
             })
             .catch((error) => {
               console.log(
@@ -53,21 +115,33 @@ const LoginPage = () => {
       >
         Google Login
       </Button>
-      <Button
-        variant="contained"
-        onClick={() => {
-          initializeApp(firebaseConfig);
-          // const provider = new GoogleAuthProvider();
-
-          const auth = getAuth();
-          const user = auth.currentUser;
-          console.log(user);
+      {/* phone number login */}
+      <Button variant="contained" onClick={AuthPhoneSignin}>
+        핸드폰으로 로그인
+      </Button>
+      <Input
+        onChange={(e) => {
+          setTest(e.target.value);
+          // console.log(test);
         }}
-      >
+      ></Input>
+      <Input
+        onChange={(e) => {
+          setTestVerifi(e.target.value);
+          // console.log(test);
+        }}
+      ></Input>
+      <Button variant="contained" onClick={verifiResult}>
+        인증번호제출
+      </Button>
+      <Button variant="contained" onClick={AuthGoogleLogin}>
         Login State?
       </Button>
-      <Link component={RouterLink} to="/app/home">
-        <TextBody sx={{ m: 5 }}>로그인하지 않고 둘러보기</TextBody>
+      <Button variant="contained" onClick={AuthLogOut}>
+        Logout
+      </Button>{" "}
+      <Link sx={{ m: 3 }} component={RouterLink} to="/app/home">
+        <TextBody>로그인하지 않고 둘러보기</TextBody>
       </Link>
     </Box>
   );
