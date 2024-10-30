@@ -44,8 +44,7 @@ import Navigation from "../../components/common/Navigation.jsx";
 import InBox from "../../components/common/InBox.jsx";
 import FullBox from "../../components/common/FullBox.jsx";
 import { useTheme } from "@mui/material/styles";
-import StoreFilter from "../../components/Home/StoreFilter.jsx";
-import StoreFilterPage from "../../components/Home/StoreFilter.jsx";
+import StoreFilterPage from "./Home/StoreFilter.jsx";
 import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { stationList } from "../../api/stationList.js";
 // import { useSelector, useDispatch } from "react-redux";
@@ -54,6 +53,7 @@ import { getImg, getImgList } from "../../api/fsImgDown.js";
 import { setStoreData } from "../../store/modules/storeSlice.js";
 import { DialogList } from "../../components/common/DialogList.jsx";
 import HeaderText from "../../components/common/HeaderText.jsx";
+import SubwayIcons from "../../api/getSubwayImage.js";
 
 // import asd from "../../assets/subwayicons/";
 const Home = () => {
@@ -201,10 +201,11 @@ const Home = () => {
               }}
             >
               <img
-                src={`/src/assets/subwayicons/line (${filter.line.replace(
-                  "line",
-                  ""
-                )}).png`}
+                src={SubwayIcons[filter.line.replace("line", "")]}
+                // {`/src/assets/subwayicons/line (${filter.line.replace(
+                //   "line",
+                //   ""
+                // )}).png`}
                 alt="subway line icons"
                 width={"24px"}
                 css={css`
