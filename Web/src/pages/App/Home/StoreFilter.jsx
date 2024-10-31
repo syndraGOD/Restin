@@ -1,13 +1,13 @@
 import { useState } from "react";
-import FullBox from "../common/FullBox";
-import { TextBody, TextBold } from "../designGuide";
+import FullBox from "../../../components/common/FullBox";
+import { TextBody, TextBold } from "@components/designGuide";
 import { Box, Button, Select, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { setFilter } from "../../store/modules/filterSlice";
+import { setFilter } from "../../../store/modules/filterSlice";
 import { useNavigate } from "react-router-dom";
-import { stationList } from "../../api/stationList";
-import HeaderInner from "../common/HeaderInner";
-import theme from "../../style/theme";
+import { stationList } from "../../../api/stationList";
+import HeaderInner from "../../../components/common/HeaderInner";
+import theme from "../../../style/theme";
 
 const StoreFilterPage = () => {
   // console.log("ㅎㅇ");

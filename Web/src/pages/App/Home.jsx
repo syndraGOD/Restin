@@ -290,7 +290,7 @@ const Home = () => {
               }
             }
           >
-            <Navigation select="home" />
+            <Navigation select="homes" />
           </Box>
         </Page>
       ) : null}

@@ -6,6 +6,9 @@ import { RiHome2Line } from "react-icons/ri";
 import { IoCardOutline, IoPersonCircleOutline } from "react-icons/io5";
 import { TextBodySmall } from "../designGuide";
 import { Link as RouterLink } from "react-router-dom";
+//@ts-check
+/**@param select 네비게이션 선택*/
+/**@param {"home"|"purchase"|"info"|null} select*/
 const Navigation = ({ select }) => {
   const myTheme = useTheme();
   return (

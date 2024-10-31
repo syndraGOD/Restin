@@ -27,7 +27,7 @@ import Sample5 from "./pages/sample/Sample5";
 import theme from "./style/theme";
 import { ThemeProvider } from "@mui/material";
 import StoreDetail from "./pages/App/Home/StoreDetail";
-import StoreFilterPage from "./components/Home/StoreFilter";
+import StoreFilterPage from "./pages/App/Home/StoreFilter";
 import { Provider as Reducer } from "react-redux";
 import { store } from "@/store";
 import ServiceUsing from "./pages/App/Home/ServiceUsing";
