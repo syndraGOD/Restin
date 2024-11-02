@@ -1,33 +1,27 @@
-import { WelcomeStyle } from "../../../style/WelcomePage";
-import BtnDefault from "../../../components/BtnDefault";
-import BtnFullBox from "../../../components/BtnFullBox";
-import WelcomeImage1 from "../../../assets/images/WelcomeImage1.png";
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/css";
+import WelcomeImage1 from "@assets/images/WelcomeImage1.png";
+import ImgTextButtonPage from "@components/common/ImgTextButtonPage";
+import { TextBtnText, TextHeader3 } from "@components/designGuide";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Welcome1 = () => {
+  const navi = useNavigate();
   return (
-    <WelcomeStyle className="divJCC">
-      <img
-        src={WelcomeImage1}
-        alt=""
-        width={300}
-        height={300}
-        className={css`
-          /* margin: 30px 0px; */
-        `}
-      />
-      <div className="textBox">
-        <p>
-          자리 요금만 내고
-          <br />
-          카페를 사용할 수 있어요
-        </p>
-      </div>
-      <BtnFullBox>
-        <BtnDefault currentPage="/welcome/2">다음</BtnDefault>
-      </BtnFullBox>
-    </WelcomeStyle>
+    <ImgTextButtonPage>
+      <img src={WelcomeImage1} alt="" />
+      <TextHeader3>
+        자리 요금만 내고
+        <br />
+        카페를 사용 할 수 있어요
+      </TextHeader3>
+      <Button
+        onClick={() => {
+          navi("/welcome/2");
+        }}
+      >
+        <TextBtnText>진짜요?</TextBtnText>
+      </Button>
+    </ImgTextButtonPage>
   );
 };
 

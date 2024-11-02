@@ -36,6 +36,10 @@ import SettingPage from "./pages/Setting/SettingPage";
 import TermsListPage from "./pages/Setting/TermsOfUse/TermsListPage";
 import NotificationSetting from "./pages/Setting/NotificationSetting";
 import PurchaseLogList from "./pages/Purchase/PurchaseLogList";
+import Welcome6 from "./pages/Auth/welcomPage/Welcome6";
+import RegisterPage from "./pages/Auth/LoginPage/RegisterPage";
+import IsExistUser from "./pages/Auth/LoginPage/IsExistUser";
+import UseAgree from "./pages/Auth/LoginPage/UseAgree";
 // import { GoogleAuthProvider } from "firebase/auth";
 
 //const app =
@@ -91,20 +95,23 @@ function App() {
                   >
                     <Route index element={<Home />} />
                   </Route>
-                  <Route path="/login" element={<LoginPage />} />
                   <Route path="/welcome">
                     <Route index path="1" element={<Welcome1 />}></Route>
                     <Route path="2" element={<Welcome2 />}></Route>
                     <Route path="3" element={<Welcome3 />}></Route>
                     <Route path="4" element={<Welcome4 />}></Route>
                     <Route path="5" element={<Welcome5 />}></Route>
+                    <Route path="5" element={<Welcome5 />}></Route>
+                    <Route path="6" element={<Welcome6 />}></Route>
                   </Route>
-                  <Route path="/sample">
-                    <Route index path="1" element={<Sample1 />}></Route>
-                    <Route path="2" element={<Sample2 />}></Route>
-                    <Route path="3" element={<Sample3 />}></Route>
-                    <Route path="4" element={<Sample4 />}></Route>
-                    <Route path="5" element={<Sample5 />}></Route>
+                  <Route path="/login">
+                    <Route
+                      index
+                      path="isuser"
+                      element={<IsExistUser />}
+                    ></Route>
+                    <Route path="register" element={<RegisterPage />}></Route>
+                    <Route path="useagree" element={<UseAgree />}></Route>
                   </Route>
                   <Route path="/app">
                     <Route path="home" element={<Home />}>

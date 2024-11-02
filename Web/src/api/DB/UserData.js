@@ -78,7 +78,7 @@
  * @property {?Array<string>} recently_viewed - 최근 본 항목 목록.
  * @property {?Array<string>} wishlist - 위시리스트.
  * @property {?Array<string>} preferred_category - 선호하는 카테고리.
- * @property {?Array<string>} purchase_history - 구매 이력.
+ * @property {?Array<string>} purchase_history - 구매 이력. //구매이력에 데이터 방식에 따라 string > ? 변경 가능
  */
 
 /**
