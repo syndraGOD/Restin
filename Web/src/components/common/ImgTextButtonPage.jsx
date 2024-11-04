@@ -14,11 +14,12 @@ const WelcomeStyle = styled.div`
   font-size: 24px;
 `;
 const ImgTextButtonPage = ({ children }) => {
-  const [img, text, button] = children;
+  const [img, text, button, ...args] = children;
   return (
     <Page className="divJCC">
       <InBox
         css={css`
+          display: flex;
           flex-direction: column;
           height: 100%;
           padding: 10vw 0;
@@ -59,7 +60,7 @@ const ImgTextButtonPage = ({ children }) => {
         >
           {text}
         </Box>
-
+        {...args}
         <Box className="contents contents_btn">{button}</Box>
       </InBox>
     </Page>

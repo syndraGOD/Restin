@@ -18,24 +18,14 @@ import Navigation from "../../components/common/Navigation";
 import TermsListPage from "./TermsOfUse/TermsListPage";
 import { useNavigate } from "react-router-dom";
 import NotionLocList from "../../api/NotionLocList";
+import { BgColorDefault } from "../../components/common/Bg";
 
 const SettingPage = () => {
   const navi = useNavigate();
   return (
     <>
       <Page sx={{ display: "flex", flexDirection: "column" }}>
-        <Box
-          className="BackgroundImageBlur"
-          sx={{
-            backgroundColor: "MainBackground.main",
-          }}
-          css={css`
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            z-index: -1;
-          `}
-        />
+        <BgColorDefault />
         <HeaderText sx={{ mb: 2 }}>설정</HeaderText>
         <FullBox className="divJCC" sx={{ flex: 1 }}>
           <InBox sx={{ flex: 1 }}>

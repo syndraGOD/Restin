@@ -3,6 +3,7 @@ import ImgTextButtonPage from "@components/common/ImgTextButtonPage";
 import { TextBtnText, TextHeader3 } from "@components/designGuide";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { BgColorDefault } from "../../../components/common/Bg";
 
 const Welcome2 = () => {
   const navi = useNavigate();
@@ -21,6 +22,7 @@ const Welcome2 = () => {
       >
         <TextBtnText>간편하네요!</TextBtnText>
       </Button>
+      <BgColorDefault bgColor="InfoLight.main" />
     </ImgTextButtonPage>
   );
 };

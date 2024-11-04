@@ -7,7 +7,6 @@ import React from "react";
 const InfoBox = ({ children, ...props }) => {
   return (
     <Box
-      {...props}
       className="divJCC"
       css={css`
         background-color: ${theme.palette.InfoLight.main};
@@ -23,6 +22,7 @@ const InfoBox = ({ children, ...props }) => {
           color: ${theme.palette.InfoDark.main};
         }
       `}
+      {...props}
     >
       {children}
     </Box>

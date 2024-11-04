@@ -4,10 +4,11 @@ import cors from "cors";
 import user from "./routes/userRoutes";
 import store from "./routes/storeRoutes";
 import auth from "./routes/authRoutes";
+import { restinPort } from "./configFiles/config";
 // const express = require("express");
 // const cors = require("cors");
 const app = express();
-const port = 3000;
+const port = restinPort;
 
 //라우터 설정
 app.use(cors());

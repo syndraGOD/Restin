@@ -75,6 +75,7 @@ const Home = () => {
     });
     // console.log(resData);
     setFetchData(resData);
+    console.log("이미지 다운");
     const getItemImgList = async (array) => {
       const newImgList = await Promise.all(
         array.map(async (item) => {
@@ -290,7 +291,7 @@ const Home = () => {
               }
             }
           >
-            <Navigation select="homes" />
+            <Navigation select="home" />
           </Box>
         </Page>
       ) : null}

@@ -33,6 +33,7 @@ import { today } from "../../../api/timeCheck";
 import { FaAngleDown } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import theme from "../../../style/theme";
+import NotionLocList from "../../../api/NotionLocList";
 const StoreDetail = () => {
   const innerBoxIconSize = "18px";
   const innerBoxWidth = "26px";

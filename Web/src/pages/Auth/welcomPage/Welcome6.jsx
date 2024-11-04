@@ -10,6 +10,7 @@ import {
 import ImgTextButtonPage from "@components/common/ImgTextButtonPage";
 import { useNavigate } from "react-router-dom";
 import Logo from "@assets/Logo/logo48.png";
+import { BgColorDefault } from "../../../components/common/Bg";
 
 const Welcome6 = () => {
   const navi = useNavigate();
@@ -40,11 +41,12 @@ const Welcome6 = () => {
       <TextHeader3> </TextHeader3>
       <Button
         onClick={() => {
-          navi("/login/inuser");
+          navi("/login/isuser");
         }}
       >
         <TextBtnText>전화번호로 시작하기</TextBtnText>
       </Button>
+      <BgColorDefault bgColor="InfoLight.main" />
     </ImgTextButtonPage>
   );
 };
