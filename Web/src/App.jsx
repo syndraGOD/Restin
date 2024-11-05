@@ -112,6 +112,7 @@ function App() {
                     ></Route>
                     <Route path="register" element={<RegisterPage />}></Route>
                     <Route path="useagree" element={<UseAgree />}></Route>
+                    <Route path="numbertest" element={<LoginPage />}></Route>
                   </Route>
                   <Route path="/app">
                     <Route path="home" element={<Home />}>

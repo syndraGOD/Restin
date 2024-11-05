@@ -1,4 +1,6 @@
 import UserForm from "../models/userDataForm.js";
+import { app, firebaseConfig } from "../configFiles/firebaseConfig.js";
+import admin from "firebase-admin";
 import {
   db_user_create,
   db_user_read,
@@ -6,38 +8,61 @@ import {
   db_user_update,
 } from "../utils/CRUD_userData.js";
 import { v4 as uuidv4 } from "uuid";
-import { jsDateToFirebaseDate } from "../utils/firebaseDateConverter.js";
-const user_isExistUser = async (phoneNumber) => {
-  const getUserArray = await db_user_read_query(
-    "profile.phoneNumber",
-    phoneNumber
-  ).data;
-  if (getUserArray.length) {
-    return getUserArray[0].userId;
-  } else {
-    return false;
+
+/**
+ *
+ */
+admin.initializeApp(firebaseConfig);
+const verifyTokenMiddleware = async (req, res, next) => {
+  try {
+    const token = req.headers["auth_token"];
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    req.userId = decodedToken.user_id;
+    req.phoneNumber = decodedToken.phone_number;
+
+    next();
+  } catch (error) {
+    console.log("Invalid token request\n", error);
+    return res.status(401).json({ message: "invaild token" });
   }
 };
 
-//전화번호로 로그인해서 계정 UUID가 발급되는지 확인필요
-const user_register = async (phoneNumber, nick, birth, authToken) => {
+import { jsDateToFirebaseDate } from "../utils/firebaseDateConverter.js";
+const user_isExistUserMiddleware = async (req, res, next) => {
+  const userId = req.userId;
+  if (userId) {
+    const getUserData = await db_user_read(userId);
+    if (getUserData.resultCode === 200) {
+      return res.status(200).json({ message: "who is exist user" });
+    } else {
+      return res.status(404).json({ message: "user is not found" });
+    }
+  } else {
+    return res.status(404).json({ message: "user is not found" });
+  }
+};
+
+const user_registerMiddleware = async (req, res, next) => {
+  // console.log(verifyToken(exampleToken));
+  const { nick, birth, joinDate } = req.body;
+  // console.log(nick, birth);
   const pushData = {
-    userId: uuidv4(),
+    userId: req.userId,
     profile: {
-      phoneNumber,
+      phoneNumber: req.phoneNumber,
       nick,
       birth,
       userType: "user",
       joinDate: jsDateToFirebaseDate(new Date()),
     },
     security: {
-      authToken,
+      authToken: req.headers["auth_token"],
     },
   };
-  const res = await db_user_create(pushData);
+  await db_user_create(pushData);
 };
 
-const user_login = async (userId, authToken) => {
+const user_loginMiddleware = async (userId, authToken) => {
   const pushData = {
     "security.lastLogin": jsDateToFirebaseDate(new Date()),
     //token어쩌지? 공부좀하고 ㄱㄷ
@@ -51,6 +76,13 @@ const user_login = async (userId, authToken) => {
     return false;
   }
 };
-const user_delete = async () => {};
+const user_deleteMiddleware = async () => {};
 // user_isExistUser();
-user_register();
+// user_register();
+export {
+  verifyTokenMiddleware,
+  user_isExistUserMiddleware,
+  user_registerMiddleware,
+  user_loginMiddleware,
+  user_deleteMiddleware,
+};

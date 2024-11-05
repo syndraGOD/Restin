@@ -21,9 +21,22 @@ import { firebaseConfig } from "../../api/firebaseConfig";
 import { useRef, useState } from "react";
 
 const LoginPage = () => {
-  const AuthGoogleLogin = () => {
-    const userGoogle = fbAuth.currentUser;
-    console.log(userGoogle);
+  const AuthGoogleLogin = async () => {
+    // const userGoogle = fbAuth.currentUser;
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        // 강제로 새로운 토큰 요청
+        const newToken = await user.getIdToken(true);
+        console.log("새로운 토큰:", newToken);
+      } catch (error) {
+        console.error("토큰 발급 오류:", error);
+      }
+    } else {
+      console.log("사용자가 로그인되어 있지 않습니다.");
+    }
+    console.log(user);
   };
   // const phoneNumber = "+1 1042512171";
   const AuthPhoneSignin = async () => {
@@ -56,7 +69,7 @@ const LoginPage = () => {
       .then((result) => {
         // User signed in successfully.
         // const user = result.user;
-        console.log("환영하다 씹새끼야");
+        console.log(result);
       })
       .catch((error) => {
         console.log("인증번호 불일치합니다");

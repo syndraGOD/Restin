@@ -50,10 +50,10 @@ const db_user_create = async (userData) => {
 
 // 사용자 읽기 함수 (non-query)
 const db_user_read = async (userId) => {
+  // console.log(userId);
   try {
     const userRef = doc(db, colName, userId);
     const userSnap = await getDoc(userRef);
-
     if (userSnap.exists()) {
       return new RESForm({
         resultCode: 200,
@@ -67,6 +67,7 @@ const db_user_read = async (userId) => {
       });
     }
   } catch (error) {
+    console.log(error);
     return new RESForm({
       resultCode: 500,
       text: "Error retrieving user",
