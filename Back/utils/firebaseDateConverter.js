@@ -1,14 +1,14 @@
-function firebaseDateToJSDate(firebaseDate) {
+export const firebaseDateToJSDate = (firebaseDate) => {
   const milliseconds =
     firebaseDate.seconds * 1000 + firebaseDate.nanoseconds / 1e6;
   return new Date(milliseconds);
-}
+};
 
-function jsDateToFirebaseDate(jsDate) {
+export const jsDateToFirebaseDate = (jsDate) => {
   const seconds = Math.floor(jsDate.getTime() / 1000);
   const nanoseconds = (jsDate.getTime() % 1000) * 1e6;
   return { seconds, nanoseconds };
-}
+};
 
 // 사용 예시
 // const firebaseDateExample = { seconds: 1672531199, nanoseconds: 0 };

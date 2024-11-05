@@ -12,6 +12,7 @@
  * @property {?string} userId - 사용자 고유 식별자.
  * @property {?number} gender - 성별 (0: 남성, 1: 여성, 2: 기타).
  * @property {?string} name - 사용자 이름.
+ * @property {?string} nick - 사용자 닉네임.
  * @property {?string} email - 사용자 이메일.
  * @property {?string} phoneNumber - 사용자 전화번호.
  * @property {?FirebaseDateObject} birth - 생년월일.
@@ -112,6 +113,7 @@ export class UserForm {
       userId: this.userId,
       gender: profile.gender ?? null,
       name: profile.name ?? null,
+      nick: profile.nick ?? null,
       email: profile.email ?? null,
       phoneNumber: profile.phoneNumber ?? null,
       birth: profile.birth ?? null,
