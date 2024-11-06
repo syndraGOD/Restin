@@ -1,10 +1,9 @@
-import express from "express";
-import {
+const {
   user_isExistUserMiddleware,
   user_loginMiddleware,
   user_registerMiddleware,
   verifyTokenMiddleware,
-} from "../controllers/auth.js";
+} = require("../controllers/auth.js");
 
 // register, login 등 모든 절차가 token을 거쳐야함
 
@@ -19,6 +18,7 @@ import {
 //3-1. regis => status 200 ok
 //3-2. front : go 4-1
 //4. login => userdata res
+const express = require("express");
 const router = express.Router();
 
 //firebase auth uuid
@@ -27,7 +27,7 @@ router.get("/is_exist", user_isExistUserMiddleware, (req, res) => {});
 router.post("/register", user_registerMiddleware, (req, res) => {});
 router.get("/login", user_loginMiddleware, (req, res) => {});
 
-export default router;
+module.exports = router;
 
 /*
 한울 계정정보

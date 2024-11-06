@@ -1,18 +1,18 @@
-import UserForm from "../models/userDataForm.js";
-import { app, firebaseConfig } from "../configFiles/firebaseConfig.js";
-import admin from "firebase-admin";
-import {
+const {
   db_user_create,
   db_user_read,
   db_user_read_query,
   db_user_update,
-} from "../utils/CRUD_userData.js";
-import { v4 as uuidv4 } from "uuid";
+  db_user_delete,
+} = require("../utils/CRUD_userData.js");
 
+const UserForm = require("../models/userDataForm.js");
+const { firebaseConfig, admin } = require("../configFiles/firebaseConfig.js");
+const { jsDateToFirebaseDate } = require("../utils/firebaseDateConverter.js");
 /**
  *
  */
-admin.initializeApp(firebaseConfig);
+// admin.initializeApp(firebaseConfig);
 const verifyTokenMiddleware = async (req, res, next) => {
   try {
     const token = req.headers["auth_token"];
@@ -27,7 +27,7 @@ const verifyTokenMiddleware = async (req, res, next) => {
   }
 };
 
-import { jsDateToFirebaseDate } from "../utils/firebaseDateConverter.js";
+// import { jsDateToFirebaseDate } from "../utils/firebaseDateConverter.js";
 const user_isExistUserMiddleware = async (req, res, next) => {
   const userId = req.userId;
   if (userId) {
@@ -79,7 +79,7 @@ const user_loginMiddleware = async (userId, authToken) => {
 const user_deleteMiddleware = async () => {};
 // user_isExistUser();
 // user_register();
-export {
+module.exports = {
   verifyTokenMiddleware,
   user_isExistUserMiddleware,
   user_registerMiddleware,

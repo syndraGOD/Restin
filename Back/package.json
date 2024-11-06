@@ -1,11 +1,12 @@
 {
-  "name": "server",
+  "name": "restin",
   "version": "1.0.0",
-  "description": "firebase server",
-  "main": "Index.js",
+  "description": "Restin Server",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon main.js"
+    "dev": "nodemon main.js",
+    "start": "pm2 start main.js --no-autorestart"
   },
   "author": "",
   "license": "ISC",
@@ -18,7 +19,7 @@
     "http": "^0.0.1-security",
     "nodemon": "^3.1.7",
     "notion-client": "^6.16.0",
+    "pm2": "^5.4.2",
     "uuid": "^11.0.2"
-  },
-  "type": "module"
+  }
 }

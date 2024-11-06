@@ -85,7 +85,7 @@
 /**
  * 사용자 정보를 관리하는 클래스.
  */
-export class UserForm {
+class UserForm {
   /**
    * @param {Object} args
    * @param {string} args.userId - 사용자 고유 식별자.
@@ -173,4 +173,4 @@ export class UserForm {
   }
 }
 
-export default UserForm;
+module.exports = UserForm;

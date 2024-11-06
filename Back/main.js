@@ -17,42 +17,49 @@
 
 // const { onRequest } = require("firebase-functions/v2/https");
 // const logger = require("firebase-functions/logger");
+// const functions = require("firebase-functions");
+// const admin = require("");
+
+const { firebaseConfigm, admin } = require("./configFiles/firebaseConfig.js");
+
 const express = require("express");
 const cors = require("cors");
-const user = require("./routes/userRoutes.js");
-const store require("./routes/storeRoutes.js");
-const auth require("./routes/authRoutes.js");
-const NotionAPI require("notion-client");
+// const user = require("./routes/userRoutes.js");
+// const store require("./routes/storeRoutes.js");
+const auth = require("./routes/authRoutes.js");
+// const NotionAPI = require("notion-client");
 const app = express();
-const port = restinPort;
-// 
+//
 //라우터 설정
 app.use(cors());
 app.use(express.json({ extended: true }));
-app.use("/user", user);
-app.use("/store", store);
+// app.use("/user", user);
+// app.use("/store", store);
 app.use("/auth", auth);
 
-const getNotion = async (loc) => {
-  const notion = new NotionAPI();
-  const recordMap = await notion.getPage(loc);
-  return recordMap;
-};
+// const getNotion = async (loc) => {
+//   const notion = new NotionAPI();
+//   const recordMap = await notion.getPage(loc);
+//   return recordMap;
+// };
 
-app.post;
+// app.post;
 app.get("/useStore/:token");
 app.get("/notion/:notionPageCode", async (req, res) => {
   const loc = req.params.notionPageCode;
-  const notion = await getNotion(loc);
-  res.send(notion);
+  import("notion-client").then((getNotion) => {
+    getNotion(loc).then((notion) => res.send(notion));
+  });
 });
 app.get((req, res) => {
   res.status(404).send("not founds");
 });
-app.listen(port, () => {
-  console.log(`Server running on ${port}port`);
+
+app.listen(process.env.PORT || 8080, () => {
+  console.log(`Server running on 8080`);
 });
 
+// exports.api = functions.https.onRequest(app);
 // Create and deploy your first functions
 // https://firebase.google.com/docs/functions/get-started
 

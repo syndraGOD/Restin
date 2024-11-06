@@ -99,7 +99,7 @@
 /**
  * StoreForm 클래스는 가게 정보를 관리합니다.
  */
-export class StoreForm {
+class StoreForm {
   /**
    * @param {StoreInfo} args - 가게 정보 객체
    */
@@ -210,3 +210,4 @@ const storeData = new StoreForm({
   toiletWomanPw: "비밀번호 없음",
   imgURL: [""],
 });
+module.exports = StoreForm;

@@ -1,5 +1,5 @@
-import { db } from "../configFiles/firebaseConfig.js";
-import {
+const { db } = require("../configFiles/firebaseConfig.js");
+const {
   doc,
   setDoc,
   getDoc,
@@ -9,23 +9,18 @@ import {
   where,
   query,
   getDocs,
-} from "firebase/firestore";
-import UserForm from "../models/userDataForm.js";
-import { RESForm } from "../models/inPacketForm.js";
-import {
-  firebaseDateToJSDate,
-  jsDateToFirebaseDate,
-} from "./firebaseDateConverter.js";
+} = require("firebase/firestore");
+const UserForm = require("../models/userDataForm.js");
+const RESForm = require("../models/inPacketForm.js");
 
 const colName = "USER";
+const {
+  firebaseDateToJSDate,
+  jsDateToFirebaseDate,
+} = require("./firebaseDateConverter.js");
 
 // 사용자 생성 함수
-/**
- * args = new UserForm
- * userId is auto create #uuid
- */
 const db_user_create = async (userData) => {
-  // const uuid = uuidv4();
   const newUserForm = new UserForm({
     ...userData,
   });
@@ -50,7 +45,6 @@ const db_user_create = async (userData) => {
 
 // 사용자 읽기 함수 (non-query)
 const db_user_read = async (userId) => {
-  // console.log(userId);
   try {
     const userRef = doc(db, colName, userId);
     const userSnap = await getDoc(userRef);
@@ -67,7 +61,6 @@ const db_user_read = async (userId) => {
       });
     }
   } catch (error) {
-    console.log(error);
     return new RESForm({
       resultCode: 500,
       text: "Error retrieving user",
@@ -76,25 +69,18 @@ const db_user_read = async (userId) => {
   }
 };
 
-/**
- *
- * @param {string} fieldName
- * @param {string} value
- * @returns
- */
+// 쿼리 기반 사용자 읽기 함수
 const db_user_read_query = async (fieldName, value) => {
   try {
-    // 원하는 필드 기준으로 문서 검색
     const userCollectionRef = collection(db, colName);
     const q = query(userCollectionRef, where(fieldName, "==", value));
     const querySnapshot = await getDocs(q);
 
-    // 결과 처리
     if (!querySnapshot.empty) {
       const userData = querySnapshot.docs.map((doc) => doc.data());
       return new RESForm({
         resultCode: 200,
-        text: "User(s) found sucess",
+        text: "User(s) found successfully",
         data: userData,
       });
     } else {
@@ -115,8 +101,6 @@ const db_user_read_query = async (fieldName, value) => {
 };
 
 // 사용자 업데이트 함수
-/** userdata는 "profile.name" or object(전체업데이트)
- */
 const db_user_update = async (userId, userData) => {
   try {
     const userRef = doc(db, colName, userId);
@@ -126,12 +110,11 @@ const db_user_update = async (userId, userData) => {
       text: "User updated successfully",
     });
   } catch (error) {
-    return new RESForm({});
-    return {
+    return new RESForm({
       resultCode: 500,
       text: "Error updating user",
       error,
-    };
+    });
   }
 };
 
@@ -153,9 +136,9 @@ const db_user_delete = async (userId) => {
   }
 };
 
-let a;
+// let a;
 
-a = db_user_create({ userId: "Asd", profile: { name: "hello" } });
+// a = db_user_create({ userId: "Asd", profile: { name: "hello" } });
 // a = db_user_update("hanwol", {
 //   "profile.name": "hello",
 //   "address.addressId": "test",
@@ -165,7 +148,8 @@ a = db_user_create({ userId: "Asd", profile: { name: "hello" } });
 //   console.log(result);
 //   process.exit(1);
 // });
-export {
+
+module.exports = {
   db_user_create,
   db_user_read,
   db_user_read_query,
