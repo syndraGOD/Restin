@@ -13,6 +13,7 @@ import { RxChatBubble } from "react-icons/rx";
 import { Form, useNavigate } from "react-router-dom";
 import { TextBold } from "../../../components/designGuide";
 import { BgColorDefault } from "../../../components/common/Bg";
+import { restinAPI } from "../../../api/config";
 
 const IsExistUser = () => {
   const navi = useNavigate();
@@ -22,6 +23,7 @@ const IsExistUser = () => {
   const [inputPhoneNumber, setInputPhoneNumber] = useState("");
   const [inputVerifiCode, setInputVerifiCode] = useState("");
   const [confirmBtn, setConfirmBtn] = useState(false);
+  const [verifiCode, setVerifiCode] = useState();
   const PhoneNumberAutoSpace = (e) => {
     if (e.target.value.replace(/\s/g, "").length < 12) {
       setInputPhoneNumber(
@@ -45,17 +47,52 @@ const IsExistUser = () => {
       }
     }
   };
-  const VerifiSendBtnClick = () => {
+  const VerifiSendBtnClick = async () => {
+    try {
+      const phoneNumber = inputPhoneNumber.replaceAll(" ", "");
+      const res = await fetch(`${restinAPI}/auth/smsVerify`, {
+        mode: "cors",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phoneNumber,
+        }),
+      });
+      const data = await res.json();
+      const awaitData = await data.verifiCode;
+      setVerifiCode(String(awaitData));
+    } catch (error) {
+      console.log(error);
+    }
+    //res = { message, verifiCode }
     setIsFirstVerifiCodeSend(true);
     verifiRef.current.focus();
   };
-  const NextBtnClick = async () => {
+  const NextBtnClick = async (e) => {
     //백으로 있는 유저인지 확인
-    const isUserRegister = await true; //true : regiter - if failed regis (make list) , false: exist user
+    // if (verifiCode !== inputVerifiCode) return;
+    const phoneNumber = inputPhoneNumber.replaceAll(" ", "");
+    const headers = {
+      phonenumber: phoneNumber,
+    };
+    const res = await fetch(`${restinAPI}/auth/is_exist`, {
+      mode: "cors",
+      method: "GET",
+      headers: headers,
+    });
+    const isUserRegister = res.status === 200 ? true : false;
+    // console.log(isUserRegister);
+    // true : regiter - if failed regis (make list) , false: exist user
     if (isUserRegister) {
-      navi("/login/register");
-    } else {
+      //login fetch() =>
+      //global state에 유저정보 띄우기
       navi("/app/home");
+    } else {
+      navi("/login/register", {
+        state: { phoneNumber: inputPhoneNumber.replaceAll(" ", "") },
+      });
     }
   };
 
@@ -133,11 +170,16 @@ const IsExistUser = () => {
           </Box>
           <Box width={"100%"}>
             <TextField
+              error={confirmBtn && verifiCode !== inputVerifiCode}
               inputRef={verifiRef}
               variant="standard"
               fullWidth
               label="인증번호"
-              helperText="* 어떤 경우에도 타인에게 공유하지 마세요"
+              helperText={
+                confirmBtn && verifiCode !== inputVerifiCode
+                  ? "* 인증번호를 다시 확인해주세요"
+                  : "* 어떤 경우에도 타인에게 공유하지 마세요"
+              }
               color="PrimaryBrand"
               inputProps={{ inputMode: "numeric", style: { fontSize: 20 } }} // font size of input text
               InputLabelProps={{
@@ -148,6 +190,9 @@ const IsExistUser = () => {
                   font-size: 12px;
                   color: ${theme.palette.SubText.main};
                 }
+                .Mui-error {
+                  color: ${theme.palette.error.main};
+                }
               `}
               value={inputVerifiCode}
               onChange={VerifiCodeInputState}
@@ -155,6 +200,7 @@ const IsExistUser = () => {
           </Box>
           {isFirstVerifiCodeSend ? (
             <Box
+              onClick={VerifiSendBtnClick}
               css={css`
                 background-color: ${theme.palette.InfoDark.main};
                 border-radius: 8px;

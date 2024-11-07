@@ -28,8 +28,9 @@ const db_user_create = async (userData) => {
     ...newUserForm,
   };
   try {
-    const userRef = doc(db, colName, "sdf"); //obj_userData.userId);
+    const userRef = doc(db, colName, obj_userData.userId); //obj_userData.userId);
     await setDoc(userRef, obj_userData);
+    console.log("New User Created / nick : ", obj_userData.profile.nick);
     return new RESForm({
       resultCode: 200,
       text: "User created successfully",

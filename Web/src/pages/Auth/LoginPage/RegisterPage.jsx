@@ -9,15 +9,23 @@ import { Box, TextField } from "@mui/material";
 import theme from "../../../style/theme";
 import { DefaultBtn } from "@components/common/Btns";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { BgColorDefault } from "../../../components/common/Bg";
 
 const RegisterPage = () => {
   const navi = useNavigate();
+  const location = useLocation();
+  const profile = location.state || {};
+  // console.log(profile);
   const nameRef = useRef();
   const [nameState, setNameState] = useState("");
   const [birthdayState, setBirthdayState] = useState("");
 
+  const nextPage = () => {
+    navi("/login/useagree", {
+      state: { ...profile, nick: nameState, birth: birthdayState },
+    });
+  };
   useEffect(() => {
     nameRef.current.focus();
   }, []);
@@ -90,9 +98,7 @@ const RegisterPage = () => {
           <Box className="EmptyBox" sx={{ width: "100%", flex: 1 }}></Box>
           <DefaultBtn
             disabled={!(nameState.length >= 2 && birthdayState.length === 6)}
-            onClick={() => {
-              navi("/login/useagree");
-            }}
+            onClick={nextPage}
           >
             인증 확인
           </DefaultBtn>

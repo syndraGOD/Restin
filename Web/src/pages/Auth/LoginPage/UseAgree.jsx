@@ -16,20 +16,33 @@ import {
 import theme from "../../../style/theme";
 import { DefaultBtn } from "@components/common/Btns";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import InfoBox from "../../../components/common/InfoBox";
 import { TextBold } from "../../../components/designGuide";
 import { IoIosArrowForward } from "react-icons/io";
 import { BgColorDefault } from "../../../components/common/Bg";
 import NotionLocList from "../../../api/NotionLocList";
+import { restinAPI } from "../../../api/config";
 
 const UseAgree = () => {
+  const location = useLocation();
+  const profile = location.state || {};
+  // console.log(profile);
   const navi = useNavigate();
   const [inputRef1, setInputRef1] = useState(false);
   const [inputRef2, setInputRef2] = useState(false);
   const [inputRef3, setInputRef3] = useState(false);
-  const nextBtnClcik = () => {
-    navi("/app/home");
+  const nextBtnClcik = async () => {
+    const res = await fetch(`${restinAPI}/auth/register`, {
+      mode: "cors",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profile),
+    });
+    console.log(res);
+    // navi("/app/home");
   };
   return (
     <FullBox sx={{ height: "100%" }}>
@@ -38,7 +51,7 @@ const UseAgree = () => {
         <HeaderInner></HeaderInner>
         <InBox sx={{ textAlign: "start", display: "flex" }}>
           <TextHeader2 color="InfoDark" width={"100%"}>
-            ㅇㅇㅇ님
+            {profile.nick}님
             <br />
             환영합니다!
           </TextHeader2>
