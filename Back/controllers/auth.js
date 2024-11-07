@@ -11,21 +11,35 @@ const { firebaseConfig, admin } = require("../configFiles/firebaseConfig.js");
 const { jsDateToFirebaseDate } = require("../utils/firebaseDateConverter.js");
 const sendMsg = require("../utils/SMS_message.js");
 const { v4: uuidv4 } = require("uuid");
+const jwt = require("jsonwebtoken");
+const { generateToken } = require("../utils/TokenAPI.JS");
+
 /**
  *
  */
 // admin.initializeApp(firebaseConfig);
 const verifyTokenMiddleware = async (req, res, next) => {
-  try {
-    const token = req.headers["auth_token"];
-    const decodedToken = await admin.auth().verifyIdToken(token);
-    req.userId = decodedToken.user_id;
-    req.phoneNumber = decodedToken.phone_number;
+  const userToken = req.headers["authorization"]?.split(" ")[1];
 
+  //token = jwt token || "null" || undefined
+  if (!userToken || userToken === "null") {
+    res.status(401).json({
+      result: "forbidden-approach",
+      message: "token is null or undefind",
+    });
+  }
+  try {
+    const secretKey = process.env.JST_SECRET_KEY;
+    const jwtDecoded = jwt.verify(userToken, secretKey);
+
+    const userId = jwtDecoded.userId;
+    req.userId = userId;
     next();
   } catch (error) {
-    console.log("Invalid token request\n", error);
-    return res.status(401).json({ message: "invaild token" });
+    res.status(401).json({
+      result: "forbidden-approach",
+      message: "token is expired or invaild",
+    });
   }
 };
 
@@ -39,17 +53,16 @@ const user_isExistUserMiddleware = async (req, res, next) => {
       phoneNumber
     );
     if (getUserData.resultCode === 200) {
+      req.userId = getUserData.data;
       next();
     } else {
-      return res.status(401).json({ message: "user is not found" });
+      res.status(401).json({ message: "user is not found" });
     }
   } else {
-    return res.status(400).json({ message: "user is empty" });
+    res.status(400).json({ message: "user is empty" });
   }
 };
 const user_smsVerifyMiddleware = async (req, res, next) => {
-  console.log("드디어!!");
-  console.log(req.body);
   if (
     req.body.phoneNumber !== undefined &&
     req.body.phoneNumber.length === 11
@@ -61,7 +74,7 @@ const user_smsVerifyMiddleware = async (req, res, next) => {
       sendMsg(phoneNumber, `Restin : ${verifiCode}`);
       next();
     } catch (RESForm) {
-      console.log(RESForm);
+      // console.log(RESForm);
       res.status(400).json({ message: RESForm });
     }
   } else {
@@ -79,16 +92,14 @@ const user_registerMiddleware = async (req, res, next) => {
       nick,
       birth,
       userType: "user",
-      joinDate: new Date(),
-      //joinDate auth()에 있음, 해당값 받아올것
-    },
-    security: {
-      authToken: req.headers["auth_token"],
+      joinDate: jsDateToFirebaseDate(new Date()),
+      accountState: "alive",
     },
   };
   try {
     const RES = await db_user_create(pushData);
     if (RES.resultCode === 200) {
+      req.userId = userId;
       next();
     } else {
       res.status(400).json({ message: RES.text });
@@ -99,23 +110,30 @@ const user_registerMiddleware = async (req, res, next) => {
 };
 
 const user_loginMiddleware = async (req, res, next) => {
-  // const pushData = {
-  //   "security.lastLogin": jsDateToFirebaseDate(new Date()),
-  //
-  // };
-  // pushdata는 front auth()에 있음, 해당값 받아올것
-  // const res = await db_user_update(userId, pushData);
-  if (res.resultCode === 200) {
-    const userData = await db_user_read(userId);
-    return userData;
-  } else {
-    console.log(new Date(), res.error, `\n`);
-    return false;
+  const { userId } = req;
+  const user = await db_user_read(userId);
+
+  if (user.resultCode === 404 || user.resultCode === 500) {
+    res.status(404).json({ message: user.text });
   }
+  const payload = {
+    userId: user.data.userId,
+    userType: user.data.profile.userType,
+  };
+  const newToken = generateToken(payload);
+  console.log(payload);
+  user.data.security = {
+    ...user.data.security,
+    lastLogin: jsDateToFirebaseDate(new Date()),
+    auth_token: newToken,
+  };
+  await db_user_update(userId, user.data);
+  res.status(200).json({ message: "user login access", user, newToken });
 };
 const user_deleteMiddleware = async () => {};
 // user_isExistUser();
 // user_register();
+//로그아웃은 프론트에서 token 삭제 + useradata state 삭제
 module.exports = {
   verifyTokenMiddleware,
   user_isExistUserMiddleware,

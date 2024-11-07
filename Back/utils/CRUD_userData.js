@@ -82,7 +82,7 @@ const db_user_read_query = async (fieldName, value) => {
       return new RESForm({
         resultCode: 200,
         text: "User(s) found successfully",
-        data: userData,
+        data: userData.userId,
       });
     } else {
       return new RESForm({

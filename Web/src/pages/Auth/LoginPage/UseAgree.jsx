@@ -27,7 +27,6 @@ import { restinAPI } from "../../../api/config";
 const UseAgree = () => {
   const location = useLocation();
   const profile = location.state || {};
-  // console.log(profile);
   const navi = useNavigate();
   const [inputRef1, setInputRef1] = useState(false);
   const [inputRef2, setInputRef2] = useState(false);
@@ -41,8 +40,14 @@ const UseAgree = () => {
       },
       body: JSON.stringify(profile),
     });
-    console.log(res);
-    // navi("/app/home");
+    if (res.status === 200) {
+      const { message, user, newToken } = await res.json();
+      const userData = user.data;
+      //userState에 연결
+      navi("/app/home");
+    } else {
+      console.log(error);
+    }
   };
   return (
     <FullBox sx={{ height: "100%" }}>
