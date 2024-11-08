@@ -23,6 +23,8 @@ import { IoIosArrowForward } from "react-icons/io";
 import { BgColorDefault } from "../../../components/common/Bg";
 import NotionLocList from "../../../api/NotionLocList";
 import { restinAPI } from "../../../api/config";
+import { useDispatch, useSelector } from "react-redux";
+import { setuserData } from "../../../store/modules/userSlice";
 
 const UseAgree = () => {
   const location = useLocation();
@@ -31,6 +33,13 @@ const UseAgree = () => {
   const [inputRef1, setInputRef1] = useState(false);
   const [inputRef2, setInputRef2] = useState(false);
   const [inputRef3, setInputRef3] = useState(false);
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.userR.userData);
+
+  useEffect(() => {
+    console.log("후", userData);
+  }, [userData]);
+
   const nextBtnClcik = async () => {
     const res = await fetch(`${restinAPI}/auth/register`, {
       mode: "cors",
@@ -42,7 +51,7 @@ const UseAgree = () => {
     });
     if (res.status === 200) {
       const { message, user, newToken } = await res.json();
-      const userData = user.data;
+      dispatch(setuserData(user.data));
       //userState에 연결
       navi("/app/home");
     } else {

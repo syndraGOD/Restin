@@ -7,8 +7,6 @@ import Dialog from "@mui/material/Dialog";
 import { TextBody, TextHeader3 } from "../designGuide";
 import { css } from "@emotion/react";
 
-// const data = ["username@gmail.com", "user02@gmail.com"];
-
 export const DialogList = (props) => {
   const { data, title, onClose, selectedValue, open } = props;
 

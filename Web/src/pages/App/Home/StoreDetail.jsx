@@ -23,7 +23,7 @@ import {
   TextHeader2,
 } from "../../../components/designGuide";
 import { IoIosArrowBack } from "react-icons/io";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Dialog } from "@mui/material";
 import InnerBox from "../../../components/common/InnerBox";
 import { FaRegClock } from "react-icons/fa";
 import { BiPhoneCall } from "react-icons/bi";
@@ -41,6 +41,7 @@ const StoreDetail = () => {
   const location = useLocation();
   const { item } = location.state || {};
   const [accordionIsVisible, setAccordionIsVisible] = useState(false);
+  const [isStart, setIsStart] = useState(false);
   const innerSize = "12px";
   const settings = {
     dots: true,
@@ -51,6 +52,17 @@ const StoreDetail = () => {
     useCSS: true,
   };
 
+  const nextBtnClick = async () => {
+    const res = await fetch(`${restinAPI}/auth/register`, {
+      mode: "cors",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profile),
+    });
+    // navigate("", { state: { item } });
+  };
   const timeForText = (open, close, breakTime) => {
     const Forkey = ({ children }) => {
       return <>{children}</>;
@@ -485,7 +497,23 @@ const StoreDetail = () => {
             </InBox>
           </FullBox>
         </FullBox>
+
         {/* StartButton */}
+        <Dialog
+          open={isStart}
+          onClose={() => {
+            setIsStart(false);
+          }}
+        >
+          <Button
+            onClick={() => {
+              setIsStart(false);
+            }}
+          >
+            취소
+          </Button>
+          <Button onClick={nextBtnClick}>시작</Button>
+        </Dialog>
         <FullBox
           sx={{
             display: "flex",
@@ -510,7 +538,7 @@ const StoreDetail = () => {
                   : myTheme.palette.SubText.main
               }
               onClick={() => {
-                navigate("/app/using", { state: { item } });
+                setIsStart(true);
               }}
             >
               <TextBtnText color="InfoLight">{nextButtonText}</TextBtnText>

@@ -44,7 +44,12 @@ router.post(
 // Firebase auth를 사용하여, 원래 모든 진입시점에 token이 있었으나,
 // 중간에 fb auth를 제거하여, 임시적으로 순서를 변경하여 register 및 smsverify때는 토큰인증 패스
 // router.use(verifyTokenMiddleware);
-router.get("/login", user_loginMiddleware, (req, res) => {});
+router.get(
+  "/login",
+  verifyTokenMiddleware,
+  user_loginMiddleware,
+  (req, res) => {}
+);
 
 module.exports = router;
 

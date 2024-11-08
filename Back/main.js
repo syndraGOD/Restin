@@ -24,7 +24,7 @@ const { firebaseConfigm, admin } = require("./configFiles/firebaseConfig.js");
 
 const express = require("express");
 const cors = require("cors");
-// const user = require("./routes/userRoutes.js");
+const user = require("./routes/userRoutes.js");
 // const store require("./routes/storeRoutes.js");
 const auth = require("./routes/authRoutes.js");
 // const NotionAPI = require("notion-client");
@@ -38,9 +38,9 @@ let corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json({ extended: true }));
-// app.use("/user", user);
 // app.use("/store", store);
 app.use("/auth", auth);
+app.use("/user", user);
 
 // const getNotion = async (loc) => {
 //   const notion = new NotionAPI();

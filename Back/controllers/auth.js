@@ -121,7 +121,6 @@ const user_loginMiddleware = async (req, res, next) => {
     userType: user.data.profile.userType,
   };
   const newToken = generateToken(payload);
-  console.log(payload);
   user.data.security = {
     ...user.data.security,
     lastLogin: jsDateToFirebaseDate(new Date()),
