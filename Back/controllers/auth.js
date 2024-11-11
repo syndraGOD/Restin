@@ -42,7 +42,7 @@ const verifyTokenMiddleware = async (req, res, next) => {
     req.userId = userId;
     next();
   } catch (error) {
-    console.log(error);
+    console.log("[error] token is invaild or null");
     res.status(401).json({
       result: "forbidden-approach",
       message: "token is expired or invaild",

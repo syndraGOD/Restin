@@ -12,6 +12,7 @@ const {
 } = require("firebase/firestore");
 
 const colNameING = "USAGE_ING_TICKET";
+const colNameWAIT = "USAGE_WAIT_PURCHASE_TICKET";
 const colNameEND = "USAGE_END_TICKET";
 const {
   firebaseDateToJSDate,
@@ -43,5 +44,51 @@ const db_usageTicket_create = async (usage) => {
     });
   }
 };
-const db_usageTicket_delete = async (ticketNumber) => {};
-module.exports = { db_usageTicket_create, db_usageTicket_delete };
+const db_usageTicket_isuse = async (userId) => {
+  const userColRef = collection(db, colNameING);
+  const q = query(userColRef, where("usage.userId", "==", userId));
+  const querySnapshot = await getDocs(q);
+
+  if (querySnapshot.empty) {
+    return new RESForm({
+      resultCode: 200,
+    });
+  } else {
+    const usageData = querySnapshot.docs[0].data();
+    return new RESForm({
+      resultCode: 500,
+      data: usageData,
+    });
+  }
+};
+const db_usageTicket_end = async (usage) => {
+  const { usageLogId } = usage;
+  const usageINGRef = doc(db, colNameING, usageLogId);
+  const usageWAITCol = collection(db, colNameWAIT);
+
+  const newUsageForm = new UsageTicketForm({
+    ...usage,
+  });
+  const obj_usageData = {
+    ...newUsageForm,
+  };
+  try {
+    await setDoc(usageWAITCol, obj_usageData);
+    await deleteDoc(usageINGRef);
+    return new RESForm({
+      resultCode: 200,
+      // data: usageData,
+    });
+  } catch {
+    return new RESForm({
+      resultCode: 500,
+    });
+  }
+};
+const db_usageTicket_delete = async (colName, ticketNumber) => {};
+module.exports = {
+  db_usageTicket_create,
+  db_usageTicket_delete,
+  db_usageTicket_isuse,
+  db_usageTicket_end,
+};

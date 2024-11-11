@@ -35,17 +35,18 @@ import { useEffect, useState } from "react";
 import theme from "../../../style/theme";
 import NotionLocList from "../../../api/NotionLocList";
 import { restinAPI } from "../../../api/config";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setuserData } from "../../../store/modules/userSlice";
 
 const StoreDetail = () => {
   const userData = useSelector((state) => state.userR.userData);
+  const dispatch = useDispatch();
   const innerBoxIconSize = "18px";
   const innerBoxWidth = "26px";
   const myTheme = useTheme();
   const location = useLocation();
   const { item } = location.state || {};
   const storeData = item;
-  console.log(storeData);
   const [accordionIsVisible, setAccordionIsVisible] = useState(false);
   const [isStart, setIsStart] = useState(false);
   const innerSize = "12px";
@@ -59,21 +60,34 @@ const StoreDetail = () => {
   };
 
   const nextBtnClick = async () => {
-    const res = await fetch(`${restinAPI}/user/usage/start`, {
-      mode: "cors",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: "Bearer " + userData.security.auth_token,
-      },
-      body: JSON.stringify({
-        userData,
-        storeInfo: {
-          id: storeData.id,
-          uuid: storeData.UUID,
+    try {
+      const res = await fetch(`${restinAPI}/user/usage/start`, {
+        mode: "cors",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: "Bearer " + userData.security?.auth_token,
         },
-      }),
-    });
+        body: JSON.stringify({
+          userData,
+          storeInfo: {
+            id: storeData.id,
+            uuid: storeData.UUID,
+          },
+        }),
+      });
+      if (res.status === 200) {
+        const awaitRES = await res.json();
+        const resUserData = awaitRES.data;
+        dispatch(setuserData(resUserData));
+      } else {
+        console.log("이용시작 실패");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    //resultCODE가 200일때와 아닐때 예외처리
+
     // navigate("", { state: { item } });
   };
   const timeForText = (open, close, breakTime) => {
