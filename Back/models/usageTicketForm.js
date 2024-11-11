@@ -15,6 +15,8 @@
  * @property {?FirebaseDateObject} endTime - 종료 시간.
  * @property {?number} totalUsageDuration - 총 사용 시간 (초).
  * @property {?string} purchaseTicketId - 결제 티켓 식별자.
+ * @property {?number} storeId - 결제 티켓 식별자.
+ * @property {?string} storeUUID - 결제 티켓 식별자.
  */
 
 /**
@@ -34,6 +36,8 @@ class UsageTicketForm {
       startTime: usage.startTime ?? null,
       endTime: usage.endTime ?? null,
       totalUsageDuration: usage.totalUsageDuration ?? null,
+      storeId: usage.storeId ?? null,
+      storeUUID: usage.storeUUID ?? null,
       purchaseTicketId: usage.purchaseTicketId ?? null,
     };
   }

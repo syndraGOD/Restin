@@ -40,6 +40,8 @@
  * @property {?FirebaseDateObject} endTime - 종료 시간.
  * @property {?number} totalUsageDuration - 총 사용 시간 (초).
  * @property {?string} purchaseTicket - 결제 티켓 식별자
+ * @property {?number} storeId - 결제 티켓 식별자.
+ * @property {?string} storeUUID - 결제 티켓 식별자.
  */
 
 /**
@@ -138,6 +140,8 @@ class UserForm {
       endTime: usage.endTime ?? null,
       totalUsageDuration: usage.totalUsageDuration ?? null,
       purchaseTicket: usage.purchaseTicket ?? null,
+      storeId: usage.storeId ?? null,
+      storeUUID: usage.storeUUID ?? null,
     };
 
     this.address = {

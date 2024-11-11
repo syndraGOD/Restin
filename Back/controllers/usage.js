@@ -7,6 +7,7 @@ const {
   db_user_update,
   db_user_delete,
 } = require("../utils/CRUD_userData.js");
+const { db_usageTicket_create } = require("../utils/CRUD_usageTicket.js");
 const { v4: uuidv4 } = require("uuid");
 const { jsDateToFirebaseDate } = require("../utils/firebaseDateConverter.js");
 
@@ -26,20 +27,28 @@ const usage_start = async (req, res, next) => {
   if (req.startTime) {
     res.status(400).json({ message: "user is already in use " });
   }
-  const { userId, usage } = req;
+  //스토어 영업시간 이내인지 확인 만약 지났거나, 20분 이내로 남았다면 시작불가
+  const { userData, storeInfo } = req.body;
+  console.log(userData.usage);
+  let { userId, usage } = userData;
+  const { id, uuid } = storeInfo;
   usage = {
     ...usage,
     userId: req.userId,
     usageLogId: uuidv4(),
     startTime: jsDateToFirebaseDate(new Date()),
+    storeId: id,
+    storeUUID: uuid,
   };
-  let dbRes = db_usageTicket_create(usage);
+  userData.usage = usage;
+  req.userData = userData;
+  let dbRes = await db_usageTicket_create(usage);
   if (dbRes.resultCode !== 200) {
-    res.status(res.resultCode).json({ message: res.text });
+    res.status(dbRes.resultCode).json({ message: dbRes.text });
   }
-  let userRes = db_user_update(userId, { usage });
+  let userRes = await db_user_update(userId, { usage });
   if (userRes.resultCode !== 200) {
-    res.status(res.resultCode).json({ message: res.text });
+    res.status(userRes.resultCode).json({ message: userRes.text });
   }
   next();
 };

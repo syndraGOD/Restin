@@ -34,12 +34,18 @@ import { FaAngleDown } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import theme from "../../../style/theme";
 import NotionLocList from "../../../api/NotionLocList";
+import { restinAPI } from "../../../api/config";
+import { useSelector } from "react-redux";
+
 const StoreDetail = () => {
+  const userData = useSelector((state) => state.userR.userData);
   const innerBoxIconSize = "18px";
   const innerBoxWidth = "26px";
   const myTheme = useTheme();
   const location = useLocation();
   const { item } = location.state || {};
+  const storeData = item;
+  console.log(storeData);
   const [accordionIsVisible, setAccordionIsVisible] = useState(false);
   const [isStart, setIsStart] = useState(false);
   const innerSize = "12px";
@@ -53,13 +59,20 @@ const StoreDetail = () => {
   };
 
   const nextBtnClick = async () => {
-    const res = await fetch(`${restinAPI}/auth/register`, {
+    const res = await fetch(`${restinAPI}/user/usage/start`, {
       mode: "cors",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        authorization: "Bearer " + userData.security.auth_token,
       },
-      body: JSON.stringify(profile),
+      body: JSON.stringify({
+        userData,
+        storeInfo: {
+          id: storeData.id,
+          uuid: storeData.UUID,
+        },
+      }),
     });
     // navigate("", { state: { item } });
   };

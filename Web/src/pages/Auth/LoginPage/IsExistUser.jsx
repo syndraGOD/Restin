@@ -14,8 +14,11 @@ import { Form, useNavigate } from "react-router-dom";
 import { TextBold } from "../../../components/designGuide";
 import { BgColorDefault } from "../../../components/common/Bg";
 import { restinAPI } from "../../../api/config";
+import { setuserData } from "../../../store/modules/userSlice";
+import { useDispatch } from "react-redux";
 
 const IsExistUser = () => {
+  const dispatch = useDispatch();
   const navi = useNavigate();
   let [isFirstVerifiCodeSend, setIsFirstVerifiCodeSend] = useState(false);
   const PhoneNumberRef = useRef();
@@ -24,6 +27,7 @@ const IsExistUser = () => {
   const [inputVerifiCode, setInputVerifiCode] = useState("");
   const [confirmBtn, setConfirmBtn] = useState(false);
   const [verifiCode, setVerifiCode] = useState();
+  //input - number 폼을 실시간 규격화
   const PhoneNumberAutoSpace = (e) => {
     if (e.target.value.replace(/\s/g, "").length < 12) {
       setInputPhoneNumber(
@@ -34,6 +38,7 @@ const IsExistUser = () => {
       );
     }
   };
+  //input - 인증번호 폼을 실시간 규격화
   const VerifiCodeInputState = (e) => {
     if (e.target.value.replace(/\s/g, "").length < 7) {
       setInputVerifiCode(e.target.value.replace(/[^0-9]/g, ""));
@@ -47,6 +52,9 @@ const IsExistUser = () => {
       }
     }
   };
+  //인증번호 검증 / send : smsverify & 인증번호 res.json().verifiCode
+  //인증번호가 동일하면 버튼 disables를 비활성화, 보안에 문제있는 방식이긴 하겠지만,
+  // 우선은 디자이너 의도에 따라 개발
   const VerifiSendBtnClick = async () => {
     try {
       const phoneNumber = inputPhoneNumber.replaceAll(" ", "");
@@ -70,6 +78,9 @@ const IsExistUser = () => {
     setIsFirstVerifiCodeSend(true);
     verifiRef.current.focus();
   };
+
+  //다음페이지로 넘어가기
+  //가입 번호면 data를 store에 저장 + app/home, 미가입번호면 registerPage
   const NextBtnClick = async (e) => {
     //백으로 있는 유저인지 확인
     // if (verifiCode !== inputVerifiCode) return;
@@ -82,12 +93,25 @@ const IsExistUser = () => {
       method: "GET",
       headers: headers,
     });
+    const resData = await res.json();
     const isUserRegister = res.status === 200 ? true : false;
     // console.log(isUserRegister);
     // true : regiter - if failed regis (make list) , false: exist user
     if (isUserRegister) {
-      //login fetch() =>
-      //global state에 유저정보 띄우기
+      const headers_login = {
+        userVerifiCode: inputVerifiCode,
+        phonenumber: phoneNumber,
+        userId: resData.userId,
+      };
+      const res_login = await fetch(`${restinAPI}/auth/login_sms`, {
+        mode: "cors",
+        method: "GET",
+        headers: headers_login,
+      });
+      const awaitRESLogin = await res_login.json();
+      const userData = awaitRESLogin.user.data;
+      dispatch(setuserData(userData));
+      //global state에 유저정보 set
       navi("/app/home");
     } else {
       navi("/login/register", {
@@ -96,6 +120,7 @@ const IsExistUser = () => {
     }
   };
 
+  //페이지 진입시 폰번호 입력칸에 자동 포커스
   useEffect(() => {
     PhoneNumberRef.current.focus();
   }, []);

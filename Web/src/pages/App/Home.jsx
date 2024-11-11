@@ -62,6 +62,8 @@ const Home = () => {
   // const dispatch = useDispatch();
   const filter = useSelector((state) => state.filterR.filter);
   const storeData = useSelector((state) => state.storeR.storeData);
+  const userData = useSelector((state) => state.userR.userData);
+  console.log(userData);
   const dispatch = useDispatch();
 
   const storeListGetAll = async (db) => {
@@ -75,7 +77,6 @@ const Home = () => {
     });
     // console.log(resData);
     setFetchData(resData);
-    console.log("이미지 다운");
     const getItemImgList = async (array) => {
       const newImgList = await Promise.all(
         array.map(async (item) => {

@@ -11,24 +11,27 @@ const {
   getDocs,
 } = require("firebase/firestore");
 
-const colName = "USAGE_TICKETS";
+const colNameING = "USAGE_ING_TICKET";
+const colNameEND = "USAGE_END_TICKET";
 const {
   firebaseDateToJSDate,
   jsDateToFirebaseDate,
 } = require("./firebaseDateConverter.js");
+const RESForm = require("../models/inPacketForm.js");
+const UsageTicketForm = require("../models/usageTicketForm.js");
 
 const db_usageTicket_create = async (usage) => {
   const { usageLogId } = usage;
-  const newUserForm = new UserForm({
+  const newUserForm = new UsageTicketForm({
     ...usage,
   });
   const obj_userData = {
     ...newUserForm,
   };
   try {
-    const userRef = doc(db, colName, usageLogId); //obj_userData.userId);
+    const userRef = doc(db, colNameING, usageLogId); //obj_userData.userId);
     await setDoc(userRef, obj_userData);
-    console.log("New UsageTicket Created / nick : ", usageLogId);
+    console.log("New UsageTicket / code : ", usageLogId);
     return new RESForm({
       resultCode: 200,
     });
@@ -41,4 +44,4 @@ const db_usageTicket_create = async (usage) => {
   }
 };
 const db_usageTicket_delete = async (ticketNumber) => {};
-module.exports(db_usageTicket_create, db_usageTicket_delete);
+module.exports = { db_usageTicket_create, db_usageTicket_delete };

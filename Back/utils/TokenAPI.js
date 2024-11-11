@@ -1,9 +1,32 @@
+const utcFromTimestamp = (time) => {
+  const hour9 = 32400000;
+  return new Date(time * 1000 + hour9); //32400000 = 9시간 / utc 시간 한국시간맞추기
+};
+
 const jwt = require("jsonwebtoken");
 require("dotenv").config({ path: "configFiles/.env" });
-
+const hour = 60 * 60;
+const day = hour * 24;
+const month = day * 30;
 const secretKey = process.env.JWT_SECRET_KEY;
+
+const now = Math.floor(Date.now() / 1000); // 현재 시각 (초 단위)
+const tokenExp = day * 1; // 3개월을 초 단위로 환산
+// tokenExp = now;
+// console.log(utcFromTimestamp(tokenExp));
+const expirationTime = now + tokenExp; // 24시간 뒤 만료
+const options = {
+  iat: now,
+  exp: expirationTime,
+};
+
 const generateToken = (payload) => {
-  const token = jwt.sign(payload, secretKey, { expiresIn: "5m" });
+  // console.log();
+  const newPayload = {
+    ...payload,
+    ...options,
+  };
+  const token = jwt.sign(newPayload, secretKey);
   return token;
 };
 
@@ -24,4 +47,5 @@ const refreshToken = (token) => {
     return null;
   }
 };
-module.exports = { jwt, generateToken, refreshToken };
+
+module.exports = { jwt, generateToken, refreshToken, utcFromTimestamp };

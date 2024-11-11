@@ -79,10 +79,12 @@ const db_user_read_query = async (fieldName, value) => {
 
     if (!querySnapshot.empty) {
       const userData = querySnapshot.docs.map((doc) => doc.data());
+      // console.log(82, userData);
+      // 여기에 비활성화된 유저는 검색 안되게 추가
       return new RESForm({
         resultCode: 200,
         text: "User(s) found successfully",
-        data: userData.userId,
+        data: userData[0].userId,
       });
     } else {
       return new RESForm({

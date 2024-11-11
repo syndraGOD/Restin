@@ -10,10 +10,10 @@ const router = express.Router();
 
 router.use(verifyTokenMiddleware);
 
-router.post("/usage/start", usage_isUsing, usage_start, (req, res) => {
+router.post("/usage/start", usage_start, (req, res) => {
   res.status(200).json({ message: "user start Restin!" });
 });
-router.post("/usage/stop", usage_isUsing, usage_stop, (req, res) => {
+router.post("/usage/stop", usage_stop, (req, res) => {
   res.status(200).json({ message: "user stoped" });
 });
 router.post("/usage/isUsage", usage_isUsing, (req, res) => {
