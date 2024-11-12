@@ -31,7 +31,7 @@ import StoreFilterPage from "./pages/App/Home/StoreFilter";
 import { Provider as Reducer } from "react-redux";
 import { store } from "@/store";
 import ServiceUsing from "./pages/App/Home/ServiceUsing";
-import NotionPage from "./components/common/NotionPage";
+// import NotionPage from "./components/common/NotionPage";
 import SettingPage from "./pages/Setting/SettingPage";
 import TermsListPage from "./pages/Setting/TermsOfUse/TermsListPage";
 import NotificationSetting from "./pages/Setting/NotificationSetting";
@@ -142,7 +142,7 @@ function App() {
                   ></Route>
                   <Route
                     path="/notionPage/:pageNumber"
-                    element={<NotionPage />}
+                    // element={<NotionPage />}
                   ></Route>
                 </Routes>
 

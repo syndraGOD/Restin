@@ -39,7 +39,9 @@ import NotionLocList from "../../../api/NotionLocList";
 import { restinAPI } from "../../../api/config";
 import { useDispatch, useSelector } from "react-redux";
 import { setuserData } from "../../../store/modules/userSlice";
+import DialogPage from "../../../components/common/DialogPage";
 
+import { TermsOfUse } from "../../../components/dialogPages/TermsOfUse";
 const StoreDetail = () => {
   const userData = useSelector((state) => state.userR.userData);
   const dispatch = useDispatch();
@@ -52,6 +54,7 @@ const StoreDetail = () => {
   const storeData = item;
   const [accordionIsVisible, setAccordionIsVisible] = useState(false);
   const [isStart, setIsStart] = useState(false);
+  const [test, settest] = useState(false);
   const innerSize = "12px";
   const settings = {
     dots: true,
@@ -231,6 +234,14 @@ const StoreDetail = () => {
   const [storeState, storeCloseReason] = StoreOpeningText();
 
   const navigate = useNavigate();
+  const [markdown, setMarkdown] = useState("");
+  // useEffect(() => {
+  //   fetch("../../../api/Rules/allRules.md")
+  //     .then(async (res) => {
+  //       return await res.text();
+  //     })
+  //     .then((text) => setMarkdown(text));
+  // }, []);
   return (
     <Page className="divJCC">
       <FullBox
@@ -530,7 +541,6 @@ const StoreDetail = () => {
             </InBox>
           </FullBox>
         </FullBox>
-
         {/* StartButton */}
         <Dialog
           open={isStart}
@@ -570,7 +580,11 @@ const StoreDetail = () => {
             <Box>
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <TextBodySmall color="Gray.500">서비스 이용약관</TextBodySmall>
-                <IoIosArrowForward />
+                <IoIosArrowForward
+                  onClick={() => {
+                    settest(true);
+                  }}
+                />
               </Box>
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <TextBodySmall color="Gray.500">
@@ -617,6 +631,14 @@ const StoreDetail = () => {
             </Box>
           </Box>
         </Dialog>
+        <DialogPage
+          state={test}
+          onClose={() => {
+            settest(false);
+          }}
+        >
+          {TermsOfUse}
+        </DialogPage>
         <FullBox
           sx={{
             display: "flex",
