@@ -12,8 +12,7 @@ const { jsDateToFirebaseDate } = require("../utils/firebaseDateConverter.js");
 const sendMsg = require("../utils/SMS_message.js");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const { generateToken } = require("../utils/TokenAPI.JS");
-const { utcFromTimestamp } = require("../utils/TokenAPI.JS");
+const { generateToken, utcFromTimestamp } = require("../utils/TokenAPI.js");
 
 const smsVerify = {
   //솔직히 이딴 방법 쓰면 안되는데, /login에서 유저정보 검증은 해야되겠고

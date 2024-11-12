@@ -14,6 +14,8 @@ const {
 } = require("../utils/CRUD_usageTicket.js");
 const { v4: uuidv4 } = require("uuid");
 const { jsDateToFirebaseDate } = require("../utils/firebaseDateConverter.js");
+const UsageTicketForm = require("../models/usageTicketForm.js");
+const e = require("express");
 
 const usage_isUsing = async (req, res, next) => {
   const { userId } = req;
@@ -48,14 +50,17 @@ const usage_start = async (req, res, next) => {
     userData.usage = usage;
     req.userData = userData;
     let dbRes = await db_usageTicket_create(usage);
-    if (dbRes.resultCode !== 200) {
+
+    if (dbRes.resultCode === 200) {
+      let userRes = await db_user_update(userId, { usage });
+      if (userRes.resultCode === 200) {
+        next();
+      } else {
+        res.status(userRes.resultCode).json({ message: userRes.text });
+      }
+    } else {
       res.status(dbRes.resultCode).json({ message: dbRes.text });
     }
-    let userRes = await db_user_update(userId, { usage });
-    if (userRes.resultCode !== 200) {
-      res.status(userRes.resultCode).json({ message: userRes.text });
-    }
-    next();
   }
 };
 
@@ -79,16 +84,20 @@ const usage_stop = async (req, res, next) => {
         seconds: usage.endTime.seconds - usage.startTime.seconds,
       },
     };
-    userData.usage = usage;
+
+    const newUsage = new UsageTicketForm({ userId });
+    userData.usage = newUsage;
     req.userData = userData;
-    let dbRes = await db_usageTicket_end(usage);
-    if (dbRes.resultCode !== 200) {
-      next();
-      // res.status(dbRes.resultCode).json({ message: dbRes.text });
-    }
-    let userRes = await db_user_update(userId, { usage });
-    if (userRes.resultCode !== 200) {
-      res.status(userRes.resultCode).json({ message: userRes.text });
+    let dbRes = await db_user_update(userId, { usage: newUsage.usage });
+    if (dbRes.resultCode === 200) {
+      let userRes = await db_usageTicket_end(usage);
+      if (userRes.resultCode === 200) {
+        next();
+      } else {
+        res.status(userRes.resultCode).json({ message: userRes.text });
+      }
+    } else {
+      res.status(dbRes.resultCode).json({ message: dbRes.text });
     }
   }
 };

@@ -1,5 +1,5 @@
-import data from "./data.js";
-import {
+const data = require("./data.js");
+const {
   getFirestore,
   collection,
   getDoc,
@@ -8,13 +8,13 @@ import {
   doc,
   updateDoc,
   runTransaction,
-} from "firebase/firestore";
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "./firebaseConfig.js";
+} = require("firebase/firestore");
+const { initializeApp } = require("firebase/app");
+const { firebaseConfig } = require("../configFiles/firebaseConfig.js");
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export const storeListUpdate = async (db) => {
+const storeListUpdate = async (db) => {
   const colName = "STORE";
   const col = collection(db, colName);
   data.map(async (itemData) => {
@@ -40,4 +40,3 @@ export const storeListUpdate = async (db) => {
 // }
 
 storeListUpdate(db);
-export default storeListUpdate;

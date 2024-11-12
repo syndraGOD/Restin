@@ -40,6 +40,8 @@ import Welcome6 from "./pages/Auth/welcomPage/Welcome6";
 import RegisterPage from "./pages/Auth/LoginPage/RegisterPage";
 import IsExistUser from "./pages/Auth/LoginPage/IsExistUser";
 import UseAgree from "./pages/Auth/LoginPage/UseAgree";
+import PurchaseIng from "./pages/Purchase/PurchaseIng";
+import PurchaseFinish from "./pages/Purchase/PurchaseFinish";
 // import { GoogleAuthProvider } from "firebase/auth";
 
 //const app =
@@ -124,10 +126,11 @@ function App() {
                     </Route>
                     <Route path="using" element={<ServiceUsing />}></Route>
                   </Route>
-                  <Route
-                    path="/purchase/listLog"
-                    element={<PurchaseLogList />}
-                  ></Route>
+                  <Route path="/purchase">
+                    <Route path="listLog" element={<PurchaseLogList />}></Route>
+                    <Route path="payment" element={<PurchaseIng />}></Route>
+                    <Route path="finish" element={<PurchaseFinish />}></Route>
+                  </Route>
                   <Route path="/myInfo/home" element={<SettingPage />}></Route>
                   <Route
                     path="/myInfo/notifi"

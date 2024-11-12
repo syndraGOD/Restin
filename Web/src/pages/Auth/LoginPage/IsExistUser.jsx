@@ -27,6 +27,7 @@ const IsExistUser = () => {
   const [inputVerifiCode, setInputVerifiCode] = useState("");
   const [confirmBtn, setConfirmBtn] = useState(false);
   const [verifiCode, setVerifiCode] = useState();
+  const [verifiFail, setVerifiFail] = useState(false);
   //input - number 폼을 실시간 규격화
   const PhoneNumberAutoSpace = (e) => {
     if (e.target.value.replace(/\s/g, "").length < 12) {
@@ -83,7 +84,13 @@ const IsExistUser = () => {
   //가입 번호면 data를 store에 저장 + app/home, 미가입번호면 registerPage
   const NextBtnClick = async (e) => {
     //백으로 있는 유저인지 확인
-    // if (verifiCode !== inputVerifiCode) return;
+    if (verifiCode !== inputVerifiCode) {
+      setInputVerifiCode("");
+      verifiRef.current.focus();
+      setVerifiFail(true);
+      setConfirmBtn(false);
+      return;
+    }
     const phoneNumber = inputPhoneNumber.replaceAll(" ", "");
     const headers = {
       phonenumber: phoneNumber,
@@ -195,13 +202,13 @@ const IsExistUser = () => {
           </Box>
           <Box width={"100%"}>
             <TextField
-              error={confirmBtn && verifiCode !== inputVerifiCode}
+              error={verifiFail && inputVerifiCode.length === 0}
               inputRef={verifiRef}
               variant="standard"
               fullWidth
               label="인증번호"
               helperText={
-                confirmBtn && verifiCode !== inputVerifiCode
+                verifiFail && inputVerifiCode.length !== 0
                   ? "* 인증번호를 다시 확인해주세요"
                   : "* 어떤 경우에도 타인에게 공유하지 마세요"
               }

@@ -13,20 +13,79 @@ import {
 } from "../../../components/designGuide";
 import InBox from "../../../components/common/InBox";
 import { Box, Button, Dialog } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import theme from "../../../style/theme";
 import { PiWifiHighBold } from "react-icons/pi";
 import manImage from "@assets/icons/Icon-ToiletMan-36px-ICE.png";
 import womanImage from "@assets/icons/Icon-ToiletWoman-36px-HOT.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { restinAPI } from "../../../api/config";
+import { setuserData } from "../../../store/modules/userSlice";
 
 const ServiceUsing = () => {
+  const userData = useSelector((state) => state.userR.userData);
+  const dispatch = useDispatch();
   const location = useLocation();
   const { item } = location.state || {};
+  const storeData = item;
   const myTheme = useTheme();
+  const navi = useNavigate();
   // console.log(item);
   const [manDialogOpen, setManDialogOpen] = useState(false);
   const [womanDialogOpen, setWomanDialogOpen] = useState(false);
+  const [useDurationTime, setuseDurationTime] = useState(0);
+  const [isEnd, setIsEnd] = useState(false);
+  const usageEndClick = async () => {
+    try {
+      const res = await fetch(`${restinAPI}/user/usage/stop`, {
+        mode: "cors",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: "Bearer " + userData.security?.auth_token,
+        },
+        body: JSON.stringify({
+          userData,
+        }),
+      });
+      if (res.status === 200) {
+        const awaitRES = await res.json();
+        const resUserData = awaitRES.data;
+        dispatch(setuserData(resUserData));
+        navi("/purchase/payment", { state: { item } });
+      } else {
+        setIsEnd(false);
+        const awaitRES = await res.json();
+        console.log("이용시작 실패", awaitRES.message);
+      }
+    } catch (error) {
+      setIsEnd(false);
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const fbDate = userData.usage.startTime;
+    let durationMillisec, durationSec, durationMin;
+
+    const duration = () => {
+      const now = new Date();
+      durationMillisec =
+        now.getTime() - (fbDate.seconds * 1000 + fbDate.nanoseconds / 1e6);
+
+      durationSec = Math.floor(durationMillisec / 1000);
+      durationMin = Math.floor(durationMillisec / 1000 / 60);
+    };
+    const reloadDurationTime = () => {
+      duration();
+      setuseDurationTime(durationMin);
+    };
+    duration();
+    setuseDurationTime(durationMin);
+
+    setInterval(reloadDurationTime, 1000);
+  }, []);
   return (
     // after select cafe, show cafe's detail info
     <Page
@@ -83,7 +142,7 @@ const ServiceUsing = () => {
       <FullBox className="Header2 center">
         <InBox>
           <TextHeader2 color="InfoLight" sx={{ padding: "0px 0px 30px 0px" }}>
-            다솜 카페
+            {item.name}
           </TextHeader2>
         </InBox>
       </FullBox>
@@ -364,13 +423,16 @@ const ServiceUsing = () => {
           >
             <Box width={"50%"}>
               <TextBodyLarge sx={{ fontWeight: "bold" }} color="InfoDark">
-                0시간 27분
+                {useDurationTime > 60
+                  ? `${Math.floor(useDurationTime / 60)}시간`
+                  : ``}
+                {`${useDurationTime % 60 < 0 ? "0" : useDurationTime % 60}`}분
               </TextBodyLarge>
               <TextBold color="MainText">사용 시간</TextBold>
             </Box>
             <Box width={"50%"}>
               <TextBodyLarge sx={{ fontWeight: "bold" }} color="InfoDark">
-                1,500원
+                {storeData.unitPrice * (1 + Math.floor(useDurationTime / 10))}원
               </TextBodyLarge>
               <TextBold color="MainText">사용 요금</TextBold>
             </Box>
@@ -381,6 +443,9 @@ const ServiceUsing = () => {
       <FullBox className="endbutton center">
         <InBox>
           <Box
+            onClick={() => {
+              setIsEnd(true);
+            }}
             component={Button}
             css={css`
               width: 100%;
@@ -394,6 +459,83 @@ const ServiceUsing = () => {
           >
             <TextBtnText color="InfoLight">사용 종료하기</TextBtnText>
           </Box>
+          <Dialog
+            open={isEnd}
+            onClose={() => {
+              setIsEnd(false);
+            }}
+            css={css`
+              .MuiDialog-paper {
+                width: 280px;
+                height: 275px;
+                border-radius: 15px;
+                background-color: white;
+                text-align: center;
+                display: flex;
+                /* justify-content: center; */
+                align-items: center;
+              }
+            `}
+          >
+            <Box
+              sx={{
+                width: "80%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-evenly",
+                flex: 1,
+                marginBottom: "10px",
+              }}
+            >
+              <TextHeader3 color="Gray.700" sx={{ fontWeight: 700 }}>
+                종료할까요?
+              </TextHeader3>
+              <TextBody color="Gray.900">
+                종료 시 자리 청소를 위해
+                <br />
+                사장님께 종료 알림을 보내드려요
+              </TextBody>
+            </Box>
+            <Box className="divJCC" sx={{ marginBottom: "9px" }}>
+              <Box>
+                <Button
+                  sx={{
+                    marginRight: "8px",
+                    width: "127px",
+                    height: "50px",
+                    bgcolor: "SubText.main",
+                    borderRadius: "14px",
+                  }}
+                  onClick={() => {
+                    setIsEnd(false);
+                  }}
+                >
+                  <TextBodyLarge
+                    color="InfoLight.main"
+                    sx={{ fontWeight: 700 }}
+                  >
+                    취소
+                  </TextBodyLarge>
+                </Button>
+                <Button
+                  sx={{
+                    width: "127px",
+                    height: "50px",
+                    bgcolor: "PrimaryBrand.main",
+                    borderRadius: "14px",
+                  }}
+                  onClick={usageEndClick}
+                >
+                  <TextBodyLarge
+                    color="InfoLight.main"
+                    sx={{ fontWeight: 700 }}
+                  >
+                    종료
+                  </TextBodyLarge>
+                </Button>
+              </Box>
+            </Box>
+          </Dialog>
         </InBox>
       </FullBox>
     </Page>

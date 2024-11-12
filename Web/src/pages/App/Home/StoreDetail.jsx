@@ -18,15 +18,17 @@ import { useTheme } from "@mui/material/styles";
 import {
   TextBody,
   TextBodyLarge,
+  TextBodySmall,
   TextBold,
   TextBtnText,
   TextHeader2,
+  TextHeader3,
 } from "../../../components/designGuide";
-import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Box, Button, Dialog } from "@mui/material";
 import InnerBox from "../../../components/common/InnerBox";
 import { FaRegClock } from "react-icons/fa";
-import { BiPhoneCall } from "react-icons/bi";
+import { BiArrowToRight, BiPhoneCall } from "react-icons/bi";
 import { FaInstagram } from "react-icons/fa";
 import BtnDefault from "../../../components/BtnDefault";
 import { today } from "../../../api/timeCheck";
@@ -44,6 +46,7 @@ const StoreDetail = () => {
   const innerBoxIconSize = "18px";
   const innerBoxWidth = "26px";
   const myTheme = useTheme();
+  const navi = useNavigate();
   const location = useLocation();
   const { item } = location.state || {};
   const storeData = item;
@@ -80,10 +83,13 @@ const StoreDetail = () => {
         const awaitRES = await res.json();
         const resUserData = awaitRES.data;
         dispatch(setuserData(resUserData));
+        navi("/app/using", { state: { item } });
       } else {
+        setIsStart(false);
         console.log("이용시작 실패");
       }
     } catch (error) {
+      setIsStart(false);
       console.log(error);
     }
     //resultCODE가 200일때와 아닐때 예외처리
@@ -531,15 +537,85 @@ const StoreDetail = () => {
           onClose={() => {
             setIsStart(false);
           }}
+          css={css`
+            .MuiDialog-paper {
+              width: 280px;
+              height: 275px;
+              border-radius: 15px;
+              background-color: white;
+              text-align: center;
+              display: flex;
+              /* justify-content: center; */
+              align-items: center;
+            }
+          `}
         >
-          <Button
-            onClick={() => {
-              setIsStart(false);
+          <Box
+            sx={{
+              width: "80%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-evenly",
+              flex: 1,
             }}
           >
-            취소
-          </Button>
-          <Button onClick={nextBtnClick}>시작</Button>
+            <TextHeader3 color="Gray.700" sx={{ fontWeight: 700 }}>
+              사용 시작할까요?
+            </TextHeader3>
+            <TextBody color="Gray.900">
+              사용한 시간만큼 요금이 계산되고
+              <br />
+              사용 종료 후 결제해요!
+            </TextBody>
+            <Box>
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <TextBodySmall color="Gray.500">서비스 이용약관</TextBodySmall>
+                <IoIosArrowForward />
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <TextBodySmall color="Gray.500">
+                  취소 및 환불 규칙
+                </TextBodySmall>
+                <IoIosArrowForward />
+              </Box>
+            </Box>
+            <TextBodySmall color="Gray.500">
+              위 내용을 확인하였으며 결제에 동의합니다
+            </TextBodySmall>
+          </Box>
+          <Box className="divJCC" sx={{ marginBottom: "9px" }}>
+            <Box>
+              <Button
+                sx={{
+                  marginRight: "8px",
+                  width: "127px",
+                  height: "50px",
+                  bgcolor: "SubText.main",
+                  borderRadius: "14px",
+                }}
+                onClick={() => {
+                  setIsStart(false);
+                }}
+              >
+                <TextBodyLarge color="InfoLight.main" sx={{ fontWeight: 700 }}>
+                  취소
+                </TextBodyLarge>
+              </Button>
+              <Button
+                sx={{
+                  width: "127px",
+                  height: "50px",
+                  bgcolor: "PrimaryBrand.main",
+                  borderRadius: "14px",
+                }}
+                onClick={nextBtnClick}
+              >
+                <TextBodyLarge color="InfoLight.main" sx={{ fontWeight: 700 }}>
+                  시작
+                </TextBodyLarge>
+              </Button>
+            </Box>
+          </Box>
         </Dialog>
         <FullBox
           sx={{

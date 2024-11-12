@@ -30,6 +30,8 @@ export const theme = createTheme({
   palette: {
     PrimaryBrand: {
       main: "#F58515",
+      Light: "#FFA554",
+      Pale: "#FFC999",
     },
 
     PrimaryBrand_Back: {
@@ -57,6 +59,20 @@ export const theme = createTheme({
     },
     MainBackground: {
       main: "#ECF1F4",
+    },
+    Gray: {
+      100: "#f8f8f8",
+      200: "#E8E8E8",
+      300: "#D1D1D1",
+      400: "#BABABA",
+      500: "#A3A3A3",
+      600: "#8B8B8B",
+      700: "#747474",
+      800: "#464646",
+      900: "#2F2F2F",
+    },
+    Red: {
+      main: "#E53939",
     },
   },
 });
