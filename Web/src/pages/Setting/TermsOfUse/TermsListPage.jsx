@@ -11,11 +11,31 @@ import InBox from "../../../components/common/InBox";
 import { useNavigate } from "react-router-dom";
 import NotionLocList from "../../../api/NotionLocList";
 import Navigation from "../../../components/common/Navigation";
+import { useState } from "react";
+import GetNotionJSX from "../../../components/common/NotionPageGet";
+import DialogPage from "../../../components/common/DialogPage";
 
 const TermsListPage = () => {
   const navi = useNavigate();
+  const [dialog, setDialog] = useState(false);
+  const [dialogText, setDialogText] = useState();
+  const [dialogH2, setDialogH2] = useState();
+  const SetDialogPage = ({ text, h2 }) => {
+    setDialogText(text);
+    setDialogH2(h2);
+    setDialog(true);
+  };
   return (
     <Page sx={{ display: "flex", flexDirection: "column" }}>
+      <DialogPage
+        state={dialog}
+        onClose={() => {
+          setDialog(false);
+        }}
+        h2={dialogH2}
+      >
+        {dialogText}
+      </DialogPage>
       <Box
         className="BackgroundImageBlur"
         sx={{
@@ -38,7 +58,10 @@ const TermsListPage = () => {
           <InfoBox>
             <Button
               onClick={() => {
-                navi(`/notionPage/${NotionLocList.termsofuse}`);
+                SetDialogPage({
+                  text: <GetNotionJSX loc={NotionLocList.termsofuse} />,
+                  h2: "",
+                });
               }}
             >
               <TextBold color="InfoDark">서비스 이용약관</TextBold>
@@ -46,7 +69,10 @@ const TermsListPage = () => {
             </Button>
             <Button
               onClick={() => {
-                navi(`/notionPage/${NotionLocList.privacypolicy}`);
+                SetDialogPage({
+                  text: <GetNotionJSX loc={NotionLocList.privacypolicy} />,
+                  h2: "",
+                });
               }}
             >
               <TextBold color="InfoDark">개인정보 처리방침</TextBold>
@@ -54,7 +80,12 @@ const TermsListPage = () => {
             </Button>
             <Button
               onClick={() => {
-                navi(`/notionPage/${NotionLocList.locationinformation}`);
+                SetDialogPage({
+                  text: (
+                    <GetNotionJSX loc={NotionLocList.locationinformation} />
+                  ),
+                  h2: "",
+                });
               }}
             >
               <TextBold color="InfoDark">위치정보 이용약관</TextBold>

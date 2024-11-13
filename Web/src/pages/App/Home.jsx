@@ -67,34 +67,38 @@ const Home = () => {
   const dispatch = useDispatch();
 
   const storeListGetAll = async (db) => {
-    const colName = "STORE";
-    const col = collection(db, colName);
+    if (storeData.length === 0) {
+      const colName = "STORE";
+      const col = collection(db, colName);
 
-    const temps = await getDocs(col);
-    const resData = [];
-    temps.forEach((item) => {
-      resData.push(item.data());
-    });
-    // console.log(resData);
-    setFetchData(resData);
-    const getItemImgList = async (array) => {
-      const newImgList = await Promise.all(
-        array.map(async (item) => {
-          let imgArr = [];
-          const ref = `StoreImage/store(${item.id})`;
-          const itemImgList = await getImgList(ref);
-          await Promise.all(
-            itemImgList.items.map(async (img) => {
-              const imgURL = await getImg(img.fullPath);
-              imgArr.push(imgURL);
-            })
-          );
-          return { ...item, imgURL: imgArr };
-        })
-      );
-      dispatch(setStoreData(newImgList));
-    };
-    getItemImgList(resData);
+      const temps = await getDocs(col);
+      const resData = [];
+      temps.forEach((item) => {
+        resData.push(item.data());
+      });
+      // console.log(resData);
+      setFetchData(resData);
+      const getItemImgList = async (array) => {
+        const newImgList = await Promise.all(
+          array.map(async (item) => {
+            let imgArr = [];
+            const ref = `StoreImage/store(${item.id})`;
+            const itemImgList = await getImgList(ref);
+            await Promise.all(
+              itemImgList.items.map(async (img) => {
+                const imgURL = await getImg(img.fullPath);
+                imgArr.push(imgURL);
+              })
+            );
+            return { ...item, imgURL: imgArr };
+          })
+        );
+        dispatch(setStoreData(newImgList));
+      };
+      getItemImgList(resData);
+    } else {
+      return;
+    }
   };
 
   const storeListFilltering = async () => {
@@ -166,6 +170,7 @@ const Home = () => {
       setLoading(true);
     }
   }, [data]);
+
   return (
     <>
       {Loading ? (

@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import FullBox from "../../components/common/FullBox";
 import HeaderText from "../../components/common/HeaderText";
 import InBox from "../../components/common/InBox";
@@ -21,7 +22,9 @@ const PurchaseLogList = () => {
           </TextBodyLarge>
           <TextHeader3 color="InfoDark">카페 찾아보기</TextHeader3>
         </InBox>
-        <Navigation select={"purchase"} />
+        <Box className="divJCC">
+          <Navigation select={"purchase"} />
+        </Box>
       </FullBox>
     </Page>
   );

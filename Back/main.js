@@ -27,7 +27,16 @@ const cors = require("cors");
 const user = require("./routes/userRoutes.js");
 // const store require("./routes/storeRoutes.js");
 const auth = require("./routes/authRoutes.js");
-// const NotionAPI = require("notion-client");
+
+const getNotionModule = async () => {
+  const NotionModule = await import("notion-client");
+  return NotionModule;
+};
+let NotionAPIS;
+getNotionModule().then((NotionModule) => {
+  const { NotionAPI } = NotionModule;
+  NotionAPIS = NotionAPI;
+});
 const app = express();
 //
 //라우터 설정
@@ -42,26 +51,29 @@ app.use(express.json({ extended: true }));
 app.use("/auth", auth);
 app.use("/user", user);
 
-// const getNotion = async (loc) => {
-//   const notion = new NotionAPI();
-//   const recordMap = await notion.getPage(loc);
-//   return recordMap;
-// };
-
+const getNotion = async (loc) => {
+  const notion = new NotionAPIS();
+  const recordMap = await notion.getPage(loc);
+  return recordMap;
+};
 // app.post;
 app.get("/useStore/:token");
 app.get("/notion/:notionPageCode", async (req, res) => {
-  const loc = req.params.notionPageCode;
-  import("notion-client").then((getNotion) => {
+  console.log("getnotion : ", req.params.notionPageCode);
+  try {
+    const loc = req.params.notionPageCode;
+    // console.log(NotionAPI);
     getNotion(loc).then((notion) => res.send(notion));
-  });
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 app.get((req, res) => {
   res.status(404).send("not founds");
 });
 
-app.listen(22, () => {
-  console.log(`Server running on 22`);
+app.listen(8080, () => {
+  console.log(`Server running on 8080`);
 });
 // exports.api = functions.https.onRequest(app);
 // Create and deploy your first functions

@@ -2,11 +2,6 @@
 import { css } from "@emotion/react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import FullBox from "../../../components/common/FullBox";
-import Test1 from "@assets/images/Test1.png";
-import Test2 from "@assets/images/Test2.png";
-import Test3 from "@assets/images/Test3.png";
-import Test4 from "@assets/images/Test4.png";
-import Test5 from "@assets/images/Test5.png";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -41,7 +36,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setuserData } from "../../../store/modules/userSlice";
 import DialogPage from "../../../components/common/DialogPage";
 
-import { TermsOfUse } from "../../../components/dialogPages/TermsOfUse";
+import { refundRule, TermsOfUse } from "../../../api/Rules/TermsOfUse";
+import HeaderText from "../../../components/common/HeaderText";
+import GetNotionJSX from "../../../components/common/NotionPageGet";
 const StoreDetail = () => {
   const userData = useSelector((state) => state.userR.userData);
   const dispatch = useDispatch();
@@ -54,7 +51,8 @@ const StoreDetail = () => {
   const storeData = item;
   const [accordionIsVisible, setAccordionIsVisible] = useState(false);
   const [isStart, setIsStart] = useState(false);
-  const [test, settest] = useState(false);
+  const [terms, setTerms] = useState(false);
+  const [refund, setRefund] = useState(false);
   const innerSize = "12px";
   const settings = {
     dots: true,
@@ -63,8 +61,17 @@ const StoreDetail = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     useCSS: true,
+    nextArrow: <></>, // nextn=button delete
   };
 
+  const [dialog, setDialog] = useState(false);
+  const [dialogText, setDialogText] = useState();
+  const [dialogH2, setDialogH2] = useState();
+  const SetDialogPage = ({ text, h2 }) => {
+    setDialogText(text);
+    setDialogH2(h2);
+    setDialog(true);
+  };
   const nextBtnClick = async () => {
     try {
       const res = await fetch(`${restinAPI}/user/usage/start`, {
@@ -242,6 +249,13 @@ const StoreDetail = () => {
   //     })
   //     .then((text) => setMarkdown(text));
   // }, []);
+
+  /*
+  /
+  //
+  /
+  /
+  */
   return (
     <Page className="divJCC">
       <FullBox
@@ -582,7 +596,10 @@ const StoreDetail = () => {
                 <TextBodySmall color="Gray.500">서비스 이용약관</TextBodySmall>
                 <IoIosArrowForward
                   onClick={() => {
-                    settest(true);
+                    SetDialogPage({
+                      text: <GetNotionJSX loc={NotionLocList.termsofuse} />,
+                      h2: "",
+                    });
                   }}
                 />
               </Box>
@@ -590,7 +607,14 @@ const StoreDetail = () => {
                 <TextBodySmall color="Gray.500">
                   취소 및 환불 규칙
                 </TextBodySmall>
-                <IoIosArrowForward />
+                <IoIosArrowForward
+                  onClick={() => {
+                    SetDialogPage({
+                      text: <GetNotionJSX loc={NotionLocList.refundrule} />,
+                      h2: "",
+                    });
+                  }}
+                />
               </Box>
             </Box>
             <TextBodySmall color="Gray.500">
@@ -631,14 +655,6 @@ const StoreDetail = () => {
             </Box>
           </Box>
         </Dialog>
-        <DialogPage
-          state={test}
-          onClose={() => {
-            settest(false);
-          }}
-        >
-          {TermsOfUse}
-        </DialogPage>
         <FullBox
           sx={{
             display: "flex",
@@ -671,6 +687,16 @@ const StoreDetail = () => {
           </InBox>
         </FullBox>
       </FullBox>
+
+      <DialogPage
+        state={dialog}
+        onClose={() => {
+          setDialog(false);
+        }}
+        h2={dialogH2}
+      >
+        {dialogText}
+      </DialogPage>
     </Page>
   );
 };

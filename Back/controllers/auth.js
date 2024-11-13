@@ -80,7 +80,7 @@ const user_smsVerifyMiddleware = async (req, res, next) => {
     const verifiCode = Math.floor(100000 + Math.random() * 900000);
     req.body.verifiCode = verifiCode;
     try {
-      sendMsg(phoneNumber, `Restin : ${verifiCode}`);
+      sendMsg(phoneNumber, `[${verifiCode}] 레스틴에서 보내는 인증번호입니다`);
       smsVerify[req.body.phoneNumber] = req.body.verifiCode;
       console.log(smsVerify);
       next();

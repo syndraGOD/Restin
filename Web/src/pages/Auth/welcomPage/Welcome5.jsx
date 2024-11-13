@@ -11,16 +11,16 @@ const Welcome5 = () => {
     <ImgTextButtonPage>
       <img src={WelcomeImage5} alt="" />
       <TextHeader3>
-        물컵을 반납하면서
+        이제 주변 개인 카페를
         <br />
-        사용을 종료해주세요
+        찾아볼까요?
       </TextHeader3>
       <Button
         onClick={() => {
           navi("/welcome/6");
         }}
       >
-        <TextBtnText>이해했어요!</TextBtnText>
+        <TextBtnText>좋아요</TextBtnText>
       </Button>
       <BgColorDefault bgColor="InfoLight.main" />
     </ImgTextButtonPage>

@@ -22,6 +22,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { restinAPI } from "../../../api/config";
 import { setuserData } from "../../../store/modules/userSlice";
+import WelcomeImage3 from "@assets/images/WelcomeImage3.png";
+import { IoIosArrowBack } from "react-icons/io";
 
 const ServiceUsing = () => {
   const userData = useSelector((state) => state.userR.userData);
@@ -132,6 +134,15 @@ const ServiceUsing = () => {
       </Box>
       {/* Header& h1 사용 중 */}
       <FullBox className="Header1 center">
+        <Box
+          component={Button}
+          onClick={() => {
+            navi(-1);
+          }}
+          sx={{ position: "absolute", lineHeight: "70px", left: "10px" }}
+        >
+          <IoIosArrowBack size={"40px"} color={theme.palette.InfoLight.main} />
+        </Box>
         <InBox sx={{ textAlign: "center" }}>
           <TextHeader3 color="InfoLight" sx={{ padding: "15px" }}>
             사용 중
@@ -397,7 +408,7 @@ const ServiceUsing = () => {
             sx={{ marginTop: "10px", padding: "15px", flexDirection: "column" }}
           >
             <img
-              src={item.imgURL[1]}
+              src={WelcomeImage3}
               width={"50%"}
               css={css`
                 border-radius: 17px;

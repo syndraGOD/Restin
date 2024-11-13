@@ -18,7 +18,7 @@ const Welcome3 = () => {
           navi("/welcome/4");
         }}
       >
-        <TextBtnText>이해했어요!</TextBtnText>
+        <TextBtnText>따뜻하군요</TextBtnText>
       </Button>
       <BgColorDefault bgColor="InfoLight.main" />
     </ImgTextButtonPage>

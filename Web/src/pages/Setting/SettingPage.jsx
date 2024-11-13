@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css, useTheme } from "@emotion/react";
 import theme from "../../style/theme";
-import React from "react";
+import React, { useState } from "react";
 import { Page } from "../../components/Page";
 import HeaderText from "../../components/common/HeaderText";
 import FullBox from "../../components/common/FullBox";
@@ -19,11 +19,30 @@ import TermsListPage from "./TermsOfUse/TermsListPage";
 import { useNavigate } from "react-router-dom";
 import NotionLocList from "../../api/NotionLocList";
 import { BgColorDefault } from "../../components/common/Bg";
+import DialogPage from "../../components/common/DialogPage";
+import GetNotionJSX from "../../components/common/NotionPageGet";
 
 const SettingPage = () => {
   const navi = useNavigate();
+  const [dialog, setDialog] = useState(false);
+  const [dialogText, setDialogText] = useState();
+  const [dialogH2, setDialogH2] = useState();
+  const SetDialogPage = ({ text, h2 }) => {
+    setDialogText(text);
+    setDialogH2(h2);
+    setDialog(true);
+  };
   return (
     <>
+      <DialogPage
+        state={dialog}
+        onClose={() => {
+          setDialog(false);
+        }}
+        h2={dialogH2}
+      >
+        {dialogText}
+      </DialogPage>
       <Page sx={{ display: "flex", flexDirection: "column" }}>
         <BgColorDefault />
         <HeaderText sx={{ mb: 2 }}>설정</HeaderText>
@@ -42,7 +61,11 @@ const SettingPage = () => {
             <InfoBox>
               <Button
                 onClick={() => {
-                  navi(`/notionPage/${NotionLocList.announce}`);
+                  SetDialogPage({
+                    text: <GetNotionJSX loc={NotionLocList.announce} />,
+                    h2: "",
+                  });
+                  // navi(`/notionPage/${NotionLocList.announce}`);
                 }}
               >
                 <TextBold color="InfoDark">공지 사항</TextBold>
@@ -50,7 +73,10 @@ const SettingPage = () => {
               </Button>
               <Button
                 onClick={() => {
-                  navi(`/notionPage/${NotionLocList.faq}`);
+                  SetDialogPage({
+                    text: <GetNotionJSX loc={NotionLocList.faq} />,
+                    h2: "",
+                  });
                 }}
               >
                 <TextBold color="InfoDark">자주 묻는 질문</TextBold>
@@ -91,7 +117,7 @@ const SettingPage = () => {
               메일 : corporationrestin@naver.com
             </TextBodySmall>
             <TextBodySmall color="SubText">
-              고객센터 : 010-4251-2171 (10:00~19:00)
+              고객센터 : 070-8895-9289 (10:00~19:00)
             </TextBodySmall>
           </InBox>
           <Navigation select={"info"}></Navigation>

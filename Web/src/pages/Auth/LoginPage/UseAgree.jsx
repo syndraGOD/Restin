@@ -25,6 +25,8 @@ import NotionLocList from "../../../api/NotionLocList";
 import { restinAPI } from "../../../api/config";
 import { useDispatch, useSelector } from "react-redux";
 import { setuserData } from "../../../store/modules/userSlice";
+import DialogPage from "../../../components/common/DialogPage";
+import GetNotionJSX from "../../../components/common/NotionPageGet";
 
 const UseAgree = () => {
   const location = useLocation();
@@ -33,6 +35,14 @@ const UseAgree = () => {
   const [inputRef1, setInputRef1] = useState(false);
   const [inputRef2, setInputRef2] = useState(false);
   const [inputRef3, setInputRef3] = useState(false);
+  const [dialog, setDialog] = useState(false);
+  const [dialogText, setDialogText] = useState();
+  const [dialogH2, setDialogH2] = useState();
+  const SetDialogPage = ({ text, h2 }) => {
+    setDialogText(text);
+    setDialogH2(h2);
+    setDialog(true);
+  };
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.userR.userData);
 
@@ -105,7 +115,17 @@ const UseAgree = () => {
                     setInputRef1(e.target.checked);
                   }}
                 />
-                <TextBold color="InfoDark">(필수) 서비스 이용약관</TextBold>
+                <TextBold
+                  onClick={() => {
+                    SetDialogPage({
+                      text: <GetNotionJSX loc={NotionLocList.termsofuse} />,
+                      h2: "",
+                    });
+                  }}
+                  color="InfoDark"
+                >
+                  (필수) 서비스 이용 약관
+                </TextBold>
               </Box>
               <Button
                 className="NotionButton"
@@ -114,7 +134,10 @@ const UseAgree = () => {
                   min-width: 0px;
                 `}
                 onClick={() => {
-                  navi(`/notionPage/${NotionLocList.termsofuse}`);
+                  SetDialogPage({
+                    text: <GetNotionJSX loc={NotionLocList.termsofuse} />,
+                    h2: "",
+                  });
                 }}
               >
                 <IoIosArrowForward />
@@ -146,7 +169,17 @@ const UseAgree = () => {
                     setInputRef2(e.target.checked);
                   }}
                 />
-                <TextBold color="InfoDark">(필수) 개인정보 이용약관</TextBold>
+                <TextBold
+                  onClick={() => {
+                    SetDialogPage({
+                      text: <GetNotionJSX loc={NotionLocList.privacypolicy} />,
+                      h2: "",
+                    });
+                  }}
+                  color="InfoDark"
+                >
+                  (필수) 개인정보 이용 방침
+                </TextBold>
               </Box>
               <Button
                 className="NotionButton"
@@ -155,7 +188,10 @@ const UseAgree = () => {
                   min-width: 0px;
                 `}
                 onClick={() => {
-                  navi(`/notionPage/${NotionLocList.privacypolicy}`);
+                  SetDialogPage({
+                    text: <GetNotionJSX loc={NotionLocList.privacypolicy} />,
+                    h2: "",
+                  });
                 }}
               >
                 <IoIosArrowForward />
@@ -187,7 +223,19 @@ const UseAgree = () => {
                     setInputRef3(e.target.checked);
                   }}
                 />
-                <TextBold color="InfoDark">(필수) 위치정보 이용약관</TextBold>
+                <TextBold
+                  onClick={() => {
+                    SetDialogPage({
+                      text: (
+                        <GetNotionJSX loc={NotionLocList.locationinformation} />
+                      ),
+                      h2: "",
+                    });
+                  }}
+                  color="InfoDark"
+                >
+                  (필수) 위치정보 수집 동의
+                </TextBold>
               </Box>
               <Button
                 className="NotionButton"
@@ -196,7 +244,12 @@ const UseAgree = () => {
                   min-width: 0px;
                 `}
                 onClick={() => {
-                  navi(`/notionPage/${NotionLocList.locationinformation}`);
+                  SetDialogPage({
+                    text: (
+                      <GetNotionJSX loc={NotionLocList.locationinformation} />
+                    ),
+                    h2: "",
+                  });
                 }}
               >
                 <IoIosArrowForward />
@@ -220,6 +273,15 @@ const UseAgree = () => {
           )}
         </InBox>
       </FullBox>
+      <DialogPage
+        state={dialog}
+        onClose={() => {
+          setDialog(false);
+        }}
+        h2={dialogH2}
+      >
+        {dialogText}
+      </DialogPage>
     </FullBox>
   );
 };

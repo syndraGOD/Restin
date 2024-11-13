@@ -20,7 +20,7 @@ const Welcome4 = () => {
           navi("/welcome/5");
         }}
       >
-        <TextBtnText>이해했어요!</TextBtnText>
+        <TextBtnText>물론이죠</TextBtnText>
       </Button>
       <BgColorDefault bgColor="InfoLight.main" />
     </ImgTextButtonPage>
