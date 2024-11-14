@@ -24,19 +24,14 @@ const Navigation = ({ select }) => {
   const myTheme = useTheme();
   const userData = useSelector((state) => state.userR.userData);
   const storeData = useSelector((state) => state.storeR.storeData);
-  console.log("store", storeData);
   const [storeImage, setstoreImage] = useState();
   // const [useStoreData, setUseStoreData] = useState();
-  console.log("navigation store", storeData);
-  console.log("navigation user", userData);
-  const useStoreData = storeData.find(
-    (store) => store.UUID === userData.usage.storeUUID
-  );
   const [useDurationTime, setuseDurationTime] = useState(0);
+  const [useStoreData, setuseStoreData] = useState();
+
   useEffect(() => {
     const fbDate = userData.usage.startTime;
     const isUsage = async () => {
-      console.log(userData);
       if (userData?.usage?.startTime) {
         // const ref = `StoreImage/store(${userData.usage.storeId})/img1.png`;
         // const res = await getImg(ref);
@@ -45,28 +40,29 @@ const Navigation = ({ select }) => {
           (store) => store.UUID === userData.usage.storeUUID
         ).imgURL[0];
         setstoreImage(image);
+
+        let durationMillisec, durationSec, durationMin;
+
+        const duration = () => {
+          const now = new Date();
+          durationMillisec =
+            now.getTime() - (fbDate.seconds * 1000 + fbDate.nanoseconds / 1e6);
+
+          durationSec = Math.floor(durationMillisec / 1000);
+          durationMin = Math.floor(durationMillisec / 1000 / 60);
+        };
+        const reloadDurationTime = () => {
+          duration();
+          setuseDurationTime(durationMin);
+        };
+        setuseStoreData(
+          storeData.find((store) => store.UUID === userData?.usage.storeUUID)
+        );
+        reloadDurationTime();
+        setInterval(reloadDurationTime, 1000);
       }
     };
     isUsage();
-
-    let durationMillisec, durationSec, durationMin;
-
-    const duration = () => {
-      const now = new Date();
-      durationMillisec =
-        now.getTime() - (fbDate.seconds * 1000 + fbDate.nanoseconds / 1e6);
-
-      durationSec = Math.floor(durationMillisec / 1000);
-      durationMin = Math.floor(durationMillisec / 1000 / 60);
-    };
-    const reloadDurationTime = () => {
-      duration();
-      setuseDurationTime(durationMin);
-    };
-    duration();
-    setuseDurationTime(durationMin);
-
-    setInterval(reloadDurationTime, 1000);
   }, []);
   return (
     <Box>
@@ -104,11 +100,11 @@ const Navigation = ({ select }) => {
             <Box>
               <Box>
                 <TextBodyLarge sx={{ fontWeight: 700 }}>
-                  {useStoreData.name}
+                  {useStoreData?.name}
                 </TextBodyLarge>
               </Box>
               <Box>
-                <TextBodySmall>{useStoreData.insta}</TextBodySmall>
+                <TextBodySmall>{useStoreData?.insta}</TextBodySmall>
               </Box>
             </Box>
           </Box>

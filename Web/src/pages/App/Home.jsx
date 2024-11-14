@@ -63,7 +63,6 @@ const Home = () => {
   const filter = useSelector((state) => state.filterR.filter);
   const storeData = useSelector((state) => state.storeR.storeData);
   const userData = useSelector((state) => state.userR.userData);
-  console.log(userData);
   const dispatch = useDispatch();
 
   const storeListGetAll = async (db) => {
@@ -76,7 +75,6 @@ const Home = () => {
       temps.forEach((item) => {
         resData.push(item.data());
       });
-      // console.log(resData);
       setFetchData(resData);
       const getItemImgList = async (array) => {
         const newImgList = await Promise.all(
@@ -165,7 +163,6 @@ const Home = () => {
   }, [storeData]);
 
   useEffect(() => {
-    // console.log(storeData);
     if (!Loading && Array.isArray(data) && data.length !== 0) {
       setLoading(true);
     }

@@ -61,11 +61,8 @@ const data = [
   {
     UUID: "", //입력X
     id: 2,
-    signDate: null, //수정X
     name: "당산커피",
     storeOwnerName: "류지원",
-    accountHolder: "류지원",
-    settlementAccount: "539101-01-051753",
     unitPrice: 350,
     location: "서울 영등포구 당산로48길 2 지하 1층 1층",
     subwayStation: {
@@ -101,7 +98,6 @@ const data = [
     },
     BusinessState: true,
     BusinessAdminPause: ["1999.10.11", 1], //설정x
-    ownerCall: "010-2122-6975",
     storeCall: "0507-0288-7038",
     insta: "@dangsan_coffee",
     wifiId: "dangsancoffee지하2",
@@ -111,6 +107,12 @@ const data = [
     toiletWomanLocation: "나가셔서 오른쪽 건물 2층",
     toiletWomanPw: "-",
     imgURL: [""],
+    privacy: {
+      ownerCall: "010-2122-6975",
+      signDate: null, //수정X
+      accountHolder: "류지원",
+      settlementAccount: "539101-01-051753",
+    },
   },
   {
     UUID: "", //입력X
