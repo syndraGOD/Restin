@@ -63,6 +63,14 @@ const Home = () => {
   const filter = useSelector((state) => state.filterR.filter);
   const storeData = useSelector((state) => state.storeR.storeData);
   const userData = useSelector((state) => state.userR.userData);
+  const navi = useNavigate();
+  // console.log("user,", userData);
+  // console.log("store,", storeData);
+  // console.log("filter,", filter);
+  // if (JSON.stringify(userData) === "{}") {
+  //   navi("/welcome/1");
+  //   //임시방편, 전체적인 userdata를 검증하여 어떻게 처리할지 고민
+  // }
   const dispatch = useDispatch();
 
   const storeListGetAll = async (db) => {

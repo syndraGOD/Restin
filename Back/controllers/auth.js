@@ -154,6 +154,7 @@ const user_verifiCodeMiddleware = (req, res, next) => {
     });
   }
 };
+//token login
 const user_loginMiddleware = async (req, res, next) => {
   const { userId } = req;
   const user = await db_user_read(userId);
@@ -171,6 +172,7 @@ const user_loginMiddleware = async (req, res, next) => {
     lastLogin: jsDateToFirebaseDate(new Date()),
     auth_token: newToken,
   };
+  console.log("Token Refresh : ", user.data.profile.phoneNumber);
   res.status(200).json({ message: "user login access", user, newToken });
   await db_user_update(userId, user.data);
 };
