@@ -16,7 +16,7 @@ const storePersistConfig = {
 
 const userPersistConfig = {
   key: "userR",
-  storage: storage,
+  storage: sessionStorage,
 };
 
 const tokenPersistConfig = {

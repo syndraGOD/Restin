@@ -27,6 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setuserData } from "../../../store/modules/userSlice";
 import DialogPage from "../../../components/common/DialogPage";
 import GetNotionJSX from "../../../components/common/NotionPageGet";
+import { setVerifiToken } from "../../../store/modules/tokenSlice";
 
 const UseAgree = () => {
   const location = useLocation();
@@ -62,6 +63,7 @@ const UseAgree = () => {
     if (res.status === 200) {
       const { message, user, newToken } = await res.json();
       dispatch(setuserData(user.data));
+      dispatch(setVerifiToken(user.data.security.auth_token));
       //userState에 연결
       navi("/app/home");
     } else {

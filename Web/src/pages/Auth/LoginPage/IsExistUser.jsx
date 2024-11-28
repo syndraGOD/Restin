@@ -16,6 +16,7 @@ import { BgColorDefault } from "../../../components/common/Bg";
 import { restinAPI } from "../../../api/config";
 import { setuserData } from "../../../store/modules/userSlice";
 import { useDispatch } from "react-redux";
+import { setVerifiToken } from "../../../store/modules/tokenSlice";
 
 const IsExistUser = () => {
   const dispatch = useDispatch();
@@ -92,32 +93,29 @@ const IsExistUser = () => {
       return;
     }
     const phoneNumber = inputPhoneNumber.replaceAll(" ", "");
-    const headers = {
-      phonenumber: phoneNumber,
-    };
     const res = await fetch(`${restinAPI}/auth/is_exist`, {
       mode: "cors",
       method: "GET",
-      headers: headers,
+      headers: {
+        phonenumber: phoneNumber,
+      },
     });
     const resData = await res.json();
-    const isUserRegister = res.status === 200 ? true : false;
-    // console.log(isUserRegister);
-    // true : regiter - if failed regis (make list) , false: exist user
-    if (isUserRegister) {
-      const headers_login = {
-        userVerifiCode: inputVerifiCode,
-        phonenumber: phoneNumber,
-        userId: resData.userId,
-      };
+    if (res.status === 200) {
       const res_login = await fetch(`${restinAPI}/auth/login_sms`, {
         mode: "cors",
         method: "GET",
-        headers: headers_login,
+        headers: {
+          userVerifiCode: inputVerifiCode,
+          phonenumber: phoneNumber,
+          userId: resData.userId,
+        },
       });
       const awaitRESLogin = await res_login.json();
       const userData = awaitRESLogin.user.data;
       dispatch(setuserData(userData));
+      console.log(userData.security);
+      dispatch(setVerifiToken(userData.security.auth_token));
       //global state에 유저정보 set
       navi("/app/home");
     } else {

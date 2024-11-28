@@ -30,9 +30,9 @@ const Navigation = ({ select }) => {
   const [useStoreData, setuseStoreData] = useState();
 
   useEffect(() => {
-    const fbDate = userData.usage.startTime;
     const isUsage = async () => {
       if (userData?.usage?.startTime) {
+        const fbDate = userData.usage.startTime;
         // const ref = `StoreImage/store(${userData.usage.storeId})/img1.png`;
         // const res = await getImg(ref);
         // setstoreImage(res);

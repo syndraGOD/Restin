@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { BgColorDefault } from "../../../components/common/Bg";
 
 const Welcome2 = () => {
-  const a = 2;
   const navi = useNavigate();
   return (
     <ImgTextButtonPage>

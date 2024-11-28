@@ -27,6 +27,7 @@ const cors = require("cors");
 const user = require("./routes/userRoutes.js");
 // const store require("./routes/storeRoutes.js");
 const auth = require("./routes/authRoutes.js");
+const notification = require("./routes/notificationRoutes.js");
 
 const getNotionModule = async () => {
   const NotionModule = await import("notion-client");
@@ -50,6 +51,7 @@ app.use(express.json({ extended: true }));
 // app.use("/store", store);
 app.use("/auth", auth);
 app.use("/user", user);
+app.use("/notification", notification);
 
 const getNotion = async (loc) => {
   const notion = new NotionAPIS();

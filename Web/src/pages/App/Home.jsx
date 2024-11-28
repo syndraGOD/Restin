@@ -1,128 +1,26 @@
 import { useDispatch, useSelector } from "react-redux";
-// import { RootState } from "../../store";
-// import { themeToggle } from "../../store/modules/themeSlice.js";
-// import { Button } from "@mui/material";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import {
-  TextBody,
-  TextBold,
-  TextHeader2,
-} from "../../components/designGuide.jsx";
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  MenuList,
-  Select,
-  Typography,
-  FormLabel,
-  FormHelperText,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Dialog,
-} from "@mui/material";
+import { TextBody, TextBold } from "../../components/designGuide.jsx";
+import { Box } from "@mui/material";
 import { Page } from "@components/Page.jsx";
 // import image from "../../assets/images/WelcomeImage1.png";
 import { useEffect, useState } from "react";
-import { app, db } from "@api/firebaseConfig";
-import {
-  collection,
-  getDoc,
-  getDocs,
-  addDoc,
-  setDoc,
-  doc,
-  updateDoc,
-  runTransaction,
-} from "firebase/firestore";
+import { db } from "@api/firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
 import StoreItem from "../../components/Home/StoreItem.jsx";
 import Navigation from "../../components/common/Navigation.jsx";
 import InBox from "../../components/common/InBox.jsx";
 import FullBox from "../../components/common/FullBox.jsx";
 import { useTheme } from "@mui/material/styles";
-import StoreFilterPage from "./Home/StoreFilter.jsx";
 import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
-import { stationList } from "../../api/stationList.js";
-// import { useSelector, useDispatch } from "react-redux";
-import { setFilter } from "../../store/modules/filterSlice.js";
 import { getImg, getImgList } from "../../api/fsImgDown.js";
 import { setStoreData } from "../../store/modules/storeSlice.js";
 import { DialogList } from "../../components/common/DialogList.jsx";
 import HeaderText from "../../components/common/HeaderText.jsx";
 import SubwayIcons from "../../api/getSubwayImage.js";
-
-// import asd from "../../assets/subwayicons/";
 const Home = () => {
-  // const theme = useSelector((state: RootState) => state.themeR.theme);
-  // const theme = useSelector((state) => state.themeR.theme);
-  // const dispatch = useDispatch();
-  const filter = useSelector((state) => state.filterR.filter);
-  const storeData = useSelector((state) => state.storeR.storeData);
-  const userData = useSelector((state) => state.userR.userData);
-  const navi = useNavigate();
-  // console.log("user,", userData);
-  // console.log("store,", storeData);
-  // console.log("filter,", filter);
-  // if (JSON.stringify(userData) === "{}") {
-  //   navi("/welcome/1");
-  //   //임시방편, 전체적인 userdata를 검증하여 어떻게 처리할지 고민
-  // }
-  const dispatch = useDispatch();
-
-  const storeListGetAll = async (db) => {
-    if (storeData.length === 0) {
-      const colName = "STORE";
-      const col = collection(db, colName);
-
-      const temps = await getDocs(col);
-      const resData = [];
-      temps.forEach((item) => {
-        resData.push(item.data());
-      });
-      setFetchData(resData);
-      const getItemImgList = async (array) => {
-        const newImgList = await Promise.all(
-          array.map(async (item) => {
-            let imgArr = [];
-            const ref = `StoreImage/store(${item.id})`;
-            const itemImgList = await getImgList(ref);
-            await Promise.all(
-              itemImgList.items.map(async (img) => {
-                const imgURL = await getImg(img.fullPath);
-                imgArr.push(imgURL);
-              })
-            );
-            return { ...item, imgURL: imgArr };
-          })
-        );
-        dispatch(setStoreData(newImgList));
-      };
-      getItemImgList(resData);
-    } else {
-      return;
-    }
-  };
-
-  const storeListFilltering = async () => {
-    // if (!fetchData) return;
-    // return await newImgList;
-    // const temp = await getItemImgList(fetchData);
-    let newData = storeData.filter((item, idx) => {
-      const arrSet = new Set(...Object.values(item.subwayStation));
-      return arrSet.has(filter.station);
-    });
-    setData(newData);
-    if (newData.length === 0) setData();
-  };
-  // useEffect(() => {
-  //   const
-  // }, [sortUser]); //기준별로 데이터 정렬
-  //이거 전에 필터별러ㅗ 데이터 필터링 먼저 구현
-
+  console.log("렌더링");
   const sortList = {
     recommend: {
       text: "추천 순",
@@ -141,40 +39,80 @@ const Home = () => {
       identifier: "payment",
     },
   };
-  let noRenderFill = 0;
+  const filter = useSelector((state) => state.filterR.filter);
+  const storeData = useSelector((state) => state.storeR.storeData);
+  const userData = useSelector((state) => state.userR.userData);
   const [Loading, setLoading] = useState(false);
-  const [fetchData, setFetchData] = useState();
-  // let fetchData;
   const [data, setData] = useState();
-  const [FilterPage, setFilterPage] = useState(false);
   const [SortPageOpen, setSortPageOpen] = useState(false);
   const [sortUser, sortUserSet] = useState(sortList.recommend);
-
-  // const sort = ["recommend", "distance", "like", "cheap"];
+  const navi = useNavigate();
+  const dispatch = useDispatch();
   const myTheme = useTheme();
 
-  const [age, setAge] = useState("");
+  const storeListGetAll = async (db) => {
+    if (storeData.length === 0) {
+      const colName = "STORE";
+      const col = collection(db, colName);
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
+      const temps = await getDocs(col);
+      const resData = [];
+      temps.forEach((item) => {
+        resData.push(item.data());
+      });
+      const getItemImgList = async (array) => {
+        const newImgList = await Promise.all(
+          array.map(async (item) => {
+            let imgArr = [];
+            const ref = `StoreImage/store(${item.id})`;
+            const itemImgList = await getImgList(ref);
+            await Promise.all(
+              itemImgList.items.map(async (img) => {
+                const imgURL = await getImg(img.fullPath);
+                imgArr.push(imgURL);
+              })
+            );
+            return { ...item, imgURL: imgArr };
+          })
+        );
+        dispatch(setStoreData(newImgList));
+      };
+      await getItemImgList(resData);
+    } else {
+      return;
+    }
+  };
+
+  const storeListFilltering = async () => {
+    let newData = storeData.filter((item, idx) => {
+      const arrSet = new Set(...Object.values(item.subwayStation));
+      return arrSet.has(filter.station);
+    });
+    setData(newData);
+    if (newData.length === 0) setData();
   };
 
   useEffect(() => {
-    storeListGetAll(db);
-    // storeListFilltering();
+    console.log("이미지 다운로드 및 실행");
+    const init = async () => {
+      await storeListGetAll(db);
+      await storeListFilltering();
+      setLoading(true);
+    };
+    init();
   }, []);
   useEffect(() => {
     storeListFilltering();
   }, [filter]);
-  useEffect(() => {
-    storeListFilltering();
-  }, [storeData]);
+  // useEffect(() => {
+  //   storeListFilltering();
+  // }, [storeData]);
 
-  useEffect(() => {
-    if (!Loading && Array.isArray(data) && data.length !== 0) {
-      setLoading(true);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (!Loading && Array.isArray(data) && data.length !== 0) {
+  //     setLoading(true);
+  //   }
+  // }, [data]);
 
   return (
     <>

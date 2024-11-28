@@ -5,22 +5,22 @@ const utcFromTimestamp = (time) => {
 
 const jwt = require("jsonwebtoken");
 require("dotenv").config({ path: "configFiles/.env" });
-const hour = 60 * 60;
-const day = hour * 24;
-const month = day * 30;
 const secretKey = process.env.JWT_SECRET_KEY;
 
-const now = Math.floor(Date.now() / 1000); // 현재 시각 (초 단위)
-const tokenExp = day * 1; // 3개월을 초 단위로 환산
-// tokenExp = now;
-// console.log(utcFromTimestamp(tokenExp));
-const expirationTime = now + tokenExp; // 24시간 뒤 만료
-const options = {
-  iat: now,
-  exp: expirationTime,
-};
-
 const generateToken = (payload) => {
+  const hour = 60 * 60;
+  const day = hour * 24;
+  const month = day * 30;
+
+  const now = Math.floor(Date.now() / 1000); // 현재 시각 (초 단위)
+  const tokenExp = day * 1; // 3개월을 초 단위로 환산
+  // tokenExp = now;
+  // console.log(utcFromTimestamp(tokenExp));
+  const expirationTime = now + tokenExp; // 24시간 뒤 만료
+  const options = {
+    iat: now,
+    exp: expirationTime,
+  };
   // console.log();
   const newPayload = {
     ...payload,

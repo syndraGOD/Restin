@@ -7,6 +7,8 @@ import {
   // useNavigate,
   Navigate,
   Outlet,
+  useNavigate,
+  useLocation,
 } from "react-router-dom";
 import GlobalStyle from "./style/GlobalStyle";
 import Home from "./pages/App/Home";
@@ -20,7 +22,7 @@ import Welcome3 from "./pages/Auth/welcomPage/Welcome3";
 import Welcome4 from "./pages/Auth/welcomPage/Welcome4";
 import Welcome5 from "./pages/Auth/welcomPage/Welcome5";
 import theme from "./style/theme";
-import { ThemeProvider } from "@mui/material";
+import { Button, ThemeProvider } from "@mui/material";
 import StoreDetail from "./pages/App/Home/StoreDetail";
 import StoreFilterPage from "./pages/App/Home/StoreFilter";
 import { Provider as Reducer, useDispatch, useSelector } from "react-redux";
@@ -40,6 +42,8 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistor } from "./store";
 import { restinAPI } from "./api/config";
 import { setuserData } from "./store/modules/userSlice";
+import { setVerifiToken } from "./store/modules/tokenSlice";
+import { sendMessageToRN } from "./api/RN/RNsend";
 // import { GoogleAuthProvider } from "firebase/auth";
 
 //const app =
@@ -47,56 +51,94 @@ import { setuserData } from "./store/modules/userSlice";
 function App() {
   // console.log("ㅎㅇ");
   const [Loading, setLoading] = useState(true);
-
+  // 0 = not has token // 1 = has token, but server disable this token // 2 = has token, allow token
   //token 확인해서 자동로그인
   const userData = useSelector((state) => state.userR.userData);
+  const auth_Token = useSelector((state) => state.tokenR.verifiToken);
   const dispatch = useDispatch();
   const tokenLogin = async () => {
     if (JSON.stringify(userData) !== "{}") {
+      console.log("로그인되어있음 - 유지");
+      return;
+    }
+    if (auth_Token === "") {
+      console.log("토큰 없음-로그인 진행");
+      return;
+    } else {
+      console.log("토큰 발견 > 데이터 내부 토큰으로 로그인 진행");
       try {
         const res = await fetch(`${restinAPI}/auth/login`, {
           mode: "cors",
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            authorization: "Bearer " + userData.security?.auth_token,
+            authorization: "Bearer " + auth_Token,
           },
         });
         if (res.status === 200) {
           const awaitRES = await res.json();
           const resUserData = awaitRES.user.data;
           dispatch(setuserData(resUserData));
-          // console.log("토큰 로그인 성공!", resUserData.security);
-          // navi("/purchase/payment", { state: { item } });
+          dispatch(setVerifiToken(resUserData.security.auth_token));
+          console.log("토큰 로그인 성공!");
         } else {
-          dispatch(setuserData({}));
-          console.log("u has token, but not verify / userData remove");
+          dispatch(setVerifiToken(""));
+          console.log("토큰 로그인 실패..");
         }
-        setLoading(false);
       } catch (error) {
-        // setIsEnd(false);
-        console.log(error);
-        setLoading(false);
+        //토큰로그인 오류가 났다고 해서 자동로그인 데이터를 초기화하는게 맞는가?
+        //한번 고민해보자, 그런데 만약 계속 에러가나는 상황이면, 초기화해주는게 오히려 나은데 말이지
+        dispatch(setVerifiToken(""));
+        console.log("토큰 로그인 에러!", error);
       }
     }
   };
   useEffect(() => {
-    document.documentElement.style.setProperty(
-      "--vh",
-      `${window.innerHeight * 0.01}px`
-    );
+    const webInit = async () => {
+      const displaySet = () => {
+        document.documentElement.style.setProperty(
+          "--vh",
+          `${window.innerHeight * 0.01}px`
+        );
+      };
+      const storeImgDownload = async () => {};
+      const autoLogin = async () => {
+        await tokenLogin();
+      };
+      await displaySet();
+      await storeImgDownload();
+      await autoLogin();
+      setLoading(false);
+    };
+    webInit();
   }, []);
-  useEffect(() => {
-    tokenLogin();
-  }, []);
-  // console.log(firebaseConfig);
-  // const navigate = useNavigate();
-  const isLogin = () => {
-    return !!false; //Math.random();
+  const loginProcess = async () => {
+    //진입시 userData 확인
+    //  있으면 그대로 children return
+    //  없으면 토큰 있는지 확인
+    //    토큰 있으면 토큰 로그인 시도
+    //
+    //    토큰 없으면
   };
-  // const LoginCheckPrivateRoute = ({ children : <React.ReactNode/>}) => {
-  //   return isLogin() ? children : <Navigate to="/login" />;
-  // };
+  const loginInit = () => {
+    sendMessageToRN({
+      type: "token",
+      payload: {
+        auth_token: userData.security.auth_token,
+      },
+    });
+  };
+  const AuthProtect = ({ children }) => {
+    // const location = useLocation();
+    // console.log(location.pathname);
+    if (JSON.stringify(userData) !== "{}") {
+      return children;
+    } else {
+      console.log("userData 비어있음", userData);
+      console.log("token", auth_Token);
+      return <Navigate to="/login/isuser"></Navigate>;
+    }
+  };
   return (
     <>
       <GlobalStyle />
@@ -107,6 +149,14 @@ function App() {
               <LogoPage />
             ) : (
               <MobilePage>
+                <Button
+                  sx={{ p: 3, m: 3 }}
+                  onClick={() => {
+                    dispatch(setuserData({}));
+                  }}
+                >
+                  ㅎㅇ
+                </Button>
                 <BrowserRouter>
                   <Routes>
                     <Route
@@ -119,12 +169,7 @@ function App() {
                         )
                       }
                     />
-                    <Route
-                      path="/app"
-                      element={<ProtectedRoute isLogin={isLogin} />}
-                    >
-                      <Route index element={<Home />} />
-                    </Route>
+                    {/* 밑에는 AuthProtect 미적용 */}
                     <Route path="/welcome">
                       <Route index path="1" element={<Welcome1 />}></Route>
                       <Route path="2" element={<Welcome2 />}></Route>
@@ -144,35 +189,91 @@ function App() {
                       <Route path="useagree" element={<UseAgree />}></Route>
                       <Route path="numbertest" element={<LoginPage />}></Route>
                     </Route>
+                    {/* 밑에는 AuthProtect 적용 */}
                     <Route path="/app">
-                      <Route path="home" element={<Home />}>
+                      <Route
+                        path="home"
+                        element={
+                          <AuthProtect>
+                            <Home />
+                          </AuthProtect>
+                        }
+                      >
                         <Route
                           path="filter"
-                          element={<StoreFilterPage />}
+                          element={
+                            <AuthProtect>
+                              <StoreFilterPage />
+                            </AuthProtect>
+                          }
                         ></Route>
-                        <Route path="store" element={<StoreDetail />}></Route>
+                        <Route
+                          path="store"
+                          element={
+                            <AuthProtect>
+                              <StoreDetail />
+                            </AuthProtect>
+                          }
+                        ></Route>
                       </Route>
-                      <Route path="using" element={<ServiceUsing />}></Route>
+                      <Route
+                        path="using"
+                        element={
+                          <AuthProtect>
+                            <ServiceUsing />
+                          </AuthProtect>
+                        }
+                      ></Route>
                     </Route>
                     <Route path="/purchase">
                       <Route
                         path="listLog"
-                        element={<PurchaseLogList />}
+                        element={
+                          <AuthProtect>
+                            <PurchaseLogList />
+                          </AuthProtect>
+                        }
                       ></Route>
-                      <Route path="payment" element={<PurchaseIng />}></Route>
-                      <Route path="finish" element={<PurchaseFinish />}></Route>
+                      <Route
+                        path="payment"
+                        element={
+                          <AuthProtect>
+                            <PurchaseIng />
+                          </AuthProtect>
+                        }
+                      ></Route>
+                      <Route
+                        path="finish"
+                        element={
+                          <AuthProtect>
+                            <PurchaseFinish />
+                          </AuthProtect>
+                        }
+                      ></Route>
                     </Route>
                     <Route
                       path="/myInfo/home"
-                      element={<SettingPage />}
+                      element={
+                        <AuthProtect>
+                          <SettingPage />
+                        </AuthProtect>
+                      }
                     ></Route>
                     <Route
                       path="/myInfo/notifi"
-                      element={<NotificationSetting />}
+                      element={
+                        <AuthProtect>
+                          <NotificationSetting />
+                        </AuthProtect>
+                      }
                     ></Route>
                     <Route
                       path="/myInfo/termsList"
-                      element={<TermsListPage />}
+                      element={
+                        <AuthProtect>
+                          <TermsListPage />
+                        </AuthProtect>
+                      }
                     ></Route>
                   </Routes>
 
