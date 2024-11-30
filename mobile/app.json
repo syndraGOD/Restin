@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.kimhanwol.mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -27,7 +28,10 @@
     "extra": {
       "eas": {
         "projectId": "1f98bed4-b3eb-4611-b4af-d778e9300c71"
-      }
+      },
+      "plugins": [
+        "@portone/react-native-sdk/plugin"
+      ]
     }
   }
 }

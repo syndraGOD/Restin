@@ -1,6 +1,6 @@
 import { useState } from "react";
 import FullBox from "../../../components/common/FullBox";
-import { TextBody, TextBold } from "@components/designGuide";
+import { TextBody } from "@components/designGuide";
 import { Box, Button, Select, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilter } from "../../../store/modules/filterSlice";
@@ -43,7 +43,7 @@ const StoreFilterPage = () => {
         sx={{
           flexDirection: "row",
           flexGrow: 1,
-          borderTop: `1px solid ${theme.palette.SubText.main}`,
+          borderTop: `1px solid ${theme.palette.Gray.c400}`,
         }}
       >
         {/* line */}
@@ -68,10 +68,10 @@ const StoreFilterPage = () => {
                       ? "white"
                       : myTheme.palette.MainBackground.main
                   }`,
-                  borderRight: `1px solid ${myTheme.palette.SubText.main}`,
+                  borderRight: `1px solid ${myTheme.palette.Gray.c400}`,
                   borderRadius: "0px",
                   height: "45px",
-                  borderBottom: `1px solid ${myTheme.palette.SubText.main}`,
+                  borderBottom: `1px solid ${myTheme.palette.Gray.c400}`,
                   boxSizing: "border-box",
                   textDecoration: "none",
                 }}
@@ -103,9 +103,13 @@ const StoreFilterPage = () => {
 
                 //   }}
                 >
-                  <TextBold sx={{ textDecoration: "none" }} color={"InfoDark"}>
+                  <TextBody
+                    weight="Bold"
+                    sx={{ textDecoration: "none" }}
+                    color={"Black"}
+                  >
                     {line.replace("line", "")}호선
-                  </TextBold>
+                  </TextBody>
                 </Box>
               </Box>
             );
@@ -128,7 +132,7 @@ const StoreFilterPage = () => {
                 sx={{
                   borderRadius: "0px",
                   height: "45px",
-                  borderBottom: `1px solid ${myTheme.palette.SubText.main}`,
+                  borderBottom: `1px solid ${myTheme.palette.Gray.c400}`,
                   boxSizing: "border-box",
                   textDecoration: "none",
                   justifyContent: "start",
@@ -146,7 +150,7 @@ const StoreFilterPage = () => {
                 }}
                 key={idx}
               >
-                <TextBody sx={{ textDecoration: "none" }} color={"InfoDark"}>
+                <TextBody sx={{ textDecoration: "none" }} color={"Black"}>
                   {station}
                 </TextBody>
               </Box>

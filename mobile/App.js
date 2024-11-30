@@ -1,9 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, WebView } from "react-native";
+import React, { useState, useEffect, createRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  WebView,
+  Alert,
+  BackHandler,
+  SafeAreaView,
+  Button,
+  Linking,
+} from "react-native";
 import { WebView as RNCWebView } from "react-native-webview";
 import * as Location from "expo-location";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
+import { Payment, PortOneController } from "@portone/react-native-sdk";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
 
@@ -119,8 +131,72 @@ export default function App() {
 
     // console.log("받은 토큰:", message.token);
   };
+
+  const controller = createRef();
+  // 뒤로가기 버튼을 눌렀을 때 결제창 내부에서 처리
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        if (controller.current?.canGoBack) {
+          controller.current.webview?.goBack();
+          return true;
+        }
+        return false;
+      }
+    );
+    return () => backHandler.remove();
+  });
+  const uid = Date.now().toString(16);
   return (
     <View style={styles.container}>
+      <Button
+        title="react native"
+        onPress={async () => {
+          console.log("시발");
+          // const url = "kakaotalk://kakaopay/home"; // 카카오톡의 URL Scheme
+          Linking.openURL(
+            "intent://pay?payToken=03gpuVw0RAMCjLRBjgqq2d&isBnplShop=true&deviceType=mobile&isTossApp=false&appPayVersion=2.1#Intent;scheme=supertoss;package=viva.republica.toss;end"
+          ).catch((err) => console.error("앱을 열 수 없습니다:", err));
+          // const response = await PortOne.requestPayment({
+          //   storeId: "store-3aaf2448-f4cd-44ca-8162-0c81eb934d6e",
+          //   channelKey: "channel-key-453920ce-40b4-4f6d-b50f-c2aa365b9adb",
+          //   paymentId: uid,
+          //   orderName: "주문명",
+          //   totalAmount: 1000,
+          //   currency: "CURRENCY_KRW",
+          //   payMethod: "EASY_PAY",
+          //   // customer: {
+          //   //   fullName: "김",
+          //   // },
+          // });
+        }}
+      ></Button>
+      {/* <SafeAreaView style={{ flex: 1 }}>
+        <Payment
+          ref={controller}
+          request={{
+            storeId: "store-3aaf2448-f4cd-44ca-8162-0c81eb934d6e",
+            channelKey: "channel-key-453920ce-40b4-4f6d-b50f-c2aa365b9adb",
+            paymentId: uid,
+            orderName: "주문명",
+            totalAmount: 1000,
+            currency: "CURRENCY_KRW",
+            payMethod: "EASY_PAY",
+            // customer: {
+            //   fullName: "김",
+            // },
+          }}
+          onError={(error) => {
+            console.log("결제 failed!");
+            Alert.alert("실패", error.message);
+          }}
+          onComplete={(complete) => {
+            console.log("결제 성공!");
+            Alert.alert("완료", JSON.stringify(complete));
+          }}
+        />
+      </SafeAreaView> */}
       <RNCWebView
         ref={webViewRef}
         source={{ uri: restinWeb }}
@@ -135,8 +211,10 @@ export default function App() {
   );
 }
 
+const statusBarHeight = getStatusBarHeight();
 const styles = StyleSheet.create({
   container: {
+    marginTop: statusBarHeight,
     flex: 1,
   },
   webView: {

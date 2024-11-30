@@ -2,7 +2,7 @@
 import styled from "@emotion/styled";
 import { Link as RouterLink } from "react-router-dom";
 import { Button } from "@mui/material";
-import { TextBtnText } from "./designGuide";
+import { TextHeader2 } from "./designGuide";
 
 // interface ComponentType {
 //   component: React.ReactElement;
@@ -33,7 +33,7 @@ const StyledButton = styled(Button)`
 const BtnDefault = ({ children, currentPage }) => {
   return (
     <StyledButton component={RouterLink} to={currentPage}>
-      <TextBtnText color="">{children}</TextBtnText>
+      <TextHeader2>{children}</TextHeader2>
     </StyledButton>
   );
 };

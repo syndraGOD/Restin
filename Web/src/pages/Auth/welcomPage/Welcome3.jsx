@@ -1,6 +1,6 @@
 import WelcomeImage3 from "@assets/images/WelcomeImage3.png";
 import ImgTextButtonPage from "@components/common/ImgTextButtonPage";
-import { TextBtnText, TextHeader3 } from "@components/designGuide";
+import { TextHeader2, TextHeader3 } from "@components/designGuide";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { BgColorDefault } from "../../../components/common/Bg";
@@ -18,9 +18,9 @@ const Welcome3 = () => {
           navi("/welcome/4");
         }}
       >
-        <TextBtnText>따뜻하군요</TextBtnText>
+        <TextHeader2 weight="Bold">따듯하군요</TextHeader2>
       </Button>
-      <BgColorDefault bgColor="InfoLight.main" />
+      <BgColorDefault bgColor="White.main" />
     </ImgTextButtonPage>
   );
 };

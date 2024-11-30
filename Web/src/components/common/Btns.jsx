@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import theme from "../../style/theme";
-import { TextBtnText } from "../designGuide";
+import { TextHeader2 } from "../designGuide";
 
 export const DefaultBtn = ({ children, ...args }) => {
   return (
@@ -12,16 +12,16 @@ export const DefaultBtn = ({ children, ...args }) => {
         height: 60px;
         margin-bottom: 10vw;
         border-radius: 16px;
-        color: ${theme.palette.InfoLight.main};
+        color: ${theme.palette.White.main};
         background-color: ${theme.palette.PrimaryBrand.main};
         &.Mui-disabled {
-          background-color: ${theme.palette.SubText.main};
-          color: ${theme.palette.InfoLight.main};
+          background-color: ${theme.palette.Gray.c400};
+          color: ${theme.palette.White.main};
         }
       `}
       {...args}
     >
-      <TextBtnText>{children}</TextBtnText>
+      <TextHeader2>{children}</TextHeader2>
     </Button>
   );
 };

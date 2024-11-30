@@ -40,7 +40,7 @@ const StoreItem = ({ item, userDistance, onClick }) => {
           className="LeftBox divJCC"
           sx={{ flexDirection: "column", width: "50%", alignItems: "start" }}
         >
-          <TextHeader3 color="InfoDark">{name}</TextHeader3>
+          <TextHeader3 color="Black">{name}</TextHeader3>
           <TextBody color="MainText">
             (내 위치 기준) {userDistance ? userDistance : "00"}m
           </TextBody>

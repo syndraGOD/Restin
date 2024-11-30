@@ -36,7 +36,7 @@ const RegisterPage = () => {
       <FullBox className="divJCC" sx={{ height: "100%", display: "flex" }}>
         <HeaderInner></HeaderInner>
         <InBox sx={{ textAlign: "start", display: "flex" }}>
-          <TextHeader2 color="InfoDark" width={"100%"}>
+          <TextHeader2 color="Black" width={"100%"}>
             처음 뵙네요. 반가워요!
           </TextHeader2>
         </InBox>
@@ -56,13 +56,13 @@ const RegisterPage = () => {
                 style: { fontSize: 20 },
               }} // font size of input text
               InputLabelProps={{
-                style: { fontSize: 20, color: theme.palette.SubText.main },
+                style: { fontSize: 20, color: theme.palette.Gray.c400 },
               }} // font size of input label
               css={css`
                 margin-bottom: 10vw;
                 .MuiFormHelperText-root {
                   font-size: 12px;
-                  color: ${theme.palette.SubText.main};
+                  color: ${theme.palette.Gray.c400};
                 }
               `}
               value={nameState}
@@ -81,12 +81,12 @@ const RegisterPage = () => {
                 style: { fontSize: 20 },
               }} // font size of input text
               InputLabelProps={{
-                style: { fontSize: 20, color: theme.palette.SubText.main },
+                style: { fontSize: 20, color: theme.palette.Gray.c400 },
               }} // font size of input label
               css={css`
                 .MuiFormHelperText-root {
                   font-size: 12px;
-                  color: ${theme.palette.SubText.main};
+                  color: ${theme.palette.Gray.c400};
                 }
               `}
               value={birthdayState}

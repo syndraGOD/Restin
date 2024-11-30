@@ -3,22 +3,14 @@ import { css } from "@emotion/react";
 
 import FullBox from "@components/common/FullBox";
 import HeaderInner from "@components/common/HeaderInner";
-import { TextHeader2 } from "@components/designGuide";
+import { TextBody, TextHeader2 } from "@components/designGuide";
 import InBox from "@components/common/InBox";
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  TextField,
-} from "@mui/material";
+import { Box, Button, Checkbox } from "@mui/material";
 import theme from "../../../style/theme";
 import { DefaultBtn } from "@components/common/Btns";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import InfoBox from "../../../components/common/InfoBox";
-import { TextBold } from "../../../components/designGuide";
 import { IoIosArrowForward } from "react-icons/io";
 import { BgColorDefault } from "../../../components/common/Bg";
 import NotionLocList from "../../../api/NotionLocList";
@@ -76,7 +68,7 @@ const UseAgree = () => {
       <FullBox className="divJCC" sx={{ height: "100%", display: "flex" }}>
         <HeaderInner></HeaderInner>
         <InBox sx={{ textAlign: "start", display: "flex" }}>
-          <TextHeader2 color="InfoDark" width={"100%"}>
+          <TextHeader2 color="Black" width={"100%"}>
             {profile.nick}님
             <br />
             환영합니다!
@@ -85,7 +77,7 @@ const UseAgree = () => {
         <Box className="EmptyBox" sx={{ width: "100%", flex: 1 }}></Box>
         <InBox
           css={css`
-            background-color: ${theme.palette.InfoLight.main};
+            background-color: ${theme.palette.White.main};
             border-radius: 18px;
             padding: 12px;
             box-sizing: border-box;
@@ -117,17 +109,18 @@ const UseAgree = () => {
                     setInputRef1(e.target.checked);
                   }}
                 />
-                <TextBold
+                <TextBody
+                  weight="Bold"
                   onClick={() => {
                     SetDialogPage({
                       text: <GetNotionJSX loc={NotionLocList.termsofuse} />,
                       h2: "",
                     });
                   }}
-                  color="InfoDark"
+                  color="Black"
                 >
                   (필수) 서비스 이용 약관
-                </TextBold>
+                </TextBody>
               </Box>
               <Button
                 className="NotionButton"
@@ -171,17 +164,18 @@ const UseAgree = () => {
                     setInputRef2(e.target.checked);
                   }}
                 />
-                <TextBold
+                <TextBody
+                  weight="Bold"
                   onClick={() => {
                     SetDialogPage({
                       text: <GetNotionJSX loc={NotionLocList.privacypolicy} />,
                       h2: "",
                     });
                   }}
-                  color="InfoDark"
+                  color="Black"
                 >
                   (필수) 개인정보 이용 방침
-                </TextBold>
+                </TextBody>
               </Box>
               <Button
                 className="NotionButton"
@@ -225,7 +219,8 @@ const UseAgree = () => {
                     setInputRef3(e.target.checked);
                   }}
                 />
-                <TextBold
+                <TextBody
+                  weight="Bold"
                   onClick={() => {
                     SetDialogPage({
                       text: (
@@ -234,10 +229,10 @@ const UseAgree = () => {
                       h2: "",
                     });
                   }}
-                  color="InfoDark"
+                  color="Black"
                 >
                   (필수) 위치정보 수집 동의
-                </TextBold>
+                </TextBody>
               </Box>
               <Button
                 className="NotionButton"

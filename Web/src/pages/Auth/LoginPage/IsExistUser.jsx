@@ -11,7 +11,6 @@ import { DefaultBtn } from "@components/common/Btns";
 import { useEffect, useRef, useState } from "react";
 import { RxChatBubble } from "react-icons/rx";
 import { Form, useNavigate } from "react-router-dom";
-import { TextBold } from "../../../components/designGuide";
 import { BgColorDefault } from "../../../components/common/Bg";
 import { restinAPI } from "../../../api/config";
 import { setuserData } from "../../../store/modules/userSlice";
@@ -135,7 +134,7 @@ const IsExistUser = () => {
       <FullBox className="divJCC" sx={{ height: "100%" }}>
         <HeaderInner></HeaderInner>
         <InBox sx={{ textAlign: "start", display: "flex" }}>
-          <TextHeader2 color="InfoDark" width={"100%"}>
+          <TextHeader2 color="Black" width={"100%"}>
             반가워요!
             <br />
             휴대폰 번호를 알려주세요
@@ -157,7 +156,7 @@ const IsExistUser = () => {
               color="PrimaryBrand"
               inputProps={{ inputMode: "numeric", style: { fontSize: 20 } }} // font size of input text
               InputLabelProps={{
-                style: { fontSize: 20, color: theme.palette.SubText.main },
+                style: { fontSize: 20, color: theme.palette.Gray.c400 },
               }} // font size of input label
               slotProps={{
                 input: {
@@ -171,9 +170,9 @@ const IsExistUser = () => {
                           margin-bottom: 5px;
                           border-radius: 15px;
                           padding: 5px;
-                          color: ${theme.palette.InfoDark.main};
+                          color: ${theme.palette.Black.main};
                           &.Mui-disabled {
-                            border: 1px solid ${theme.palette.SubText.main};
+                            border: 1px solid ${theme.palette.Gray.c400};
                           }
                         `}
                         disabled={
@@ -191,7 +190,7 @@ const IsExistUser = () => {
                 margin: 20vw 0 6vw 0;
                 .MuiFormHelperText-root {
                   font-size: 12px;
-                  color: ${theme.palette.SubText.main};
+                  color: ${theme.palette.Gray.c400};
                 }
               `}
               value={inputPhoneNumber}
@@ -213,12 +212,12 @@ const IsExistUser = () => {
               color="PrimaryBrand"
               inputProps={{ inputMode: "numeric", style: { fontSize: 20 } }} // font size of input text
               InputLabelProps={{
-                style: { fontSize: 20, color: theme.palette.SubText.main },
+                style: { fontSize: 20, color: theme.palette.Gray.c400 },
               }} // font size of input label
               css={css`
                 .MuiFormHelperText-root {
                   font-size: 12px;
-                  color: ${theme.palette.SubText.main};
+                  color: ${theme.palette.Gray.c400};
                 }
                 .Mui-error {
                   color: ${theme.palette.error.main};
@@ -232,21 +231,22 @@ const IsExistUser = () => {
             <Box
               onClick={VerifiSendBtnClick}
               css={css`
-                background-color: ${theme.palette.InfoDark.main};
+                background-color: ${theme.palette.Black.main};
                 border-radius: 8px;
                 padding: 6px 10px;
                 align-self: start;
                 margin-top: 2vw;
               `}
             >
-              <TextBold
+              <TextBody
+                weight="Bold"
                 css={css`
                   font-size: 11px;
                 `}
-                color="InfoLight"
+                color="White"
               >
                 인증번호 재전송
-              </TextBold>
+              </TextBody>
             </Box>
           ) : null}
           <Box className="EmptyBox" sx={{ flex: 1 }}></Box>

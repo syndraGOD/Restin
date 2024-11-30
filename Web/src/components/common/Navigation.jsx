@@ -78,14 +78,14 @@ const Navigation = ({ select }) => {
             });
           }}
           sx={{
-            backgroundColor: "InfoDark.main",
+            backgroundColor: "Black.main",
             borderRadius: "30px",
             height: "60px",
             width: "100%",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            color: "InfoLight.main",
+            color: "White.main",
           }}
         >
           <Box display="flex" marginLeft={"7px"}>
@@ -138,8 +138,8 @@ const Navigation = ({ select }) => {
               size={"20px"}
               color={
                 select !== "home"
-                  ? myTheme.palette.SubText.main
-                  : myTheme.palette.InfoDark.main
+                  ? myTheme.palette.Gray.c400
+                  : myTheme.palette.Black.main
               }
             />
           </Box>
@@ -150,8 +150,8 @@ const Navigation = ({ select }) => {
               }}
               color={
                 select !== "home"
-                  ? myTheme.palette.SubText.main
-                  : myTheme.palette.InfoDark.main
+                  ? myTheme.palette.Gray.c400
+                  : myTheme.palette.Black.main
               }
             >
               홈
@@ -169,8 +169,8 @@ const Navigation = ({ select }) => {
               size={"20px"}
               color={
                 select !== "purchase"
-                  ? myTheme.palette.SubText.main
-                  : myTheme.palette.InfoDark.main
+                  ? myTheme.palette.Gray.c400
+                  : myTheme.palette.Black.main
               }
             />
           </Box>
@@ -178,8 +178,8 @@ const Navigation = ({ select }) => {
             <TextBodySmall
               color={
                 select !== "purchase"
-                  ? myTheme.palette.SubText.main
-                  : myTheme.palette.InfoDark.main
+                  ? myTheme.palette.Gray.c400
+                  : myTheme.palette.Black.main
               }
             >
               결제
@@ -197,8 +197,8 @@ const Navigation = ({ select }) => {
               size={"20px"}
               color={
                 select !== "info"
-                  ? myTheme.palette.SubText.main
-                  : myTheme.palette.InfoDark.main
+                  ? myTheme.palette.Gray.c400
+                  : myTheme.palette.Black.main
               }
             />
           </Box>
@@ -206,8 +206,8 @@ const Navigation = ({ select }) => {
             <TextBodySmall
               color={
                 select !== "info"
-                  ? myTheme.palette.SubText.main
-                  : myTheme.palette.InfoDark.main
+                  ? myTheme.palette.Gray.c400
+                  : myTheme.palette.Black.main
               }
             >
               내 정보

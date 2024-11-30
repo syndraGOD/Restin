@@ -4,8 +4,8 @@ import { Box, Button } from "@mui/material";
 import {
   TextBodyLarge,
   TextHeader1,
+  TextHeader2,
   TextHeader3,
-  TextBtnText,
 } from "@components/designGuide";
 import ImgTextButtonPage from "@components/common/ImgTextButtonPage";
 import { useNavigate } from "react-router-dom";
@@ -44,9 +44,9 @@ const Welcome6 = () => {
           navi("/login/isuser");
         }}
       >
-        <TextBtnText>전화번호로 시작하기</TextBtnText>
+        <TextHeader2 weight="Bold">전화번호로 시작하기</TextHeader2>
       </Button>
-      <BgColorDefault bgColor="InfoLight.main" />
+      <BgColorDefault bgColor="White.main" />
     </ImgTextButtonPage>
   );
 };

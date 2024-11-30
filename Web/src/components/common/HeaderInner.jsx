@@ -16,7 +16,7 @@ const HeaderInner = ({ children, ...props }) => {
         alignItems: "center",
         position: "relative",
         padding: "10px 0px",
-        // borderBottom: `1px solid ${theme.palette.SubText.main}`,
+        // borderBottom: `1px solid ${theme.palette.Gray.c400}`,
         height: "70px",
       }}
     >
@@ -27,12 +27,9 @@ const HeaderInner = ({ children, ...props }) => {
         }}
         sx={{ position: "absolute", lineHeight: "70px", left: "10px" }}
       >
-        <IoIosArrowBack size={"40px"} color={theme.palette.InfoDark.main} />
+        <IoIosArrowBack size={"40px"} color={theme.palette.Black.main} />
       </Box>
-      <TextHeader3
-        sx={{ margin: "5px 0", alignItems: "center" }}
-        color="InfoDark"
-      >
+      <TextHeader3 sx={{ margin: "5px 0", alignItems: "center" }} color="Black">
         {children}
       </TextHeader3>
     </FullBox>

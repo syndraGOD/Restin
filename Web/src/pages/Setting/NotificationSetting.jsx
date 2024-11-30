@@ -25,7 +25,7 @@ const NotificationSetting = () => {
       <HeaderInner sx={{ fontWeight: 700 }}>알림 설정</HeaderInner>
       <FullBox className="divJCC" sx={{ textAlign: "start" }}>
         <InBox sx={{ display: "flex", justifyContent: "space-between" }}>
-          <TextBodyLarge sx={{ fontWeight: "bold" }} color="InfoDark">
+          <TextBodyLarge sx={{ fontWeight: "bold" }} color="Black">
             결제 알림
           </TextBodyLarge>
           <IOSSwitch></IOSSwitch>

@@ -14,8 +14,6 @@ import {
   TextBody,
   TextBodyLarge,
   TextBodySmall,
-  TextBold,
-  TextBtnText,
   TextHeader2,
   TextHeader3,
 } from "../../../components/designGuide";
@@ -281,7 +279,7 @@ const StoreDetail = () => {
             top: 10,
           }}
         >
-          <IoIosArrowBack size={"50px"} color={theme.palette.InfoLight.main} />
+          <IoIosArrowBack size={"50px"} color={theme.palette.White.main} />
         </Box>
         {/* image slider */}
         <FullBox
@@ -324,13 +322,13 @@ const StoreDetail = () => {
                 textAlign: "start",
               }}
             >
-              <TextHeader2 color="InfoDark" sx={{ mt: 2, mb: 2 }}>
+              <TextHeader2 color="Black" sx={{ mt: 2, mb: 2 }}>
                 {item.name}
               </TextHeader2>
               <InnerBox
                 text={
                   <GrMapLocation
-                    color={myTheme.palette.SubText.main}
+                    color={myTheme.palette.Gray.c400}
                     size={innerBoxIconSize}
                     css={css`
                       top: 0.1em !important;
@@ -340,14 +338,15 @@ const StoreDetail = () => {
                 w={innerBoxWidth}
               >
                 <Box>
-                  <TextBold
+                  <TextBody
+                    weight="Bold"
                     css={css`
                       display: inline-block;
                     `}
                     color="PrimaryBrand"
                   >
                     걸어서 {1}분
-                  </TextBold>
+                  </TextBody>
                   <TextBody
                     css={css`
                       display: inline-block;
@@ -404,7 +403,7 @@ const StoreDetail = () => {
                 w={innerBoxWidth}
                 text={
                   <FaRegClock
-                    color={myTheme.palette.SubText.main}
+                    color={myTheme.palette.Gray.c400}
                     size={innerBoxIconSize}
                   />
                 }
@@ -428,10 +427,12 @@ const StoreDetail = () => {
                     `}
                   >
                     {}
-                    <TextBold color="PrimaryBrand">{storeState}</TextBold>
+                    <TextBody weight="Bold" color="PrimaryBrand">
+                      {storeState}
+                    </TextBody>
                     <TextBody color="MainText"> · {storeCloseReason}</TextBody>
                     <Box
-                      color={myTheme.palette.SubText.main}
+                      color={myTheme.palette.Gray.c400}
                       css={css`
                         position: absolute;
                         display: inline-block;
@@ -534,7 +535,7 @@ const StoreDetail = () => {
                 w={innerBoxWidth}
                 text={
                   <BiPhoneCall
-                    color={myTheme.palette.SubText.main}
+                    color={myTheme.palette.Gray.c400}
                     size={innerBoxIconSize}
                   />
                 }
@@ -545,7 +546,7 @@ const StoreDetail = () => {
                 w={innerBoxWidth}
                 text={
                   <FaInstagram
-                    color={myTheme.palette.SubText.main}
+                    color={myTheme.palette.Gray.c400}
                     size={innerBoxIconSize}
                   />
                 }
@@ -628,14 +629,14 @@ const StoreDetail = () => {
                   marginRight: "8px",
                   width: "127px",
                   height: "50px",
-                  bgcolor: "SubText.main",
+                  bgcolor: "Gray.c400",
                   borderRadius: "14px",
                 }}
                 onClick={() => {
                   setIsStart(false);
                 }}
               >
-                <TextBodyLarge color="InfoLight.main" sx={{ fontWeight: 700 }}>
+                <TextBodyLarge color="White.main" sx={{ fontWeight: 700 }}>
                   취소
                 </TextBodyLarge>
               </Button>
@@ -648,7 +649,7 @@ const StoreDetail = () => {
                 }}
                 onClick={nextBtnClick}
               >
-                <TextBodyLarge color="InfoLight.main" sx={{ fontWeight: 700 }}>
+                <TextBodyLarge color="White.main" sx={{ fontWeight: 700 }}>
                   시작
                 </TextBodyLarge>
               </Button>
@@ -676,13 +677,13 @@ const StoreDetail = () => {
               bgcolor={
                 storeState === "사용가능"
                   ? myTheme.palette.PrimaryBrand.main
-                  : myTheme.palette.SubText.main
+                  : myTheme.palette.Gray.c400
               }
               onClick={() => {
                 setIsStart(true);
               }}
             >
-              <TextBtnText color="InfoLight">{nextButtonText}</TextBtnText>
+              <TextHeader2 color="White">{nextButtonText}</TextHeader2>
             </Box>
           </InBox>
         </FullBox>

@@ -15,12 +15,12 @@ const PurchaseLogList = () => {
         <HeaderText>사용 내역</HeaderText>
         <InBox
           className="divJCC"
-          sx={{ flex: 1, backgroundColor: "InfoLight.main", m: 4 }}
+          sx={{ flex: 1, backgroundColor: "White.main", m: 4 }}
         >
           <TextBodyLarge color="MainText">
             아직 사용 내역이 없어요
           </TextBodyLarge>
-          <TextHeader3 color="InfoDark">카페 찾아보기</TextHeader3>
+          <TextHeader3 color="Black">카페 찾아보기</TextHeader3>
         </InBox>
         <Box className="divJCC">
           <Navigation select={"purchase"} />

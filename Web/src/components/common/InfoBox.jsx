@@ -9,7 +9,7 @@ const InfoBox = ({ children, ...props }) => {
     <Box
       className="divJCC"
       css={css`
-        background-color: ${theme.palette.InfoLight.main};
+        background-color: ${theme.palette.White.main};
         border-radius: 25px;
         padding: 14px;
         margin-top: 20px;
@@ -19,7 +19,7 @@ const InfoBox = ({ children, ...props }) => {
         }
         svg {
           font-size: 18px;
-          color: ${theme.palette.InfoDark.main};
+          color: ${theme.palette.Black.main};
         }
       `}
       {...props}

@@ -9,7 +9,7 @@ const HeaderText = ({ children, ...props }) => {
       <InBox className="divJCC" sx={{ alignItems: "start" }}>
         <TextHeader2
           sx={{ margin: "5px 0", alignItems: "start" }}
-          color="InfoDark"
+          color="Black"
         >
           {children}
         </TextHeader2>

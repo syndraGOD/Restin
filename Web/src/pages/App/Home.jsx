@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { TextBody, TextBold } from "../../components/designGuide.jsx";
+import { TextBody, TextTitle1 } from "../../components/designGuide.jsx";
 import { Box } from "@mui/material";
 import { Page } from "@components/Page.jsx";
 // import image from "../../assets/images/WelcomeImage1.png";
@@ -163,7 +163,9 @@ const Home = () => {
                   border-radius: 10px;
                 `}
               />
-              <TextBold color="InfoDark">{filter.station}역</TextBold>
+              <TextBody weight="Bold" color="Black">
+                {filter.station}역
+              </TextBody>
             </Box>
             <Box
               sx={{ width: 1 / 2, padding: "15px 0px", position: "relative" }}
@@ -171,7 +173,9 @@ const Home = () => {
                 setSortPageOpen(true);
               }}
             >
-              <TextBold color="InfoDark">{sortUser.text}</TextBold>
+              <TextBody weight="Bold" color="Black">
+                {sortUser.text}
+              </TextBody>
             </Box>
 
             <DialogList

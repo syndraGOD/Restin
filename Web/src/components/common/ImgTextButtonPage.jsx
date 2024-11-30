@@ -42,7 +42,7 @@ const ImgTextButtonPage = ({ children }) => {
             height: 60px;
             margin-bottom: 10vw;
             border-radius: 16px;
-            color: ${theme.palette.InfoLight.main};
+            color: ${theme.palette.White};
             background-color: ${theme.palette.PrimaryBrand.main};
           }
         `}
@@ -64,57 +64,6 @@ const ImgTextButtonPage = ({ children }) => {
         <Box className="contents contents_btn">{button}</Box>
       </InBox>
     </Page>
-    // <InBox
-    //   sx={{
-    //     height: "100%",
-    //     display: "flex",
-    //     alignItems: "center",
-    //     justifyContent: "center",
-    //   }}
-    // >
-    //   <WelcomeStyle className="divJCC">
-    //     <img
-    //       src={WelcomeImage1}
-    //       alt=""
-    //       width={"100%"}
-    //       height={300}
-    //       className={css`
-    //         /* margin: 30px 0px; */
-    //       `}
-    //     />
-    //     <div
-    //       className="textBox divJCC"
-    //       css={css`
-    //         flex: 1;
-    //       `}
-    //     >
-    //       <p>
-    //         자리 요금만 내고
-    //         <br />
-    //         카페를 사용할 수 있어요
-    //       </p>
-    //     </div>
-
-    //     <FullBox className="endbutton center divJCC">
-    //       <InBox>
-    //         <Box
-    //           css={css`
-    //             width: 100%;
-    //             height: 60px;
-    //             margin: 30px 0px;
-    //             border-radius: 15px;
-    //             /* background-color: skyblue; */
-    //           `}
-    //           // disabled={storeState === "사용가능" ? false : true}
-    //           bgcolor="PrimaryBrand.main"
-    //           className="divJCC"
-    //         >
-    //           <TextBtnText color="InfoLight">사용 종료하기</TextBtnText>
-    //         </Box>
-    //       </InBox>
-    //     </FullBox>
-    //   </WelcomeStyle>
-    // </InBox>
   );
 };
 

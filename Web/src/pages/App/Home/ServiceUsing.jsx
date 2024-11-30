@@ -6,8 +6,6 @@ import {
   TextBody,
   TextBodyLarge,
   TextBodySmall,
-  TextBold,
-  TextBtnText,
   TextHeader2,
   TextHeader3,
 } from "../../../components/designGuide";
@@ -72,6 +70,7 @@ const ServiceUsing = () => {
     let durationMillisec, durationSec, durationMin;
 
     const duration = () => {
+      console.log("duration 실행");
       const now = new Date();
       durationMillisec =
         now.getTime() - (fbDate.seconds * 1000 + fbDate.nanoseconds / 1e6);
@@ -86,7 +85,12 @@ const ServiceUsing = () => {
     duration();
     setuseDurationTime(durationMin);
 
-    setInterval(reloadDurationTime, 1000);
+    const intervalId = setInterval(reloadDurationTime, 1000);
+
+    return () => {
+      console.log("언마운트");
+      clearInterval(intervalId);
+    };
   }, []);
   return (
     // after select cafe, show cafe's detail info
@@ -98,7 +102,7 @@ const ServiceUsing = () => {
           justify-content: center;
         }
         .innerBox {
-          background-color: ${theme.palette.InfoLight.main}BF;
+          background-color: ${theme.palette.White.main}BF;
           border-radius: 17px;
           display: flex;
           justify-content: center;
@@ -141,18 +145,16 @@ const ServiceUsing = () => {
           }}
           sx={{ position: "absolute", lineHeight: "70px", left: "10px" }}
         >
-          <IoIosArrowBack size={"40px"} color={theme.palette.InfoLight.main} />
+          <IoIosArrowBack size={"40px"} color={theme.palette.White.main} />
         </Box>
         <InBox sx={{ textAlign: "center" }}>
-          <TextHeader3 color="InfoLight" sx={{ padding: "15px" }}>
-            사용 중
-          </TextHeader3>
+          <TextHeader3 sx={{ padding: "15px" }}>사용 중</TextHeader3>
         </InBox>
       </FullBox>
       {/* Header& h2 Name */}
       <FullBox className="Header2 center">
         <InBox>
-          <TextHeader2 color="InfoLight" sx={{ padding: "0px 0px 30px 0px" }}>
+          <TextHeader2 sx={{ padding: "0px 0px 30px 0px" }}>
             {item.name}
           </TextHeader2>
         </InBox>
@@ -180,7 +182,7 @@ const ServiceUsing = () => {
               css={css`
                 width: 80px;
                 height: 80px;
-                background-color: ${theme.palette.InfoLight.main};
+                background-color: ${theme.palette.White.main};
                 border-radius: 50%;
                 display: flex;
                 justify-content: center;
@@ -192,7 +194,9 @@ const ServiceUsing = () => {
                 color={theme.palette.MainText.main}
               />
             </Box>
-            <TextBold sx={{ marginTop: "10px" }}>Wifi: {item.wifiId}</TextBold>
+            <TextBody weight="Bold" sx={{ marginTop: "10px" }}>
+              Wifi: {item.wifiId}
+            </TextBody>
             <TextBodySmall sx={{ fontWeight: "bold" }} color="MainText">
               Pw: {item.wifiPw}
             </TextBodySmall>
@@ -233,8 +237,9 @@ const ServiceUsing = () => {
                 </Box>
               </Box>
               <Box width={"66%"}>
-                <TextBold
-                  color="InfoDark"
+                <TextBody
+                  weight="Bold"
+                  color="Black"
                   sx={{
                     textWrap: "nowrap",
                     textOverflow: "ellipsis",
@@ -244,8 +249,10 @@ const ServiceUsing = () => {
                   }}
                 >
                   {item.toiletManLocation}
-                </TextBold>
-                <TextBold color="MainText">{item.toiletManPw}</TextBold>
+                </TextBody>
+                <TextBody weight="Bold" color="MainText">
+                  {item.toiletManPw}
+                </TextBody>
               </Box>
             </Box>
             <Dialog
@@ -288,16 +295,19 @@ const ServiceUsing = () => {
                   </Box>
                 </Box>
                 <Box>
-                  <TextBold
-                    color="InfoDark"
+                  <TextBody
+                    weight="Bold"
+                    color="Black"
                     sx={{
                       marginRight: "12px",
                       margin: "5px",
                     }}
                   >
                     {item.toiletManLocation}
-                  </TextBold>
-                  <TextBold color="MainText">{item.toiletManPw}</TextBold>
+                  </TextBody>
+                  <TextBody weight="Bold" color="MainText">
+                    {item.toiletManPw}
+                  </TextBody>
                 </Box>
               </Box>
             </Dialog>
@@ -326,8 +336,9 @@ const ServiceUsing = () => {
                 </Box>
               </Box>
               <Box width={"66%"}>
-                <TextBold
-                  color="InfoDark"
+                <TextBody
+                  weight="Bold"
+                  color="Black"
                   sx={{
                     textWrap: "nowrap",
                     textOverflow: "ellipsis",
@@ -337,8 +348,10 @@ const ServiceUsing = () => {
                   }}
                 >
                   {item.toiletWomanLocation}
-                </TextBold>
-                <TextBold color="MainText">{item.toiletWomanPw}</TextBold>
+                </TextBody>
+                <TextBody weight="Bold" color="MainText">
+                  {item.toiletWomanPw}
+                </TextBody>
               </Box>
             </Box>
             <Dialog
@@ -380,8 +393,9 @@ const ServiceUsing = () => {
                   </Box>
                 </Box>
                 <Box>
-                  <TextBold
-                    color="InfoDark"
+                  <TextBody
+                    weight="Bold"
+                    color="Black"
                     sx={{
                       textWrap: "nowrap",
                       textOverflow: "ellipsis",
@@ -392,8 +406,10 @@ const ServiceUsing = () => {
                     }}
                   >
                     {item.toiletWomanLocation}
-                  </TextBold>
-                  <TextBold color="MainText">{item.toiletWomanPw}</TextBold>
+                  </TextBody>
+                  <TextBody weight="Bold" color="MainText">
+                    {item.toiletWomanPw}
+                  </TextBody>
                 </Box>
               </Box>
             </Dialog>
@@ -414,13 +430,14 @@ const ServiceUsing = () => {
                 border-radius: 17px;
               `}
             ></img>
-            <TextBold
+            <TextBody
+              weight="Bold"
               color="MainText"
               sx={{ padding: "10px", textAlign: "center" }}
             >
               화면을 보여주고
               <br />물 한 잔을 받아주세요
-            </TextBold>
+            </TextBody>
           </Box>
         </InBox>
       </FullBox>
@@ -433,19 +450,23 @@ const ServiceUsing = () => {
             sx={{ textAlign: "center", padding: "15px 0px", marginTop: "10px" }}
           >
             <Box width={"50%"}>
-              <TextBodyLarge sx={{ fontWeight: "bold" }} color="InfoDark">
+              <TextBodyLarge sx={{ fontWeight: "bold" }} color="Black">
                 {useDurationTime > 60
                   ? `${Math.floor(useDurationTime / 60)}시간`
                   : ``}
                 {`${useDurationTime % 60 < 0 ? "0" : useDurationTime % 60}`}분
               </TextBodyLarge>
-              <TextBold color="MainText">사용 시간</TextBold>
+              <TextBody weight="Bold" color="MainText">
+                사용 시간
+              </TextBody>
             </Box>
             <Box width={"50%"}>
-              <TextBodyLarge sx={{ fontWeight: "bold" }} color="InfoDark">
+              <TextBodyLarge sx={{ fontWeight: "bold" }} color="Black">
                 {storeData.unitPrice * (1 + Math.floor(useDurationTime / 10))}원
               </TextBodyLarge>
-              <TextBold color="MainText">사용 요금</TextBold>
+              <TextBody weight="Bold" color="MainText">
+                사용 요금
+              </TextBody>
             </Box>
           </Box>
         </InBox>
@@ -468,7 +489,7 @@ const ServiceUsing = () => {
             // disabled={storeState === "사용가능" ? false : true}
             bgcolor={myTheme.palette.SecondaryBrand.main}
           >
-            <TextBtnText color="InfoLight">사용 종료하기</TextBtnText>
+            <TextHeader2 color="White">사용 종료하기</TextHeader2>
           </Box>
           <Dialog
             open={isEnd}
@@ -514,17 +535,14 @@ const ServiceUsing = () => {
                     marginRight: "8px",
                     width: "127px",
                     height: "50px",
-                    bgcolor: "SubText.main",
+                    bgcolor: "Gray.c400",
                     borderRadius: "14px",
                   }}
                   onClick={() => {
                     setIsEnd(false);
                   }}
                 >
-                  <TextBodyLarge
-                    color="InfoLight.main"
-                    sx={{ fontWeight: 700 }}
-                  >
+                  <TextBodyLarge color="White.main" sx={{ fontWeight: 700 }}>
                     취소
                   </TextBodyLarge>
                 </Button>
@@ -537,10 +555,7 @@ const ServiceUsing = () => {
                   }}
                   onClick={usageEndClick}
                 >
-                  <TextBodyLarge
-                    color="InfoLight.main"
-                    sx={{ fontWeight: 700 }}
-                  >
+                  <TextBodyLarge color="White.main" sx={{ fontWeight: 700 }}>
                     종료
                   </TextBodyLarge>
                 </Button>

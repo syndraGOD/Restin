@@ -13,66 +13,50 @@ export const theme = createTheme({
       },
     },
   },
-  typography: {
-    Text_Title: {
-      fontWeight: "700px",
-      fontSize: "40px",
-    },
-    Text_Header1: {},
-    Text_Header2: {},
-    Text_Header3: {},
-    TEXT_BodyLarge: {},
-    TEXT_Body: {},
-    TEXT_BodySmall: {},
-    TEXT_Bold: {},
-    TEXT_BtnText: {},
-  },
+  typography: {},
   palette: {
     PrimaryBrand: {
       main: "#F58515",
       Light: "#FFA554",
       Pale: "#FFC999",
+      get default() {
+        return this.main;
+      },
     },
-
-    PrimaryBrand_Back: {
-      main: "#FFF5E9",
+    Black: {
+      main: "#181818",
     },
-
-    SecondaryBrand: {
-      main: "#50ABE5",
-    },
-
-    SecondaryBrand_Back: {
-      main: "#E9F3FF",
-    },
-    InfoDark: {
-      main: "#0E0E2C",
-    },
-    InfoLight: {
-      main: "#FAFCFE",
-    },
-    MainText: {
-      main: "#4A4A68",
-    },
-    SubText: {
-      main: "#8C8CA1",
-    },
-    MainBackground: {
-      main: "#ECF1F4",
-    },
-    Gray: {
-      100: "#f8f8f8",
-      200: "#E8E8E8",
-      300: "#D1D1D1",
-      400: "#BABABA",
-      500: "#A3A3A3",
-      600: "#8B8B8B",
-      700: "#747474",
-      800: "#464646",
-      900: "#2F2F2F",
+    White: {
+      main: "#FFFFFF",
     },
     Red: {
       main: "#E53939",
+    },
+    // Black: {
+    //   main: "#0E0E2C",
+    // },
+    // White: {
+    //   main: "#FAFCFE",
+    // },
+    // MainText: {
+    //   main: "#4A4A68",
+    // },
+    // Gray.c400: {
+    //   main: "#8C8CA1",
+    // },
+    // MainBackground: {
+    //   main: "#ECF1F4",
+    // },
+    Gray: {
+      c100: "#f8f8f8",
+      c200: "#E8E8E8",
+      c300: "#D1D1D1",
+      c400: "#BABABA",
+      c500: "#A3A3A3",
+      c600: "#8B8B8B",
+      c700: "#747474",
+      c800: "#464646",
+      c900: "#2F2F2F",
     },
   },
 });

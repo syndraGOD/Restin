@@ -44,6 +44,7 @@ import { restinAPI } from "./api/config";
 import { setuserData } from "./store/modules/userSlice";
 import { setVerifiToken } from "./store/modules/tokenSlice";
 import { sendMessageToRN } from "./api/RN/RNsend";
+import * as PortOne from "@portone/browser-sdk/v2";
 // import { GoogleAuthProvider } from "firebase/auth";
 
 //const app =
@@ -139,6 +140,7 @@ function App() {
       return <Navigate to="/login/isuser"></Navigate>;
     }
   };
+  const uid = Date.now().toString(16);
   return (
     <>
       <GlobalStyle />
@@ -151,11 +153,31 @@ function App() {
               <MobilePage>
                 <Button
                   sx={{ p: 3, m: 3 }}
-                  onClick={() => {
-                    dispatch(setuserData({}));
+                  onClick={async () => {
+                    // window.location = "kakaotalk://kakaopay/home";
+                    // dispatch(setuserData({}));
+                    console.log("시발 너도냐?");
+                    const response = await PortOne.requestPayment({
+                      storeId: "store-3aaf2448-f4cd-44ca-8162-0c81eb934d6e",
+                      channelKey:
+                        "channel-key-453920ce-40b4-4f6d-b50f-c2aa365b9adb",
+                      paymentId: uid,
+                      orderName: "주문명",
+                      totalAmount: 1000,
+                      currency: "CURRENCY_KRW",
+                      payMethod: "EASY_PAY",
+                      redirectUrl: `http://test.restin.co.kr/`,
+                      // customer: {
+                      //   fullName: "김",
+                      // },
+                    });
+                    if (response.code !== undefined) {
+                      // 오류 발생
+                      return alert(response.message);
+                    }
                   }}
                 >
-                  ㅎㅇ
+                  react
                 </Button>
                 <BrowserRouter>
                   <Routes>
