@@ -107,7 +107,7 @@ const SettingPage = () => {
           <InBox sx={{ textAlign: "start", p: 4 }}>
             <TextBody
               weight="Bold"
-              color="MainText"
+              color="Gray.c900"
               sx={{ padding: "0.5em 0" }}
             >
               사업자 정보

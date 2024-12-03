@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 import { useState } from "react";
 import FullBox from "../../../components/common/FullBox";
 import { TextBody } from "@components/designGuide";
@@ -5,9 +7,15 @@ import { Box, Button, Select, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilter } from "../../../store/modules/filterSlice";
 import { useNavigate } from "react-router-dom";
-import { stationList } from "../../../api/stationList";
+import {
+  LineInfo,
+  stationIncludeLine,
+  stationList,
+  SubwayIcons,
+} from "../../../api/stationList";
 import HeaderInner from "../../../components/common/HeaderInner";
 import theme from "../../../style/theme";
+import { TextBodyLarge } from "../../../components/designGuide";
 
 const StoreFilterPage = () => {
   // console.log("ㅎㅇ");
@@ -36,14 +44,14 @@ const StoreFilterPage = () => {
       }}
     >
       {/* h2 */}
-      <HeaderInner>필터</HeaderInner>
+      <HeaderInner>지역 선택</HeaderInner>
       {/* Fillter */}
       <FullBox
         className="divJCC"
         sx={{
           flexDirection: "row",
           flexGrow: 1,
-          borderTop: `1px solid ${theme.palette.Gray.c400}`,
+          // borderTop: `1px solid ${theme.palette.Gray.c400}`,
         }}
       >
         {/* line */}
@@ -51,7 +59,7 @@ const StoreFilterPage = () => {
           className="divJCC"
           sx={{
             flexDirection: "column",
-            backgroundColor: `${myTheme.palette.MainBackground.main}`,
+            backgroundColor: `${myTheme.palette.Gray.c100}`,
             width: "35%",
             height: "100%",
             justifyContent: "start",
@@ -64,16 +72,15 @@ const StoreFilterPage = () => {
                 sx={{
                   position: "relative",
                   backgroundColor: `${
-                    line === select.line
-                      ? "white"
-                      : myTheme.palette.MainBackground.main
+                    line === select.line ? "white" : myTheme.palette.White.main
                   }`,
-                  borderRight: `1px solid ${myTheme.palette.Gray.c400}`,
+                  // borderRight: `1px solid ${myTheme.palette.Gray.c400}`,
                   borderRadius: "0px",
                   height: "45px",
-                  borderBottom: `1px solid ${myTheme.palette.Gray.c400}`,
+                  // borderBottom: `1px solid ${myTheme.palette.Gray.c400}`,
                   boxSizing: "border-box",
                   textDecoration: "none",
+                  backgroundColor: "Gray.c100",
                 }}
                 component={Button}
                 onClick={() => {
@@ -84,7 +91,7 @@ const StoreFilterPage = () => {
                 }}
                 key={line}
               >
-                <Box
+                {/* <Box
                   sx={{
                     position: "absolute",
                     left: "0px",
@@ -93,23 +100,38 @@ const StoreFilterPage = () => {
                     backgroundColor: `${
                       line === select.line
                         ? myTheme.palette.PrimaryBrand.main
-                        : myTheme.palette.MainBackground.main
+                        : myTheme.palette.White.main
                     }`,
                   }}
-                />
+                /> */}
                 <Box
                 //   sx={{
                 //     height: "100%",
 
                 //   }}
                 >
-                  <TextBody
+                  <TextBodyLarge
                     weight="Bold"
                     sx={{ textDecoration: "none" }}
-                    color={"Black"}
+                    color={"Gray.c900"}
+                    position={"relative"}
+                    css={css`
+                      ::before {
+                        content: "";
+                        position: absolute;
+                        display: inline-block;
+                        width: 8px;
+                        height: 8px;
+                        margin: auto;
+                        border-radius: 50%;
+                        left: -15px;
+                        top: 40%;
+                        background-color: ${LineInfo[line].color};
+                      }
+                    `}
                   >
                     {line.replace("line", "")}호선
-                  </TextBody>
+                  </TextBodyLarge>
                 </Box>
               </Box>
             );
@@ -132,7 +154,7 @@ const StoreFilterPage = () => {
                 sx={{
                   borderRadius: "0px",
                   height: "45px",
-                  borderBottom: `1px solid ${myTheme.palette.Gray.c400}`,
+                  // borderBottom: `1px solid ${myTheme.palette.Gray.c400}`,
                   boxSizing: "border-box",
                   textDecoration: "none",
                   justifyContent: "start",
@@ -150,9 +172,42 @@ const StoreFilterPage = () => {
                 }}
                 key={idx}
               >
-                <TextBody sx={{ textDecoration: "none" }} color={"Black"}>
+                <TextBodyLarge
+                  sx={{ textDecoration: "none" }}
+                  color={"Gray.c900"}
+                  weight="Medium"
+                >
                   {station}
-                </TextBody>
+                </TextBodyLarge>
+                <Box display={"flex"} alignItems={"center"}>
+                  {stationIncludeLine(station).map((color_line, idx) => {
+                    return (
+                      <>
+                        {/* <img
+                          src={SubwayIcons[color_line]}
+                          alt="subway line icons"
+                          width={"20px"}
+                          css={css`
+                            margin-left: 8px;
+                            margin-top: 2px;
+                            border-radius: 10px;
+                          `}
+                        /> */}
+                      </>
+                      // <Box
+                      //   key={color_line}
+                      //   css={css`
+                      //     display: inline-block;
+                      //     width: 8px;
+                      //     height: 8px;
+                      //     margin-left: 10px;
+                      //     border-radius: 50%;
+                      //     /* background-color: ${LineInfo[color_line].color}; */
+                      //   `}
+                      // ></Box>
+                    );
+                  })}
+                </Box>
               </Box>
             );
           })}

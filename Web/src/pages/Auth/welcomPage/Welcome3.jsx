@@ -18,7 +18,9 @@ const Welcome3 = () => {
           navi("/welcome/4");
         }}
       >
-        <TextHeader2 weight="Bold">따듯하군요</TextHeader2>
+        <TextHeader2 weight="Bold" color="White.main">
+          따듯하군요
+        </TextHeader2>
       </Button>
       <BgColorDefault bgColor="White.main" />
     </ImgTextButtonPage>

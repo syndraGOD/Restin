@@ -14,7 +14,7 @@ import GlobalStyle from "./style/GlobalStyle";
 import Home from "./pages/App/Home";
 import LoginPage from "./pages/Auth/LoginPage";
 import React, { useEffect, useState } from "react";
-import MobilePage from "./style/Mobile";
+import MobilePage from "./style/Mobile.jsx";
 import LogoPage from "./pages/LogoPage";
 import Welcome1 from "./pages/Auth/welcomPage/Welcome1";
 import Welcome2 from "./pages/Auth/welcomPage/Welcome2";
@@ -151,12 +151,11 @@ function App() {
               <LogoPage />
             ) : (
               <MobilePage>
-                <Button
+                {/* <Button
                   sx={{ p: 3, m: 3 }}
                   onClick={async () => {
                     // window.location = "kakaotalk://kakaopay/home";
                     // dispatch(setuserData({}));
-                    console.log("시발 너도냐?");
                     const response = await PortOne.requestPayment({
                       storeId: "store-3aaf2448-f4cd-44ca-8162-0c81eb934d6e",
                       channelKey:
@@ -178,7 +177,7 @@ function App() {
                   }}
                 >
                   react
-                </Button>
+                </Button> */}
                 <BrowserRouter>
                   <Routes>
                     <Route
@@ -220,24 +219,24 @@ function App() {
                             <Home />
                           </AuthProtect>
                         }
-                      >
-                        <Route
-                          path="filter"
-                          element={
-                            <AuthProtect>
-                              <StoreFilterPage />
-                            </AuthProtect>
-                          }
-                        ></Route>
-                        <Route
-                          path="store"
-                          element={
-                            <AuthProtect>
-                              <StoreDetail />
-                            </AuthProtect>
-                          }
-                        ></Route>
-                      </Route>
+                      ></Route>
+
+                      <Route
+                        path="filter"
+                        element={
+                          <AuthProtect>
+                            <StoreFilterPage />
+                          </AuthProtect>
+                        }
+                      ></Route>
+                      <Route
+                        path="store"
+                        element={
+                          <AuthProtect>
+                            <StoreDetail />
+                          </AuthProtect>
+                        }
+                      ></Route>
                       <Route
                         path="using"
                         element={

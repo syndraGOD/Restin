@@ -24,14 +24,11 @@ const express = require("express");
 const router = express.Router();
 
 //firebase auth uuid
+//sms 전송
 router.post("/smsVerify", user_smsVerifyMiddleware, (req, res) => {
-  res
-    .status(200)
-    .json({ message: "SMS send  complete", verifiCode: req.body.verifiCode });
+  res.status(200).json({ message: "SMS send  complete" });
 });
-router.get("/is_exist", user_isExistUserMiddleware, (req, res) => {
-  res.status(200).json({ message: "who is exist user", userId: req.userId });
-});
+//sms code verifi
 router.post(
   "/register",
   user_registerMiddleware,
@@ -52,10 +49,18 @@ router.get(
   (req, res) => {}
 );
 router.get(
-  "/login_sms",
+  "/login_smsCodeVerify",
   user_verifiCodeMiddleware,
+  user_isExistUserMiddleware,
   user_loginMiddleware,
-  (req, res) => {}
+  (req, res) => {
+    //     res
+    //       .status(200)
+    //       .json({
+    //         message: "who is exist user",
+    // //userData
+    //       });
+  }
 );
 
 module.exports = router;

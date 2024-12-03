@@ -11,6 +11,7 @@ import { DefaultBtn } from "@components/common/Btns";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BgColorDefault } from "../../../components/common/Bg";
+import { TextBox_header2 } from "../../../components/common/TextBox";
 
 const RegisterPage = () => {
   const navi = useNavigate();
@@ -18,8 +19,10 @@ const RegisterPage = () => {
   const profile = location.state || {};
   // console.log(profile);
   const nameRef = useRef();
+  const birthRef = useRef();
   const [nameState, setNameState] = useState("");
   const [birthdayState, setBirthdayState] = useState("");
+  const [isNext, setIsNext] = useState(false);
 
   const nextPage = () => {
     navi("/login/useagree", {
@@ -27,7 +30,7 @@ const RegisterPage = () => {
     });
   };
   useEffect(() => {
-    nameRef.current.focus();
+    // nameRef.current.focus();
   }, []);
 
   return (
@@ -35,13 +38,94 @@ const RegisterPage = () => {
       <BgColorDefault />
       <FullBox className="divJCC" sx={{ height: "100%", display: "flex" }}>
         <HeaderInner></HeaderInner>
-        <InBox sx={{ textAlign: "start", display: "flex" }}>
-          <TextHeader2 color="Black" width={"100%"}>
-            처음 뵙네요. 반가워요!
-          </TextHeader2>
+        {!isNext ? (
+          <TextBox_header2>
+            이름 또는 닉네임을
+            <br />
+            알려주세요
+          </TextBox_header2>
+        ) : (
+          <TextBox_header2>
+            생년월일을 입력하고
+            <br />
+            시작해볼까요?
+          </TextBox_header2>
+        )}
+
+        <InBox
+          sx={{
+            flexDirection: "column",
+            flex: 1,
+            display: "flex",
+            justifyContent: "start",
+          }}
+        >
+          {!isNext ? (
+            <Box width={"100%"} component="form" noValidate autoComplete="off">
+              <TextField
+                inputRef={nameRef}
+                variant="standard"
+                fullWidth
+                label="이름"
+                placeholder="레스틴"
+                color="PrimaryBrand"
+                value={nameState}
+                onChange={(e) => {
+                  // if (e.target.value.length > 8) e.target.value.pop();
+                  e.target.value = e.target.value.slice(0, 8);
+                  console.log(e.target.value);
+                  setNameState(e.target.value);
+                }}
+                inputProps={{
+                  inputMode: "text",
+                }}
+              ></TextField>
+            </Box>
+          ) : (
+            <Box width={"100%"} component="form" noValidate autoComplete="off">
+              <TextField
+                inputRef={birthRef}
+                variant="standard"
+                fullWidth
+                label="생년월일"
+                placeholder="010809"
+                color="PrimaryBrand"
+                value={birthdayState}
+                onChange={(e) => {
+                  setBirthdayState(e.target.value);
+                }}
+                inputProps={{
+                  maxLength: 6,
+                  inputMode: "numeric",
+                }}
+              ></TextField>
+            </Box>
+          )}
+
+          <Box className="EmptyBox" sx={{ flex: 1 }}></Box>
+          {!isNext ? (
+            <DefaultBtn
+              disabled={nameState.length < 2 || nameState.length > 8}
+              onClick={() => {
+                setIsNext(true);
+              }}
+            >
+              확인
+            </DefaultBtn>
+          ) : (
+            <DefaultBtn
+              disabled={birthdayState.length !== 6}
+              onClick={nextPage}
+              // onClick={() => {
+              //   console.log(nameState, birthdayState);
+              // }}
+            >
+              확인
+            </DefaultBtn>
+          )}
         </InBox>
 
-        <InBox sx={{ flexDirection: "column", flex: 1, display: "flex" }}>
+        {/* <InBox sx={{ flexDirection: "column", flex: 1, display: "flex" }}>
           <Box className="divJCC" sx={{ width: "100%", flex: 1 }}>
             <TextField
               inputRef={nameRef}
@@ -102,7 +186,7 @@ const RegisterPage = () => {
           >
             인증 확인
           </DefaultBtn>
-        </InBox>
+        </InBox> */}
       </FullBox>
     </FullBox>
   );

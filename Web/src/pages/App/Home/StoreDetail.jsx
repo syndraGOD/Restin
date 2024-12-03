@@ -14,6 +14,7 @@ import {
   TextBody,
   TextBodyLarge,
   TextBodySmall,
+  TextHeader1,
   TextHeader2,
   TextHeader3,
 } from "../../../components/designGuide";
@@ -37,6 +38,10 @@ import DialogPage from "../../../components/common/DialogPage";
 import { refundRule, TermsOfUse } from "../../../api/Rules/TermsOfUse";
 import HeaderText from "../../../components/common/HeaderText";
 import GetNotionJSX from "../../../components/common/NotionPageGet";
+import HeaderInner from "../../../components/common/HeaderInner";
+import { GoCopy } from "react-icons/go";
+import { DefaultBtn } from "../../../components/common/Btns";
+
 const StoreDetail = () => {
   const userData = useSelector((state) => state.userR.userData);
   const dispatch = useDispatch();
@@ -52,6 +57,7 @@ const StoreDetail = () => {
   const [terms, setTerms] = useState(false);
   const [refund, setRefund] = useState(false);
   const innerSize = "12px";
+  let nextButtonText = "사용 시작하기";
   const settings = {
     dots: true,
     infinite: true,
@@ -235,7 +241,6 @@ const StoreDetail = () => {
     };
     return isClose(todayText);
   };
-  let nextButtonText = "사용 시작하기";
   const [storeState, storeCloseReason] = StoreOpeningText();
 
   const navigate = useNavigate();
@@ -254,19 +259,58 @@ const StoreDetail = () => {
   /
   /
   */
+  const NextButton = () => {
+    const for0To9ToText = (num) => {
+      if (num < 10) {
+        return `0${num}`;
+      } else {
+        return `${num}`;
+      }
+    };
+    const openData = item.businessTime;
+    const today = new Date();
+    const todayText = String(today).substring(0, 3).toLowerCase();
+    const open = openData[`${todayText}open`];
+    const todayHourMin = `${for0To9ToText(today.getHours())}${for0To9ToText(
+      today.getMinutes()
+    )}`;
+    if (userData.usage.startTime) {
+      return <DefaultBtn disabled={true}>다른 카페를 사용 중이에요</DefaultBtn>;
+    } else if (open === null && close === null) {
+      return <DefaultBtn disabled={true}>휴무일이에요</DefaultBtn>;
+    } else if (!(open < todayHourMin && todayHourMin < close)) {
+      return (
+        <DefaultBtn disabled={true}>
+          {open.substring(0, 2) + ":" + open.substring(2, 4)} 부터 사용할 수
+          있어요
+        </DefaultBtn>
+      );
+    } else {
+      return (
+        <DefaultBtn
+          onClick={() => {
+            setIsStart(true);
+          }}
+        >
+          사용 시작하기
+        </DefaultBtn>
+      );
+    }
+  };
   return (
     <Page className="divJCC">
       <FullBox
         sx={{
-          position: "absolute",
-          height: "100%",
-          zIndex: 1,
+          // position: "absolute",
+          // height: "130vh",
+          overflow: "auto",
           backgroundColor: "white",
           justifyContent: "start",
+          marginTop: "50px", //HeaderInner 들어갈 자리
         }}
       >
         {/* BackButton */}
-        <Box
+        {/* <Box
           component={Button}
           onClick={() => {
             navigate(-1);
@@ -280,7 +324,21 @@ const StoreDetail = () => {
           }}
         >
           <IoIosArrowBack size={"50px"} color={theme.palette.White.main} />
-        </Box>
+        </Box> */}
+
+        <HeaderInner
+          position={"fixed"}
+          css={css`
+            justify-content: end;
+            z-index: 2;
+          `}
+        >
+          <Box height={"100%"}>
+            <TextBody weight="Bold" color="Gray.c700">
+              이용 안내
+            </TextBody>
+          </Box>
+        </HeaderInner>
         {/* image slider */}
         <FullBox
           className="slider-container"
@@ -322,58 +380,73 @@ const StoreDetail = () => {
                 textAlign: "start",
               }}
             >
-              <TextHeader2 color="Black" sx={{ mt: 2, mb: 2 }}>
-                {item.name}
-              </TextHeader2>
-              <InnerBox
-                text={
-                  <GrMapLocation
-                    color={myTheme.palette.Gray.c400}
-                    size={innerBoxIconSize}
-                    css={css`
-                      top: 0.1em !important;
-                    `}
-                  />
-                }
-                w={innerBoxWidth}
+              <TextHeader3
+                weight="Bold"
+                color="Black.main"
+                sx={{ mt: "21px", mb: "10px" }}
               >
-                <Box>
-                  <TextBody
-                    weight="Bold"
-                    css={css`
-                      display: inline-block;
-                    `}
-                    color="PrimaryBrand"
+                {item.name}
+              </TextHeader3>
+
+              <Box>
+                <TextBodyLarge
+                  weight="Medium"
+                  css={css`
+                    display: inline-block;
+                  `}
+                  color="Black.main"
+                >
+                  수원역 8번출구에서 1분
+                </TextBodyLarge>
+                <TextBodyLarge
+                  css={css`
+                    display: inline-block;
+                  `}
+                  color="Gray.c900"
+                >
+                  {" "}
+                  · {70}m
+                </TextBodyLarge>
+                <TextBodyLarge display="inline-flex" color="Gray.c600" mt="7px">
+                  {item.location}
+                  {"  "}
+                  <Box
+                    sx={{
+                      display: "inline-flex",
+                      height: "100%",
+                      color: "Gray.c600",
+                      transform: "scaleX(-1)",
+                    }}
+                    onClick={() => {
+                      sendMessageToRN({
+                        type: "copy",
+                        payload: {
+                          text: item.location,
+                        },
+                      });
+                    }}
                   >
-                    걸어서 {1}분
-                  </TextBody>
-                  <TextBody
-                    css={css`
-                      display: inline-block;
-                    `}
-                    color="MainText"
-                  >
-                    {" "}
-                    · {70}m
-                  </TextBody>
-                  <TextBody color="MainText">{item.location}</TextBody>
-                </Box>
-              </InnerBox>
+                    <GoCopy size={24} />
+                  </Box>
+                </TextBodyLarge>
+              </Box>
               <Box
                 css={css`
                   display: flex;
                   justify-content: space-between;
                   align-items: center;
-                  padding: 20px 24px;
-                  border-radius: 20px;
-                  margin: 15px 0px;
+                  padding: 16px 24px;
+                  border-radius: 14px;
+                  margin: 20px 0 8px 0;
                 `}
-                bgcolor={myTheme.palette.MainBackground.main}
+                bgcolor={myTheme.palette.Gray.c100}
               >
-                <TextBodyLarge color="MainText">10분당</TextBodyLarge>
-                <TextHeader2 color="PrimaryBrand">
+                <TextBodyLarge weight="Bold" color="Gray.c800">
+                  10분당
+                </TextBodyLarge>
+                <TextHeader1 weight="Bold" color="PrimaryBrand">
                   {item.unitPrice}원
-                </TextHeader2>
+                </TextHeader1>
               </Box>
             </InBox>
           </FullBox>
@@ -381,9 +454,9 @@ const StoreDetail = () => {
             <Box
               css={css`
                 height: 10px;
-                margin: 15px 0px;
+                margin: 20px 0px;
               `}
-              bgcolor={myTheme.palette.MainBackground.main}
+              bgcolor={myTheme.palette.Gray.c100}
             ></Box>
           </FullBox>
           <FullBox
@@ -430,7 +503,7 @@ const StoreDetail = () => {
                     <TextBody weight="Bold" color="PrimaryBrand">
                       {storeState}
                     </TextBody>
-                    <TextBody color="MainText"> · {storeCloseReason}</TextBody>
+                    <TextBody color="Gray.c900"> · {storeCloseReason}</TextBody>
                     <Box
                       color={myTheme.palette.Gray.c400}
                       css={css`
@@ -458,7 +531,7 @@ const StoreDetail = () => {
                       `}
                     >
                       <TextBody
-                        color={today().day === 1 ? "PrimaryBrand" : "MainText"}
+                        color={today().day === 1 ? "PrimaryBrand" : "Gray.c900"}
                       >
                         월요일
                         {timeForText(
@@ -468,7 +541,7 @@ const StoreDetail = () => {
                         )}
                       </TextBody>
                       <TextBody
-                        color={today().day === 2 ? "PrimaryBrand" : "MainText"}
+                        color={today().day === 2 ? "PrimaryBrand" : "Gray.c900"}
                       >
                         화요일
                         {timeForText(
@@ -478,7 +551,7 @@ const StoreDetail = () => {
                         )}
                       </TextBody>
                       <TextBody
-                        color={today().day === 3 ? "PrimaryBrand" : "MainText"}
+                        color={today().day === 3 ? "PrimaryBrand" : "Gray.c900"}
                       >
                         수요일
                         {timeForText(
@@ -488,7 +561,7 @@ const StoreDetail = () => {
                         )}
                       </TextBody>
                       <TextBody
-                        color={today().day === 4 ? "PrimaryBrand" : "MainText"}
+                        color={today().day === 4 ? "PrimaryBrand" : "Gray.c900"}
                       >
                         목요일
                         {timeForText(
@@ -498,7 +571,7 @@ const StoreDetail = () => {
                         )}
                       </TextBody>
                       <TextBody
-                        color={today().day === 5 ? "PrimaryBrand" : "MainText"}
+                        color={today().day === 5 ? "PrimaryBrand" : "Gray.c900"}
                       >
                         금요일
                         {timeForText(
@@ -508,7 +581,7 @@ const StoreDetail = () => {
                         )}
                       </TextBody>
                       <TextBody
-                        color={today().day === 6 ? "PrimaryBrand" : "MainText"}
+                        color={today().day === 6 ? "PrimaryBrand" : "Gray.c900"}
                       >
                         토요일
                         {timeForText(
@@ -518,7 +591,7 @@ const StoreDetail = () => {
                         )}
                       </TextBody>
                       <TextBody
-                        color={today().day === 0 ? "PrimaryBrand" : "MainText"}
+                        color={today().day === 0 ? "PrimaryBrand" : "Gray.c900"}
                       >
                         일요일
                         {timeForText(
@@ -540,7 +613,7 @@ const StoreDetail = () => {
                   />
                 }
               >
-                <TextBody color="MainText">{item.storeCall}</TextBody>
+                <TextBody color="Gray.c900">{item.storeCall}</TextBody>
               </InnerBox>
               <InnerBox
                 w={innerBoxWidth}
@@ -551,12 +624,12 @@ const StoreDetail = () => {
                   />
                 }
               >
-                <TextBody color="MainText">{item.insta}</TextBody>
+                <TextBody color="Gray.c900">{item.insta}</TextBody>
               </InnerBox>
             </InBox>
           </FullBox>
         </FullBox>
-        {/* StartButton */}
+        {/* isStart? dialog */}
         <Dialog
           open={isStart}
           onClose={() => {
@@ -656,12 +729,31 @@ const StoreDetail = () => {
             </Box>
           </Box>
         </Dialog>
+
+        {/* start button */}
+        <Box width="100vw" height={150}></Box>
         <FullBox
+          className="divJCC"
+          css={css`
+            position: fixed;
+            bottom: 0;
+          `}
+        >
+          <InBox>
+            <NextButton></NextButton>
+          </InBox>
+        </FullBox>
+        {/* <FullBox
           sx={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
+          css={css`
+            position: fixed;
+
+            bottom: 30px;
+          `}
         >
           <InBox>
             <Box
@@ -669,9 +761,7 @@ const StoreDetail = () => {
               css={css`
                 width: 100%;
                 height: 60px;
-                margin: 30px 0px;
                 border-radius: 15px;
-                /* background-color: skyblue; */
               `}
               disabled={storeState === "사용가능" ? false : true}
               bgcolor={
@@ -686,7 +776,7 @@ const StoreDetail = () => {
               <TextHeader2 color="White">{nextButtonText}</TextHeader2>
             </Box>
           </InBox>
-        </FullBox>
+        </FullBox> */}
       </FullBox>
 
       <DialogPage

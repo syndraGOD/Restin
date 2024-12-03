@@ -2,7 +2,7 @@
 import { css, useTheme } from "@emotion/react";
 import { Box } from "@mui/material";
 
-export const BgColorDefault = ({ bgColor = "MainBackground.main" }) => {
+export const BgColorDefault = ({ bgColor = "White.main" }) => {
   return (
     <Box
       className="BackgroundImageBlur"

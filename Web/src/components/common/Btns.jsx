@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import theme from "../../style/theme";
-import { TextHeader2 } from "../designGuide";
+import { TextBodyLarge, TextHeader2 } from "../designGuide";
 
 export const DefaultBtn = ({ children, ...args }) => {
   return (
@@ -16,12 +16,12 @@ export const DefaultBtn = ({ children, ...args }) => {
         background-color: ${theme.palette.PrimaryBrand.main};
         &.Mui-disabled {
           background-color: ${theme.palette.Gray.c400};
-          color: ${theme.palette.White.main};
+          color: ${theme.palette.Black.main};
         }
       `}
       {...args}
     >
-      <TextHeader2>{children}</TextHeader2>
+      <TextBodyLarge weight="Bold">{children}</TextBodyLarge>
     </Button>
   );
 };

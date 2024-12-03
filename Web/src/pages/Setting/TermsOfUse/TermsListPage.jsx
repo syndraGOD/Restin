@@ -39,7 +39,7 @@ const TermsListPage = () => {
       <Box
         className="BackgroundImageBlur"
         sx={{
-          backgroundColor: "MainBackground.main",
+          backgroundColor: "White.main",
         }}
         css={css`
           width: 100%;

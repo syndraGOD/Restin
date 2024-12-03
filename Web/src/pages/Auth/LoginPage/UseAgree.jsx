@@ -5,7 +5,8 @@ import FullBox from "@components/common/FullBox";
 import HeaderInner from "@components/common/HeaderInner";
 import { TextBody, TextHeader2 } from "@components/designGuide";
 import InBox from "@components/common/InBox";
-import { Box, Button, Checkbox } from "@mui/material";
+import { Box, Button } from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
 import theme from "../../../style/theme";
 import { DefaultBtn } from "@components/common/Btns";
 import { useEffect, useRef, useState } from "react";
@@ -20,6 +21,9 @@ import { setuserData } from "../../../store/modules/userSlice";
 import DialogPage from "../../../components/common/DialogPage";
 import GetNotionJSX from "../../../components/common/NotionPageGet";
 import { setVerifiToken } from "../../../store/modules/tokenSlice";
+import { CheckBox } from "@mui/icons-material";
+import { TextBox_header2 } from "../../../components/common/TextBox";
+import { BiSquareRounded } from "react-icons/bi";
 
 const UseAgree = () => {
   const location = useLocation();
@@ -28,6 +32,7 @@ const UseAgree = () => {
   const [inputRef1, setInputRef1] = useState(false);
   const [inputRef2, setInputRef2] = useState(false);
   const [inputRef3, setInputRef3] = useState(false);
+  const [inputRef4, setInputRef4] = useState(false);
   const [dialog, setDialog] = useState(false);
   const [dialogText, setDialogText] = useState();
   const [dialogH2, setDialogH2] = useState();
@@ -39,11 +44,7 @@ const UseAgree = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.userR.userData);
 
-  useEffect(() => {
-    console.log("후", userData);
-  }, [userData]);
-
-  const nextBtnClcik = async () => {
+  const nextBtnClick = async () => {
     const res = await fetch(`${restinAPI}/auth/register`, {
       mode: "cors",
       method: "POST",
@@ -62,24 +63,24 @@ const UseAgree = () => {
       console.log(error);
     }
   };
+  const label = { inputProps: { "aria-label": "Checkbox demo" } };
   return (
     <FullBox sx={{ height: "100%" }}>
       <BgColorDefault />
       <FullBox className="divJCC" sx={{ height: "100%", display: "flex" }}>
         <HeaderInner></HeaderInner>
-        <InBox sx={{ textAlign: "start", display: "flex" }}>
-          <TextHeader2 color="Black" width={"100%"}>
-            {profile.nick}님
-            <br />
-            환영합니다!
-          </TextHeader2>
-        </InBox>
+
+        <TextBox_header2>
+          {profile.nick}님
+          <br />
+          환영합니다!
+        </TextBox_header2>
         <Box className="EmptyBox" sx={{ width: "100%", flex: 1 }}></Box>
         <InBox
           css={css`
-            background-color: ${theme.palette.White.main};
-            border-radius: 18px;
-            padding: 12px;
+            background-color: ${theme.palette.Gray.c100};
+            border-radius: 20px;
+            padding: 20px 24px;
             box-sizing: border-box;
             margin-bottom: 10vw;
           `}
@@ -104,21 +105,23 @@ const UseAgree = () => {
                 }}
               >
                 <Checkbox
+                  icon={<BiSquareRounded size="26px" />}
                   checked={inputRef1}
                   onChange={(e) => {
                     setInputRef1(e.target.checked);
                   }}
-                />
+                ></Checkbox>
+
                 <TextBody
-                  weight="Bold"
                   onClick={() => {
                     SetDialogPage({
                       text: <GetNotionJSX loc={NotionLocList.termsofuse} />,
                       h2: "",
                     });
                   }}
-                  color="Black"
+                  color="Gray.c900"
                 >
+                  {"   "}
                   (필수) 서비스 이용 약관
                 </TextBody>
               </Box>
@@ -135,7 +138,7 @@ const UseAgree = () => {
                   });
                 }}
               >
-                <IoIosArrowForward />
+                <IoIosArrowForward color={theme.palette.Black.main} />
               </Button>
             </Box>
           </InfoBox>
@@ -159,22 +162,23 @@ const UseAgree = () => {
                 }}
               >
                 <Checkbox
+                  icon={<BiSquareRounded size="26px" />}
                   checked={inputRef2}
                   onChange={(e) => {
                     setInputRef2(e.target.checked);
                   }}
                 />
                 <TextBody
-                  weight="Bold"
                   onClick={() => {
                     SetDialogPage({
                       text: <GetNotionJSX loc={NotionLocList.privacypolicy} />,
                       h2: "",
                     });
                   }}
-                  color="Black"
+                  color="Gray.c900"
                 >
-                  (필수) 개인정보 이용 방침
+                  {"   "}
+                  (필수) 개인정보 처리 방침
                 </TextBody>
               </Box>
               <Button
@@ -190,7 +194,7 @@ const UseAgree = () => {
                   });
                 }}
               >
-                <IoIosArrowForward />
+                <IoIosArrowForward color={theme.palette.Black.main} />
               </Button>
             </Box>
           </InfoBox>
@@ -214,13 +218,13 @@ const UseAgree = () => {
                 }}
               >
                 <Checkbox
+                  icon={<BiSquareRounded size="26px" />}
                   checked={inputRef3}
                   onChange={(e) => {
                     setInputRef3(e.target.checked);
                   }}
                 />
                 <TextBody
-                  weight="Bold"
                   onClick={() => {
                     SetDialogPage({
                       text: (
@@ -229,9 +233,10 @@ const UseAgree = () => {
                       h2: "",
                     });
                   }}
-                  color="Black"
+                  color="Gray.c900"
                 >
-                  (필수) 위치정보 수집 동의
+                  {"   "}
+                  (필수) 위치정보 이용약관
                 </TextBody>
               </Box>
               <Button
@@ -249,20 +254,77 @@ const UseAgree = () => {
                   });
                 }}
               >
-                <IoIosArrowForward />
+                <IoIosArrowForward color={theme.palette.Black.main} />
+              </Button>
+            </Box>
+          </InfoBox>
+          <InfoBox
+            css={css`
+              padding: 0;
+              margin: 0;
+            `}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Checkbox
+                  icon={<BiSquareRounded size="26px" />}
+                  checked={inputRef4}
+                  onChange={(e) => {
+                    setInputRef4(e.target.checked);
+                  }}
+                />
+                <TextBody
+                  onClick={() => {
+                    SetDialogPage({
+                      text: <GetNotionJSX loc={NotionLocList.otp_marketing} />,
+                      h2: "",
+                    });
+                  }}
+                  color="Gray.c900"
+                >
+                  {"   "}
+                  (선택) 마케팅 수신 동의
+                </TextBody>
+              </Box>
+              <Button
+                className="NotionButton"
+                css={css`
+                  padding: 5px;
+                  min-width: 0px;
+                `}
+                onClick={() => {
+                  SetDialogPage({
+                    text: <GetNotionJSX loc={NotionLocList.otp_marketing} />,
+                    h2: "",
+                  });
+                }}
+              >
+                <IoIosArrowForward color={theme.palette.Black.main} />
               </Button>
             </Box>
           </InfoBox>
         </InBox>
         <InBox>
           {inputRef1 && inputRef2 && inputRef3 ? (
-            <DefaultBtn onClick={nextBtnClcik}>시작하기</DefaultBtn>
+            <DefaultBtn onClick={nextBtnClick}>확인</DefaultBtn>
           ) : (
             <DefaultBtn
               onClick={() => {
                 setInputRef1(true);
                 setInputRef2(true);
                 setInputRef3(true);
+                setInputRef4(true);
               }}
             >
               모두 동의하기

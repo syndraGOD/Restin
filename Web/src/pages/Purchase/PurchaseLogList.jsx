@@ -8,7 +8,7 @@ import { Page } from "../../components/Page";
 
 const PurchaseLogList = () => {
   return (
-    <Page sx={{ backgroundColor: "MainBackground.main" }}>
+    <Page sx={{ backgroundColor: "White.main" }}>
       <FullBox
         sx={{ display: "flex", flexDirection: "column", height: "100%" }}
       >
@@ -17,7 +17,7 @@ const PurchaseLogList = () => {
           className="divJCC"
           sx={{ flex: 1, backgroundColor: "White.main", m: 4 }}
         >
-          <TextBodyLarge color="MainText">
+          <TextBodyLarge color="Gray.c900">
             아직 사용 내역이 없어요
           </TextBodyLarge>
           <TextHeader3 color="Black">카페 찾아보기</TextHeader3>

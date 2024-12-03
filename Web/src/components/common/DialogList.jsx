@@ -4,7 +4,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import Dialog from "@mui/material/Dialog";
-import { TextBody, TextHeader3 } from "../designGuide";
+import { TextBody, TextBodyLarge, TextHeader3 } from "../designGuide";
 import { css } from "@emotion/react";
 
 // const data = ["username@gmail.com", "user02@gmail.com"];
@@ -27,35 +27,41 @@ export const DialogList = (props) => {
       css={css`
         .MuiDialog-paper {
           display: flex;
-          justify-content: center;
-          text-align: center;
-          width: 60vw;
-          padding: 20px 0px;
-          border-radius: 25px;
+          justify-content: start;
+          text-align: start;
+          width: 75vw;
+          max-width: 75vw;
+          min-height: 215px;
+          padding: 7% 10% 4.5% 7%;
+          box-sizing: border-box;
+          border-radius: 14px;
           .MuiButtonBase-root {
             display: flex;
-            justify-content: center;
+            justify-content: start;
           }
           p {
-            text-align: center;
+            text-align: start;
             display: inline;
             /* border-bottom: 1px solid #e0e0e0; */
           }
         }
       `}
     >
-      <TextHeader3>{title}</TextHeader3>
-      <List sx={{ pt: 3, textAlign: "center" }}>
+      <TextHeader3 weight="Bold">{title}</TextHeader3>
+      <List sx={{ pt: "20px", pl: 0 }}>
         {data.map((value) => (
           <ListItem
             disableGutters
             key={value}
             css={css`
-              padding: 4px 0px;
+              padding: 6px 0px;
             `}
           >
-            <ListItemButton onClick={() => handleListItemClick(value)}>
-              <TextBody>{value}</TextBody>
+            <ListItemButton
+              sx={{ p: 0 }}
+              onClick={() => handleListItemClick(value.key)}
+            >
+              <TextBodyLarge weight="Medium">{value}</TextBodyLarge>
             </ListItemButton>
           </ListItem>
         ))}

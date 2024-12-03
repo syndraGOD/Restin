@@ -20,7 +20,9 @@ const Welcome4 = () => {
           navi("/welcome/5");
         }}
       >
-        <TextHeader2 weight="Bold">물론이죠</TextHeader2>
+        <TextHeader2 weight="Bold" color="White.main">
+          물론이죠
+        </TextHeader2>
       </Button>
       <BgColorDefault bgColor="White.main" />
     </ImgTextButtonPage>

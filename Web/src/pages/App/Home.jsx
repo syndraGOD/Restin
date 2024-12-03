@@ -1,7 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { TextBody, TextTitle1 } from "../../components/designGuide.jsx";
+import {
+  TextBody,
+  TextHeader3,
+  TextTitle1,
+} from "../../components/designGuide.jsx";
 import { Box } from "@mui/material";
 import { Page } from "@components/Page.jsx";
 // import image from "../../assets/images/WelcomeImage1.png";
@@ -18,7 +22,12 @@ import { getImg, getImgList } from "../../api/fsImgDown.js";
 import { setStoreData } from "../../store/modules/storeSlice.js";
 import { DialogList } from "../../components/common/DialogList.jsx";
 import HeaderText from "../../components/common/HeaderText.jsx";
-import SubwayIcons from "../../api/getSubwayImage.js";
+import logo_small from "@assets/Logo/logo_small.png";
+import { IoIosArrowDown } from "react-icons/io";
+import theme from "../../style/theme.js";
+import { BsFillRecordCircleFill } from "react-icons/bs";
+import { VscCircleLarge } from "react-icons/vsc";
+
 const Home = () => {
   console.log("렌더링");
   const sortList = {
@@ -127,15 +136,29 @@ const Home = () => {
           {/* [Children] FilterPage, Detail */}
           <Outlet />
           {/* h2 */}
-          <HeaderText>Restin</HeaderText>
+          <HeaderText sx={{ margin: "10px 0" }}>
+            <img src={logo_small} height={"21px"} />
+          </HeaderText>
           {/* header */}
           <FullBox
             className="divJCC"
-            sx={{
-              flexDirection: "row",
-            }}
+            flexDirection={"row"}
+            padding={1.5}
+            borderBottom={`1px solid ${theme.palette.Gray.c300}`}
           >
-            <Box
+            <InBox textAlign={"start"}>
+              <Box
+                display={"flex"}
+                alignItems={"center"}
+                onClick={() => {
+                  navi("/app/filter");
+                }}
+              >
+                <TextHeader3 weight="Bold">{filter.station}역 </TextHeader3>
+                <IoIosArrowDown size={24} color={theme.palette.Gray.c900} />
+              </Box>
+            </InBox>
+            {/* <Box
               sx={{
                 width: 1 / 2,
                 borderRadius: "0px",
@@ -176,11 +199,27 @@ const Home = () => {
               <TextBody weight="Bold" color="Black">
                 {sortUser.text}
               </TextBody>
-            </Box>
+            </Box> */}
 
             <DialogList
               title="정렬"
-              data={Object.values(sortList).map((obj) => obj.text)}
+              data={Object.values(sortList).map((obj) => {
+                return (
+                  <Box key={obj.text} display="flex" alignItems={"center"}>
+                    {obj.text !== sortUser.text ? (
+                      <VscCircleLarge size={20} />
+                    ) : (
+                      <BsFillRecordCircleFill
+                        color={theme.palette.PrimaryBrand.main}
+                        size={20}
+                      />
+                    )}
+
+                    {"    " + obj.text}
+                    {/* <TextBody>{obj.text}</TextBody> */}
+                  </Box>
+                );
+              })}
               selectedValue={sortUser.text}
               open={SortPageOpen}
               onClose={(value) => {
@@ -194,12 +233,11 @@ const Home = () => {
           {/* contents */}
           <FullBox
             className="divJCC"
-            bgcolor={myTheme.palette.MainBackground.main}
+            bgcolor={myTheme.palette.White.main}
             sx={{
               flexGrow: 1,
               alignItems: "center",
               justifyContent: "start",
-              // height: "100%",
               position: "relative",
               overflowY: "scroll",
             }}
@@ -210,17 +248,35 @@ const Home = () => {
                 display: "block",
               }}
             >
-              <Box textAlign={"start"} margin={"15px 0px"}>
-                <TextBody color="MainText">
-                  {data ? data.length : 0}개의 카페
-                </TextBody>
-              </Box>
               <Box
                 sx={{
-                  display: "block",
-                  // height: "1000px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  // textAlign: "start",
+                  margin: "24px 0 24px 0",
                 }}
               >
+                <TextBody color="Gray.c900">
+                  {data ? data.length : 0}개의 카페
+                </TextBody>
+                <Box
+                  sx={{
+                    maxHeight: "30px",
+                    border: `1px solid ${theme.palette.Gray.c300}`,
+                    borderRadius: "16px",
+                    padding: "4px 12px",
+                  }}
+                  onClick={() => {
+                    setSortPageOpen(true);
+                  }}
+                >
+                  <TextBody weight="Bold" color="Gray.c700">
+                    {sortUser.text}
+                  </TextBody>
+                </Box>
+              </Box>
+              <Box display="block">
                 {data
                   ? data.map((item, idx) => {
                       return (
@@ -237,7 +293,7 @@ const Home = () => {
           </FullBox>
           {/* navigation */}
           <Box
-            bgcolor={myTheme.palette.MainBackground.main}
+            bgcolor={myTheme.palette.White.main}
             sx={
               {
                 // borderRadius: "15px 15px 0 0",

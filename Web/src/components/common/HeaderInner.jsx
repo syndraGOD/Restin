@@ -1,37 +1,58 @@
 import React from "react";
-import { TextHeader2, TextHeader3 } from "../designGuide";
+import { TextBody, TextHeader2, TextHeader3 } from "../designGuide";
 import FullBox from "./FullBox";
 import { IoIosArrowBack } from "react-icons/io";
 import theme from "../../style/theme";
 import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import InBox from "./InBox";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 
-const HeaderInner = ({ children, ...props }) => {
+const HeaderInner = ({ position, children, ...props }) => {
   const navigate = useNavigate();
   return (
     <FullBox
-      {...props}
       className="divJCC"
-      sx={{
-        alignItems: "center",
-        position: "relative",
-        padding: "10px 0px",
-        // borderBottom: `1px solid ${theme.palette.Gray.c400}`,
-        height: "70px",
-      }}
+      position={position ? position : "static"}
+      top={0}
+      zIndex={2}
+      backgroundColor="White.main"
     >
-      <Box
-        component={Button}
-        onClick={() => {
-          navigate(-1);
-        }}
-        sx={{ position: "absolute", lineHeight: "70px", left: "10px" }}
+      <InBox
+        css={css`
+          height: 50px;
+          position: relative;
+          display: flex;
+          align-items: center;
+        `}
+        {...props}
       >
-        <IoIosArrowBack size={"40px"} color={theme.palette.Black.main} />
-      </Box>
-      <TextHeader3 sx={{ margin: "5px 0", alignItems: "center" }} color="Black">
-        {children}
-      </TextHeader3>
+        <Box
+          onClick={() => {
+            navigate(-1);
+          }}
+          sx={{
+            position: "absolute",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            left: 0,
+          }}
+        >
+          <IoIosArrowBack size={"22px"} color={theme.palette.Gray.c900} />
+        </Box>
+        <TextBody
+          sx={{ margin: "5px 0", alignItems: "center" }}
+          color="Gray.c900"
+          weight="Bold"
+        >
+          {typeof children === "string" ? children : null}
+        </TextBody>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          {typeof children !== "string" ? children : null}
+        </Box>
+      </InBox>
     </FullBox>
   );
 };

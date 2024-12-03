@@ -19,7 +19,7 @@ const InfoBox = ({ children, ...props }) => {
         }
         svg {
           font-size: 18px;
-          color: ${theme.palette.Black.main};
+          /* color: ${theme.palette.Black.main}; */
         }
       `}
       {...props}

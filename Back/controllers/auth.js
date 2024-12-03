@@ -24,12 +24,16 @@ const smsVerify = {
  *
  */
 // admin.initializeApp(firebaseConfig);
+
+//미들웨어는, 성공토큰을 보내면 안된다,
+//마지막 200 res는 반드시 routes에서
+//모든 userData는 서버에서 불러와서 수정할것
+
 const verifyTokenMiddleware = async (req, res, next) => {
   const userToken = req.headers["authorization"]?.split(" ")[1];
   //token = jwt token || "null" || undefined
   if (!userToken || userToken === "null") {
     res.status(401).json({
-      result: "forbidden-approach",
       message: "token is null or undefind",
     });
   }
@@ -43,34 +47,12 @@ const verifyTokenMiddleware = async (req, res, next) => {
   } catch (error) {
     console.log("[error] token is invaild or null");
     res.status(401).json({
-      result: "forbidden-approach",
       message: "token is expired or invaild",
     });
   }
 };
 
-// import { jsDateToFirebaseDate } from "../utils/firebaseDateConverter.js";
-const user_isExistUserMiddleware = async (req, res, next) => {
-  const phoneNumber = req.headers.phonenumber;
-  console.log(req.headers.phonenumber);
-  if (phoneNumber) {
-    const getUserData = await db_user_read_query(
-      "profile.phoneNumber",
-      phoneNumber
-    );
-    if (getUserData.resultCode === 200) {
-      //아 여기서 완전 보안 처리하려면,
-      //userdata에 verificode를 같이 저장시킨다음
-      //
-      req.userId = getUserData.data;
-      next();
-    } else {
-      res.status(401).json({ message: "user is not found" });
-    }
-  } else {
-    res.status(400).json({ message: "user is empty" });
-  }
-};
+//가입된 유저인지 확인하는 미들웨어
 const user_smsVerifyMiddleware = async (req, res, next) => {
   if (
     req.body.phoneNumber !== undefined &&
@@ -101,10 +83,76 @@ const user_smsVerifyMiddleware = async (req, res, next) => {
       res.status(400).json({ message: RESForm });
     }
   } else {
-    res.status(500).json({ message: "is not phoneNumber format" });
+    res.status(400).json({ message: "is not phoneNumber format" });
   }
 };
+//sms 인증번호 확인 미들웨어
+const user_verifiCodeMiddleware = (req, res, next) => {
+  try {
+    const { userverificode, phonenumber } = req.headers;
+    if (
+      !userverificode ||
+      !phonenumber ||
+      smsVerify[phonenumber] !== Number(userverificode)
+    ) {
+      console.warn(82, smsVerify[phonenumber], Number(userverificode));
+      throw new Error();
+    }
+    next();
+  } catch (error) {
+    res.status(412).json({
+      message: "verifiCode is null or undefind or invaild",
+    });
+  }
+};
+const user_isExistUserMiddleware = async (req, res, next) => {
+  const phoneNumber = req.headers.phonenumber;
+  console.log(req.headers.phonenumber);
+  if (phoneNumber) {
+    const getUserData = await db_user_read_query(
+      "profile.phoneNumber",
+      phoneNumber
+    );
+    if (getUserData.resultCode === 200) {
+      //아 여기서 완전 보안 처리하려면,
+      //userdata에 verificode를 같이 저장시킨다음
+      //
+      req.userId = getUserData.data;
+      next();
+    } else {
+      res
+        .status(200)
+        .json({ message: "sms verifi ok, but user not regist", exist: false });
+    }
+  } else {
+    res.status(400).json({ message: "phonenumber is empty" });
+  }
+};
+//token login
+const user_loginMiddleware = async (req, res, next) => {
+  const userId = req.userId ?? req.headers.userId;
+  console.log(userId, req.userId, req.headers.userId);
+  const user = await db_user_read(userId);
 
+  if (user.resultCode === 404 || user.resultCode === 500) {
+    res.status(404).json({ message: user.text });
+  }
+  const payload = {
+    userId: user.data.userId,
+    userType: user.data.profile.userType,
+  };
+  const newToken = generateToken(payload);
+  user.data.security = {
+    ...user.data.security,
+    lastLogin: jsDateToFirebaseDate(new Date()),
+    auth_token: newToken,
+  };
+  console.log("Token Refresh : ", user.data.profile.phoneNumber);
+  res
+    .status(200)
+    .json({ message: "user login access", user, newToken, exist: true });
+  await db_user_update(userId, user.data);
+};
 const user_registerMiddleware = async (req, res, next) => {
   const { nick, birth, phoneNumber } = req.body;
   // console.log(nick, birth);
@@ -131,50 +179,6 @@ const user_registerMiddleware = async (req, res, next) => {
   } catch {
     res.status(401).json({ message: "user create failed" });
   }
-};
-//유저가 만약 토큰 안들고올시, 로그인하면 여기서 인증번호 확인
-const user_verifiCodeMiddleware = (req, res, next) => {
-  try {
-    const { userverificode, phonenumber, userid } = req.headers;
-    console.log(userverificode, phonenumber, userid);
-    if (
-      !userverificode ||
-      !phonenumber ||
-      smsVerify[phonenumber] !== Number(userverificode)
-    ) {
-      console.log(84, smsVerify[phonenumber], Number(userverificode));
-      throw new Error();
-    }
-    req.userId = userid;
-    next();
-  } catch (error) {
-    res.status(401).json({
-      result: "forbidden-approach",
-      message: "verifiCode is null or undefind or invaild",
-    });
-  }
-};
-//token login
-const user_loginMiddleware = async (req, res, next) => {
-  const { userId } = req;
-  const user = await db_user_read(userId);
-
-  if (user.resultCode === 404 || user.resultCode === 500) {
-    res.status(404).json({ message: user.text });
-  }
-  const payload = {
-    userId: user.data.userId,
-    userType: user.data.profile.userType,
-  };
-  const newToken = generateToken(payload);
-  user.data.security = {
-    ...user.data.security,
-    lastLogin: jsDateToFirebaseDate(new Date()),
-    auth_token: newToken,
-  };
-  console.log("Token Refresh : ", user.data.profile.phoneNumber);
-  res.status(200).json({ message: "user login access", user, newToken });
-  await db_user_update(userId, user.data);
 };
 const user_deleteMiddleware = async () => {};
 // user_isExistUser();

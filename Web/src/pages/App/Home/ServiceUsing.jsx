@@ -189,15 +189,12 @@ const ServiceUsing = () => {
                 align-items: center;
               `}
             >
-              <PiWifiHighBold
-                size={"5em"}
-                color={theme.palette.MainText.main}
-              />
+              <PiWifiHighBold size={"5em"} color={theme.palette.Gray.c900} />
             </Box>
             <TextBody weight="Bold" sx={{ marginTop: "10px" }}>
               Wifi: {item.wifiId}
             </TextBody>
-            <TextBodySmall sx={{ fontWeight: "bold" }} color="MainText">
+            <TextBodySmall sx={{ fontWeight: "bold" }} color="Gray.c900">
               Pw: {item.wifiPw}
             </TextBodySmall>
           </Box>
@@ -250,7 +247,7 @@ const ServiceUsing = () => {
                 >
                   {item.toiletManLocation}
                 </TextBody>
-                <TextBody weight="Bold" color="MainText">
+                <TextBody weight="Bold" color="Gray.c900">
                   {item.toiletManPw}
                 </TextBody>
               </Box>
@@ -305,7 +302,7 @@ const ServiceUsing = () => {
                   >
                     {item.toiletManLocation}
                   </TextBody>
-                  <TextBody weight="Bold" color="MainText">
+                  <TextBody weight="Bold" color="Gray.c900">
                     {item.toiletManPw}
                   </TextBody>
                 </Box>
@@ -349,7 +346,7 @@ const ServiceUsing = () => {
                 >
                   {item.toiletWomanLocation}
                 </TextBody>
-                <TextBody weight="Bold" color="MainText">
+                <TextBody weight="Bold" color="Gray.c900">
                   {item.toiletWomanPw}
                 </TextBody>
               </Box>
@@ -407,7 +404,7 @@ const ServiceUsing = () => {
                   >
                     {item.toiletWomanLocation}
                   </TextBody>
-                  <TextBody weight="Bold" color="MainText">
+                  <TextBody weight="Bold" color="Gray.c900">
                     {item.toiletWomanPw}
                   </TextBody>
                 </Box>
@@ -432,7 +429,7 @@ const ServiceUsing = () => {
             ></img>
             <TextBody
               weight="Bold"
-              color="MainText"
+              color="Gray.c900"
               sx={{ padding: "10px", textAlign: "center" }}
             >
               화면을 보여주고
@@ -456,7 +453,7 @@ const ServiceUsing = () => {
                   : ``}
                 {`${useDurationTime % 60 < 0 ? "0" : useDurationTime % 60}`}분
               </TextBodyLarge>
-              <TextBody weight="Bold" color="MainText">
+              <TextBody weight="Bold" color="Gray.c900">
                 사용 시간
               </TextBody>
             </Box>
@@ -464,7 +461,7 @@ const ServiceUsing = () => {
               <TextBodyLarge sx={{ fontWeight: "bold" }} color="Black">
                 {storeData.unitPrice * (1 + Math.floor(useDurationTime / 10))}원
               </TextBodyLarge>
-              <TextBody weight="Bold" color="MainText">
+              <TextBody weight="Bold" color="Gray.c900">
                 사용 요금
               </TextBody>
             </Box>
