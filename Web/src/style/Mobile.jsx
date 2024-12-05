@@ -1,8 +1,10 @@
-import { ExpandCircleDownTwoTone } from "@mui/icons-material";
-import styled from "styled-components";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { DialogPage } from "../components/common/DialogOk";
+import GetNotionJSX from "../components/common/NotionPageGet";
+import NotionLocList from "../api/NotionLocList";
 // const setScreenSize = () => {
 //   let vh = window.innerHeight * 0.01;
 
@@ -58,6 +60,7 @@ import { useEffect, useRef, useState } from "react";
 // }, []);
 
 export const MobilePage = ({ children }) => {
+  const location = useLocation();
   const [windowViewHeight, setwindowViewHeight] = useState(
     window.visualViewport?.height || window.innerHeight
   );
@@ -71,33 +74,6 @@ export const MobilePage = ({ children }) => {
     return () => {
       window.visualViewport.removeEventListener("resize", handleResize);
     };
-    // const handleVisualViewportResize = () => {
-    //   // 이전의 visualViewport 영역
-    //   const currentVisualViewport = window.visualViewport.height;
-    //   if (
-    //     fullHeight.current - 30 >
-    //     currentVisualViewport
-    //     // && fullHeight.current - 100 < currentVisualViewport
-    //   ) {
-    //     console.log("keyboard on");
-    //     // alert("hi");
-    //     const scrollHeight = window.document.scrollingElement.scrollHeight;
-    //     const scrollTop = scrollHeight - window.visualViewport.height;
-
-    //     window.scrollTo(0, scrollTop); // 입력창이 키보드에 가려지지 않도록 조절
-    //   }
-    //   fullHeight.current = window.visualViewport.height;
-    // };
-    // window.visualViewport.addEventListener(
-    //   "resize",
-    //   handleVisualViewportResize
-    // );
-    // return () => {
-    //   window.visualViewport.removeEventListener(
-    //     "resize",
-    //     handleVisualViewportResize
-    //   );
-    // };
   }, []);
   return (
     <div
@@ -119,6 +95,16 @@ export const MobilePage = ({ children }) => {
       `}
     >
       {children}
+      {/* {console.log(
+        location.hash !== "" && NotionLocList[location.hash.replace("#", "")]
+      )} */}
+      <DialogPage
+        open={Boolean(
+          location.hash !== "" && NotionLocList[location.hash.replace("#", "")]
+        )}
+      >
+        <GetNotionJSX loc={NotionLocList[location.hash.replace("#", "")]} />
+      </DialogPage>
     </div>
   );
 };

@@ -71,9 +71,9 @@ const StoreFilterPage = () => {
               <Box
                 sx={{
                   position: "relative",
-                  backgroundColor: `${
-                    line === select.line ? "white" : myTheme.palette.White.main
-                  }`,
+                  // backgroundColor: `${
+                  //   line === select.line ? "white" : myTheme.palette.White.main
+                  // }`,
                   // borderRight: `1px solid ${myTheme.palette.Gray.c400}`,
                   borderRadius: "0px",
                   height: "45px",

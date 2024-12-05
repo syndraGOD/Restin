@@ -1,6 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import FullBox from "../../../components/common/FullBox";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -19,7 +24,7 @@ import {
   TextHeader3,
 } from "../../../components/designGuide";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { Box, Button, Dialog } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import InnerBox from "../../../components/common/InnerBox";
 import { FaRegClock } from "react-icons/fa";
 import { BiArrowToRight, BiPhoneCall } from "react-icons/bi";
@@ -33,7 +38,6 @@ import NotionLocList from "../../../api/NotionLocList";
 import { restinAPI } from "../../../api/config";
 import { useDispatch, useSelector } from "react-redux";
 import { setuserData } from "../../../store/modules/userSlice";
-import DialogPage from "../../../components/common/DialogPage";
 
 import { refundRule, TermsOfUse } from "../../../api/Rules/TermsOfUse";
 import HeaderText from "../../../components/common/HeaderText";
@@ -41,23 +45,28 @@ import GetNotionJSX from "../../../components/common/NotionPageGet";
 import HeaderInner from "../../../components/common/HeaderInner";
 import { GoCopy } from "react-icons/go";
 import { DefaultBtn } from "../../../components/common/Btns";
+// import UseGuide from "./UseGuide";
+import UseGuide from "./UseGuide.png";
+import { DialogOK } from "../../../components/common/DialogOk";
 
 const StoreDetail = () => {
   const userData = useSelector((state) => state.userR.userData);
+  const storeData = useSelector((state) => state.storeR.storeData);
   const dispatch = useDispatch();
   const innerBoxIconSize = "18px";
   const innerBoxWidth = "26px";
   const myTheme = useTheme();
   const navi = useNavigate();
   const location = useLocation();
-  const { item } = location.state || {};
-  const storeData = item;
+  const [searchParams] = useSearchParams();
+  const selectUUID = searchParams.get("UUID");
+  // const { item } = location.state || {};
+  const item = storeData.filter((store) => store.UUID === selectUUID)[0];
   const [accordionIsVisible, setAccordionIsVisible] = useState(false);
-  const [isStart, setIsStart] = useState(false);
-  const [terms, setTerms] = useState(false);
-  const [refund, setRefund] = useState(false);
   const innerSize = "12px";
-  let nextButtonText = "사용 시작하기";
+  let nextButtonText = "이용 시작하기";
+
+  // console.log("detail 리로드", "localstate : ", location.state || {});
   const settings = {
     dots: true,
     infinite: true,
@@ -68,14 +77,6 @@ const StoreDetail = () => {
     nextArrow: <></>, // nextn=button delete
   };
 
-  const [dialog, setDialog] = useState(false);
-  const [dialogText, setDialogText] = useState();
-  const [dialogH2, setDialogH2] = useState();
-  const SetDialogPage = ({ text, h2 }) => {
-    setDialogText(text);
-    setDialogH2(h2);
-    setDialog(true);
-  };
   const nextBtnClick = async () => {
     try {
       const res = await fetch(`${restinAPI}/user/usage/start`, {
@@ -88,8 +89,8 @@ const StoreDetail = () => {
         body: JSON.stringify({
           userData,
           storeInfo: {
-            id: storeData.id,
-            uuid: storeData.UUID,
+            id: item.id,
+            uuid: item.UUID,
           },
         }),
       });
@@ -99,11 +100,11 @@ const StoreDetail = () => {
         dispatch(setuserData(resUserData));
         navi("/app/using", { state: { item } });
       } else {
-        setIsStart(false);
+        navi(-1);
         console.log("이용시작 실패");
       }
     } catch (error) {
-      setIsStart(false);
+      navi(-1);
       console.log(error);
     }
     //resultCODE가 200일때와 아닐때 예외처리
@@ -289,7 +290,7 @@ const StoreDetail = () => {
       return (
         <DefaultBtn
           onClick={() => {
-            setIsStart(true);
+            navi(`${location.search}#isStart`);
           }}
         >
           사용 시작하기
@@ -333,7 +334,12 @@ const StoreDetail = () => {
             z-index: 2;
           `}
         >
-          <Box height={"100%"}>
+          <Box
+            height={"100%"}
+            onClick={() => {
+              navi("/app/useguide");
+            }}
+          >
             <TextBody weight="Bold" color="Gray.c700">
               이용 안내
             </TextBody>
@@ -629,107 +635,6 @@ const StoreDetail = () => {
             </InBox>
           </FullBox>
         </FullBox>
-        {/* isStart? dialog */}
-        <Dialog
-          open={isStart}
-          onClose={() => {
-            setIsStart(false);
-          }}
-          css={css`
-            .MuiDialog-paper {
-              width: 280px;
-              height: 275px;
-              border-radius: 15px;
-              background-color: white;
-              text-align: center;
-              display: flex;
-              /* justify-content: center; */
-              align-items: center;
-            }
-          `}
-        >
-          <Box
-            sx={{
-              width: "80%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-evenly",
-              flex: 1,
-            }}
-          >
-            <TextHeader3 color="Gray.700" sx={{ fontWeight: 700 }}>
-              사용 시작할까요?
-            </TextHeader3>
-            <TextBody color="Gray.900">
-              사용한 시간만큼 요금이 계산되고
-              <br />
-              사용 종료 후 결제해요!
-            </TextBody>
-            <Box>
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <TextBodySmall color="Gray.500">서비스 이용약관</TextBodySmall>
-                <IoIosArrowForward
-                  onClick={() => {
-                    SetDialogPage({
-                      text: <GetNotionJSX loc={NotionLocList.termsofuse} />,
-                      h2: "",
-                    });
-                  }}
-                />
-              </Box>
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <TextBodySmall color="Gray.500">
-                  취소 및 환불 규칙
-                </TextBodySmall>
-                <IoIosArrowForward
-                  onClick={() => {
-                    SetDialogPage({
-                      text: <GetNotionJSX loc={NotionLocList.refundrule} />,
-                      h2: "",
-                    });
-                  }}
-                />
-              </Box>
-            </Box>
-            <TextBodySmall color="Gray.500">
-              위 내용을 확인하였으며 결제에 동의합니다
-            </TextBodySmall>
-          </Box>
-          <Box className="divJCC" sx={{ marginBottom: "9px" }}>
-            <Box>
-              <Button
-                sx={{
-                  marginRight: "8px",
-                  width: "127px",
-                  height: "50px",
-                  bgcolor: "Gray.c400",
-                  borderRadius: "14px",
-                }}
-                onClick={() => {
-                  setIsStart(false);
-                }}
-              >
-                <TextBodyLarge color="White.main" sx={{ fontWeight: 700 }}>
-                  취소
-                </TextBodyLarge>
-              </Button>
-              <Button
-                sx={{
-                  width: "127px",
-                  height: "50px",
-                  bgcolor: "PrimaryBrand.main",
-                  borderRadius: "14px",
-                }}
-                onClick={nextBtnClick}
-              >
-                <TextBodyLarge color="White.main" sx={{ fontWeight: 700 }}>
-                  시작
-                </TextBodyLarge>
-              </Button>
-            </Box>
-          </Box>
-        </Dialog>
-
         {/* start button */}
         <Box width="100vw" height={150}></Box>
         <FullBox
@@ -743,51 +648,39 @@ const StoreDetail = () => {
             <NextButton></NextButton>
           </InBox>
         </FullBox>
-        {/* <FullBox
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          css={css`
-            position: fixed;
-
-            bottom: 30px;
-          `}
-        >
-          <InBox>
-            <Box
-              component={Button}
-              css={css`
-                width: 100%;
-                height: 60px;
-                border-radius: 15px;
-              `}
-              disabled={storeState === "사용가능" ? false : true}
-              bgcolor={
-                storeState === "사용가능"
-                  ? myTheme.palette.PrimaryBrand.main
-                  : myTheme.palette.Gray.c400
-              }
-              onClick={() => {
-                setIsStart(true);
-              }}
-            >
-              <TextHeader2 color="White">{nextButtonText}</TextHeader2>
-            </Box>
-          </InBox>
-        </FullBox> */}
       </FullBox>
 
-      <DialogPage
-        state={dialog}
-        onClose={() => {
-          setDialog(false);
-        }}
-        h2={dialogH2}
+      {/* isStart? dialog */}
+
+      <DialogOK
+        open="isStart"
+        h2="사용 시작할까요?"
+        text={`사용한 시간만큼 요금이 계산되고\n사용 종료 후 결제해요!`}
+        isok={nextBtnClick}
+        isoktext="사용 시작하기"
       >
-        {dialogText}
-      </DialogPage>
+        <Box color="Gray.c600">
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <TextBodySmall>서비스 이용약관</TextBodySmall>
+            <IoIosArrowForward
+              onClick={() => {
+                navi(`${location.search}#termsofuse`);
+              }}
+            />
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <TextBodySmall>취소 및 환불 규칙</TextBodySmall>
+            <IoIosArrowForward
+              onClick={() => {
+                navi(`${location.search}#refundrule`);
+              }}
+            />
+          </Box>
+          <TextBodySmall marginTop={1}>
+            위 내용을 확인하였으며 결제에 동의합니다
+          </TextBodySmall>
+        </Box>
+      </DialogOK>
     </Page>
   );
 };

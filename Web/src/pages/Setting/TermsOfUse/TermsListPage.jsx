@@ -13,29 +13,12 @@ import NotionLocList from "../../../api/NotionLocList";
 import Navigation from "../../../components/common/Navigation";
 import { useState } from "react";
 import GetNotionJSX from "../../../components/common/NotionPageGet";
-import DialogPage from "../../../components/common/DialogPage";
+import { SettingInfoBox } from "../SettingPage";
 
 const TermsListPage = () => {
   const navi = useNavigate();
-  const [dialog, setDialog] = useState(false);
-  const [dialogText, setDialogText] = useState();
-  const [dialogH2, setDialogH2] = useState();
-  const SetDialogPage = ({ text, h2 }) => {
-    setDialogText(text);
-    setDialogH2(h2);
-    setDialog(true);
-  };
   return (
     <Page sx={{ display: "flex", flexDirection: "column" }}>
-      <DialogPage
-        state={dialog}
-        onClose={() => {
-          setDialog(false);
-        }}
-        h2={dialogH2}
-      >
-        {dialogText}
-      </DialogPage>
       <Box
         className="BackgroundImageBlur"
         sx={{
@@ -55,55 +38,35 @@ const TermsListPage = () => {
         sx={{ flex: 1, display: "flex", flexDirection: "column" }}
       >
         <InBox>
-          <InfoBox>
-            <Button
-              onClick={() => {
-                SetDialogPage({
-                  text: <GetNotionJSX loc={NotionLocList.termsofuse} />,
-                  h2: "",
-                });
-              }}
-            >
-              <TextBody weight="Bold" color="Black">
-                서비스 이용약관
-              </TextBody>
-              <IoIosArrowForward />
-            </Button>
-            <Button
-              onClick={() => {
-                SetDialogPage({
-                  text: <GetNotionJSX loc={NotionLocList.privacypolicy} />,
-                  h2: "",
-                });
-              }}
-            >
-              <TextBody weight="Bold" color="Black">
-                개인정보 처리방침
-              </TextBody>
-              <IoIosArrowForward />
-            </Button>
-            <Button
-              onClick={() => {
-                SetDialogPage({
-                  text: (
-                    <GetNotionJSX loc={NotionLocList.locationinformation} />
-                  ),
-                  h2: "",
-                });
-              }}
-            >
-              <TextBody weight="Bold" color="Black">
-                위치정보 이용약관
-              </TextBody>
-              <IoIosArrowForward />
-            </Button>
-            <Button>
-              <TextBody weight="Bold" color="Black">
-                버전정보
-              </TextBody>
-              <TextBody color="Black">v1.0</TextBody>
-            </Button>
-          </InfoBox>
+          <SettingInfoBox
+            onClick={() => {
+              navi("#termsofuse");
+            }}
+          >
+            서비스 이용약관
+          </SettingInfoBox>
+          <SettingInfoBox
+            onClick={() => {
+              navi("#privacypolicy");
+            }}
+          >
+            개인정보 처리방침
+          </SettingInfoBox>
+          <SettingInfoBox
+            onClick={() => {
+              navi("#locationinformation");
+            }}
+          >
+            위치정보 이용약관
+          </SettingInfoBox>
+          <SettingInfoBox
+            onClick={() => {
+              navi("#otp_marketing");
+            }}
+          >
+            마케팅 수신 동의(선택)
+          </SettingInfoBox>
+          <SettingInfoBox onClick={() => {}}>버전정보 v1.0</SettingInfoBox>
         </InBox>
         <Box sx={{ flex: 1 }}> </Box>
         <Navigation></Navigation>

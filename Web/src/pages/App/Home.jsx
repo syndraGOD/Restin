@@ -20,7 +20,7 @@ import { useTheme } from "@mui/material/styles";
 import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { getImg, getImgList } from "../../api/fsImgDown.js";
 import { setStoreData } from "../../store/modules/storeSlice.js";
-import { DialogList } from "../../components/common/DialogList.jsx";
+import { DialogList } from "../../components/common/DialogOk.jsx";
 import HeaderText from "../../components/common/HeaderText.jsx";
 import logo_small from "@assets/Logo/logo_small.png";
 import { IoIosArrowDown } from "react-icons/io";
@@ -133,8 +133,6 @@ const Home = () => {
             height: 100%;
           `}
         >
-          {/* [Children] FilterPage, Detail */}
-          <Outlet />
           {/* h2 */}
           <HeaderText sx={{ margin: "10px 0" }}>
             <img src={logo_small} height={"21px"} />

@@ -16,7 +16,7 @@ const StoreItem = ({ item, userDistance, onClick }) => {
   const { id, imgURL, name, unitPrice } = item;
   const navigate = useNavigate();
   const onClickStore = () => {
-    navigate("/app/store", { state: { item } });
+    navigate(`/app/store?UUID=${item.UUID}`);
   };
   return (
     <Box className="StoreItem" marginBottom={3}>

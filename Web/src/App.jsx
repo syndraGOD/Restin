@@ -30,7 +30,7 @@ import { store } from "@/store";
 import ServiceUsing from "./pages/App/Home/ServiceUsing";
 import SettingPage from "./pages/Setting/SettingPage";
 import TermsListPage from "./pages/Setting/TermsOfUse/TermsListPage";
-import NotificationSetting from "./pages/Setting/NotificationSetting";
+import NotificationSetting from "./pages/Setting/Setting/NotificationSetting";
 import PurchaseLogList from "./pages/Purchase/PurchaseLogList";
 import Welcome6 from "./pages/Auth/welcomPage/Welcome6";
 import RegisterPage from "./pages/Auth/LoginPage/RegisterPage";
@@ -45,6 +45,11 @@ import { setuserData } from "./store/modules/userSlice";
 import { setVerifiToken } from "./store/modules/tokenSlice";
 import { sendMessageToRN } from "./api/RN/RNsend";
 import * as PortOne from "@portone/browser-sdk/v2";
+import KakaoChannelGuide from "./pages/Setting/Setting/KakaoChannelGuide.jsx";
+import UserInfoModify from "./pages/Setting/Setting/UserInfoModify.jsx";
+import UseGuide from "./pages/App/Home/UseGuide.jsx";
+import NotionLocList from "./api/NotionLocList.js";
+import GetNotionJSX from "./components/common/NotionPageGet.jsx";
 // import { GoogleAuthProvider } from "firebase/auth";
 
 //const app =
@@ -57,6 +62,7 @@ function App() {
   const userData = useSelector((state) => state.userR.userData);
   const auth_Token = useSelector((state) => state.tokenR.verifiToken);
   const dispatch = useDispatch();
+  // const location = useLocation();
   const tokenLogin = async () => {
     if (JSON.stringify(userData) !== "{}") {
       console.log("로그인되어있음 - 유지");
@@ -135,8 +141,8 @@ function App() {
     if (JSON.stringify(userData) !== "{}") {
       return children;
     } else {
-      console.log("userData 비어있음", userData);
-      console.log("token", auth_Token);
+      console.log("userData : ", userData);
+      console.log("token : ", auth_Token);
       return <Navigate to="/login/isuser"></Navigate>;
     }
   };
@@ -147,11 +153,7 @@ function App() {
       <Reducer store={store}>
         <PersistGate loading={<LogoPage />} persistor={persistor}>
           <ThemeProvider theme={theme}>
-            {Loading ? (
-              <LogoPage />
-            ) : (
-              <MobilePage>
-                {/* <Button
+            {/* <Button
                   sx={{ p: 3, m: 3 }}
                   onClick={async () => {
                     // window.location = "kakaotalk://kakaopay/home";
@@ -178,130 +180,154 @@ function App() {
                 >
                   react
                 </Button> */}
-                <BrowserRouter>
-                  <Routes>
+            <BrowserRouter>
+              <MobilePage>
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      JSON.stringify(userData) !== "{}" ? (
+                        <Navigate to="/app/home" />
+                      ) : (
+                        <Navigate to="/welcome/1" />
+                      )
+                    }
+                  />
+                  {/* 밑에는 AuthProtect 미적용 */}
+                  <Route path="/welcome">
+                    <Route index path="1" element={<Welcome1 />}></Route>
+                    <Route path="2" element={<Welcome2 />}></Route>
+                    <Route path="3" element={<Welcome3 />}></Route>
+                    <Route path="4" element={<Welcome4 />}></Route>
+                    <Route path="5" element={<Welcome5 />}></Route>
+                    <Route path="5" element={<Welcome5 />}></Route>
+                    <Route path="6" element={<Welcome6 />}></Route>
+                  </Route>
+                  <Route path="/login">
                     <Route
-                      path="/"
+                      index
+                      path="isuser"
+                      element={<IsExistUser />}
+                    ></Route>
+                    <Route path="register" element={<RegisterPage />}></Route>
+                    <Route path="useagree" element={<UseAgree />}></Route>
+                    <Route path="numbertest" element={<LoginPage />}></Route>
+                  </Route>
+                  {/* 밑에는 AuthProtect 적용 */}
+                  <Route path="/app">
+                    <Route
+                      path="home"
                       element={
-                        JSON.stringify(userData) !== "{}" ? (
-                          <Navigate to="/app/home" />
-                        ) : (
-                          <Navigate to="/welcome/1" />
-                        )
+                        <AuthProtect>
+                          <Home />
+                        </AuthProtect>
                       }
-                    />
-                    {/* 밑에는 AuthProtect 미적용 */}
-                    <Route path="/welcome">
-                      <Route index path="1" element={<Welcome1 />}></Route>
-                      <Route path="2" element={<Welcome2 />}></Route>
-                      <Route path="3" element={<Welcome3 />}></Route>
-                      <Route path="4" element={<Welcome4 />}></Route>
-                      <Route path="5" element={<Welcome5 />}></Route>
-                      <Route path="5" element={<Welcome5 />}></Route>
-                      <Route path="6" element={<Welcome6 />}></Route>
-                    </Route>
-                    <Route path="/login">
-                      <Route
-                        index
-                        path="isuser"
-                        element={<IsExistUser />}
-                      ></Route>
-                      <Route path="register" element={<RegisterPage />}></Route>
-                      <Route path="useagree" element={<UseAgree />}></Route>
-                      <Route path="numbertest" element={<LoginPage />}></Route>
-                    </Route>
-                    {/* 밑에는 AuthProtect 적용 */}
-                    <Route path="/app">
-                      <Route
-                        path="home"
-                        element={
-                          <AuthProtect>
-                            <Home />
-                          </AuthProtect>
-                        }
-                      ></Route>
+                    ></Route>
 
-                      <Route
-                        path="filter"
-                        element={
-                          <AuthProtect>
-                            <StoreFilterPage />
-                          </AuthProtect>
-                        }
-                      ></Route>
-                      <Route
-                        path="store"
-                        element={
-                          <AuthProtect>
-                            <StoreDetail />
-                          </AuthProtect>
-                        }
-                      ></Route>
-                      <Route
-                        path="using"
-                        element={
-                          <AuthProtect>
-                            <ServiceUsing />
-                          </AuthProtect>
-                        }
-                      ></Route>
-                    </Route>
-                    <Route path="/purchase">
-                      <Route
-                        path="listLog"
-                        element={
-                          <AuthProtect>
-                            <PurchaseLogList />
-                          </AuthProtect>
-                        }
-                      ></Route>
-                      <Route
-                        path="payment"
-                        element={
-                          <AuthProtect>
-                            <PurchaseIng />
-                          </AuthProtect>
-                        }
-                      ></Route>
-                      <Route
-                        path="finish"
-                        element={
-                          <AuthProtect>
-                            <PurchaseFinish />
-                          </AuthProtect>
-                        }
-                      ></Route>
-                    </Route>
                     <Route
-                      path="/myInfo/home"
+                      path="filter"
                       element={
                         <AuthProtect>
-                          <SettingPage />
+                          <StoreFilterPage />
                         </AuthProtect>
                       }
                     ></Route>
                     <Route
-                      path="/myInfo/notifi"
+                      path="store"
                       element={
                         <AuthProtect>
-                          <NotificationSetting />
+                          <StoreDetail />
                         </AuthProtect>
                       }
                     ></Route>
                     <Route
-                      path="/myInfo/termsList"
+                      path="useguide"
                       element={
                         <AuthProtect>
-                          <TermsListPage />
+                          <UseGuide />
                         </AuthProtect>
                       }
                     ></Route>
-                  </Routes>
-
-                  {/* <Button variant="contained">Hello world</Button> */}
-                </BrowserRouter>
+                    <Route
+                      path="using"
+                      element={
+                        <AuthProtect>
+                          <ServiceUsing />
+                        </AuthProtect>
+                      }
+                    ></Route>
+                  </Route>
+                  <Route path="/purchase">
+                    <Route
+                      path="listLog"
+                      element={
+                        <AuthProtect>
+                          <PurchaseLogList />
+                        </AuthProtect>
+                      }
+                    ></Route>
+                    <Route
+                      path="payment"
+                      element={
+                        <AuthProtect>
+                          <PurchaseIng />
+                        </AuthProtect>
+                      }
+                    ></Route>
+                    <Route
+                      path="finish"
+                      element={
+                        <AuthProtect>
+                          <PurchaseFinish />
+                        </AuthProtect>
+                      }
+                    ></Route>
+                  </Route>
+                  <Route
+                    path="/myInfo/home"
+                    element={
+                      <AuthProtect>
+                        <SettingPage />
+                      </AuthProtect>
+                    }
+                  ></Route>
+                  <Route
+                    path="/myInfo/notifi"
+                    element={
+                      <AuthProtect>
+                        <NotificationSetting />
+                      </AuthProtect>
+                    }
+                  ></Route>
+                  <Route
+                    path="/myInfo/termsList"
+                    element={
+                      <AuthProtect>
+                        <TermsListPage />
+                      </AuthProtect>
+                    }
+                  ></Route>
+                  <Route
+                    path="/myInfo/kakaochannel"
+                    element={
+                      <AuthProtect>
+                        <KakaoChannelGuide />
+                      </AuthProtect>
+                    }
+                  ></Route>
+                  <Route
+                    path="/myInfo/userinfomodify"
+                    element={
+                      <AuthProtect>
+                        <UserInfoModify />
+                      </AuthProtect>
+                    }
+                  ></Route>
+                </Routes>
               </MobilePage>
-            )}
+
+              {/* <Button variant="contained">Hello world</Button> */}
+            </BrowserRouter>
           </ThemeProvider>
         </PersistGate>
       </Reducer>

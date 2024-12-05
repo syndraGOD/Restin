@@ -11,7 +11,7 @@ const InfoBox = ({ children, ...props }) => {
       css={css`
         background-color: ${theme.palette.White.main};
         border-radius: 25px;
-        padding: 14px;
+        /* padding: 14px; */
         margin-top: 20px;
         button {
           display: flex;

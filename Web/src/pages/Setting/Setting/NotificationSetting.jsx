@@ -1,10 +1,10 @@
 import React from "react";
-import HeaderInner from "../../components/common/HeaderInner";
-import FullBox from "../../components/common/FullBox";
-import { TextBodyLarge } from "../../components/designGuide";
-import { Page } from "../../components/Page";
-import InBox from "../../components/common/InBox";
-import { IOSSwitch } from "../../components/common/Switch_IOS";
+import HeaderInner from "@components/common/HeaderInner";
+import FullBox from "@components/common/FullBox";
+import { TextBodyLarge } from "@components/designGuide";
+import { Page } from "@components/Page";
+import InBox from "@components/common/InBox";
+import { IOSSwitch } from "@components/common/Switch_IOS";
 import { useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 

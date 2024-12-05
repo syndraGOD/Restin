@@ -90,6 +90,8 @@ export const theme = createTheme({
         `,
       },
     },
+    //texrField는 styledcomponents와 충돌이 난다
+    //fullbox 사용시 한글자 입력하면 리렌더링 문제 발생
     MuiTextField: {
       defaultProps: {
         // {{console.log(this)}}

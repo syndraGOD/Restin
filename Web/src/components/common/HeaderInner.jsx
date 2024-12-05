@@ -9,7 +9,14 @@ import InBox from "./InBox";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 
-const HeaderInner = ({ position, children, ...props }) => {
+const HeaderInner = ({
+  backArrow = true,
+  bgColor,
+  onClise,
+  position,
+  children,
+  ...props
+}) => {
   const navigate = useNavigate();
   return (
     <FullBox
@@ -17,7 +24,7 @@ const HeaderInner = ({ position, children, ...props }) => {
       position={position ? position : "static"}
       top={0}
       zIndex={2}
-      backgroundColor="White.main"
+      backgroundColor={bgColor ? bgColor : "White.main"}
     >
       <InBox
         css={css`
@@ -28,20 +35,22 @@ const HeaderInner = ({ position, children, ...props }) => {
         `}
         {...props}
       >
-        <Box
-          onClick={() => {
-            navigate(-1);
-          }}
-          sx={{
-            position: "absolute",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            left: 0,
-          }}
-        >
-          <IoIosArrowBack size={"22px"} color={theme.palette.Gray.c900} />
-        </Box>
+        {backArrow ? (
+          <Box
+            onClick={() => {
+              navigate(-1);
+            }}
+            sx={{
+              position: "absolute",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              left: 0,
+            }}
+          >
+            <IoIosArrowBack size={"22px"} color={theme.palette.Gray.c900} />
+          </Box>
+        ) : null}
         <TextBody
           sx={{ margin: "5px 0", alignItems: "center" }}
           color="Gray.c900"

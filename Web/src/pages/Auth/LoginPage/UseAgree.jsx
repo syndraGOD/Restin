@@ -18,7 +18,6 @@ import NotionLocList from "../../../api/NotionLocList";
 import { restinAPI } from "../../../api/config";
 import { useDispatch, useSelector } from "react-redux";
 import { setuserData } from "../../../store/modules/userSlice";
-import DialogPage from "../../../components/common/DialogPage";
 import GetNotionJSX from "../../../components/common/NotionPageGet";
 import { setVerifiToken } from "../../../store/modules/tokenSlice";
 import { CheckBox } from "@mui/icons-material";
@@ -33,16 +32,7 @@ const UseAgree = () => {
   const [inputRef2, setInputRef2] = useState(false);
   const [inputRef3, setInputRef3] = useState(false);
   const [inputRef4, setInputRef4] = useState(false);
-  const [dialog, setDialog] = useState(false);
-  const [dialogText, setDialogText] = useState();
-  const [dialogH2, setDialogH2] = useState();
-  const SetDialogPage = ({ text, h2 }) => {
-    setDialogText(text);
-    setDialogH2(h2);
-    setDialog(true);
-  };
   const dispatch = useDispatch();
-  const userData = useSelector((state) => state.userR.userData);
 
   const nextBtnClick = async () => {
     const res = await fetch(`${restinAPI}/auth/register`, {
@@ -114,10 +104,7 @@ const UseAgree = () => {
 
                 <TextBody
                   onClick={() => {
-                    SetDialogPage({
-                      text: <GetNotionJSX loc={NotionLocList.termsofuse} />,
-                      h2: "",
-                    });
+                    navi("#termsofuse");
                   }}
                   color="Gray.c900"
                 >
@@ -132,10 +119,7 @@ const UseAgree = () => {
                   min-width: 0px;
                 `}
                 onClick={() => {
-                  SetDialogPage({
-                    text: <GetNotionJSX loc={NotionLocList.termsofuse} />,
-                    h2: "",
-                  });
+                  navi("#termsofuse");
                 }}
               >
                 <IoIosArrowForward color={theme.palette.Black.main} />
@@ -170,10 +154,7 @@ const UseAgree = () => {
                 />
                 <TextBody
                   onClick={() => {
-                    SetDialogPage({
-                      text: <GetNotionJSX loc={NotionLocList.privacypolicy} />,
-                      h2: "",
-                    });
+                    navi("#privacypolicy");
                   }}
                   color="Gray.c900"
                 >
@@ -188,10 +169,7 @@ const UseAgree = () => {
                   min-width: 0px;
                 `}
                 onClick={() => {
-                  SetDialogPage({
-                    text: <GetNotionJSX loc={NotionLocList.privacypolicy} />,
-                    h2: "",
-                  });
+                  navi("#privacypolicy");
                 }}
               >
                 <IoIosArrowForward color={theme.palette.Black.main} />
@@ -226,12 +204,7 @@ const UseAgree = () => {
                 />
                 <TextBody
                   onClick={() => {
-                    SetDialogPage({
-                      text: (
-                        <GetNotionJSX loc={NotionLocList.locationinformation} />
-                      ),
-                      h2: "",
-                    });
+                    navi("#locationinformation");
                   }}
                   color="Gray.c900"
                 >
@@ -246,12 +219,7 @@ const UseAgree = () => {
                   min-width: 0px;
                 `}
                 onClick={() => {
-                  SetDialogPage({
-                    text: (
-                      <GetNotionJSX loc={NotionLocList.locationinformation} />
-                    ),
-                    h2: "",
-                  });
+                  navi("#locationinformation");
                 }}
               >
                 <IoIosArrowForward color={theme.palette.Black.main} />
@@ -286,10 +254,7 @@ const UseAgree = () => {
                 />
                 <TextBody
                   onClick={() => {
-                    SetDialogPage({
-                      text: <GetNotionJSX loc={NotionLocList.otp_marketing} />,
-                      h2: "",
-                    });
+                    navi("#otp_marketing");
                   }}
                   color="Gray.c900"
                 >
@@ -304,10 +269,7 @@ const UseAgree = () => {
                   min-width: 0px;
                 `}
                 onClick={() => {
-                  SetDialogPage({
-                    text: <GetNotionJSX loc={NotionLocList.otp_marketing} />,
-                    h2: "",
-                  });
+                  navi("#otp_marketing");
                 }}
               >
                 <IoIosArrowForward color={theme.palette.Black.main} />
@@ -332,15 +294,6 @@ const UseAgree = () => {
           )}
         </InBox>
       </FullBox>
-      <DialogPage
-        state={dialog}
-        onClose={() => {
-          setDialog(false);
-        }}
-        h2={dialogH2}
-      >
-        {dialogText}
-      </DialogPage>
     </FullBox>
   );
 };

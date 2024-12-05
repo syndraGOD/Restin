@@ -8,10 +8,11 @@ import {
   TextBodySmall,
   TextHeader2,
   TextHeader3,
+  TextHeader4,
 } from "../../../components/designGuide";
 import InBox from "../../../components/common/InBox";
-import { Box, Button, Dialog } from "@mui/material";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Box, Button } from "@mui/material";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import theme from "../../../style/theme";
 import { PiWifiHighBold } from "react-icons/pi";
 import manImage from "@assets/icons/Icon-ToiletMan-36px-ICE.png";
@@ -22,20 +23,28 @@ import { restinAPI } from "../../../api/config";
 import { setuserData } from "../../../store/modules/userSlice";
 import WelcomeImage3 from "@assets/images/WelcomeImage3.png";
 import { IoIosArrowBack } from "react-icons/io";
+import { BiBox } from "react-icons/bi";
+import { TextBox_header2 } from "../../../components/common/TextBox";
+import HeaderInner from "../../../components/common/HeaderInner";
+import { DefaultBtn } from "../../../components/common/Btns";
+import {
+  DialogInfoSimple,
+  DialogOK,
+} from "../../../components/common/DialogOk";
 
 const ServiceUsing = () => {
   const userData = useSelector((state) => state.userR.userData);
+  const storeData = useSelector((state) => state.storeR.storeData);
   const dispatch = useDispatch();
   const location = useLocation();
-  const { item } = location.state || {};
-  const storeData = item;
+  // const { item } = location.state || {};
+  const item = storeData.filter(
+    (store) => store.UUID === userData.usage.storeUUID
+  )[0];
   const myTheme = useTheme();
   const navi = useNavigate();
   // console.log(item);
-  const [manDialogOpen, setManDialogOpen] = useState(false);
-  const [womanDialogOpen, setWomanDialogOpen] = useState(false);
   const [useDurationTime, setuseDurationTime] = useState(0);
-  const [isEnd, setIsEnd] = useState(false);
   const usageEndClick = async () => {
     try {
       const res = await fetch(`${restinAPI}/user/usage/stop`, {
@@ -55,12 +64,12 @@ const ServiceUsing = () => {
         dispatch(setuserData(resUserData));
         navi("/purchase/payment", { state: { item } });
       } else {
-        setIsEnd(false);
+        navi(-1);
         const awaitRES = await res.json();
-        console.log("이용시작 실패", awaitRES.message);
+        console.log("이용종료 실패", awaitRES.message);
       }
     } catch (error) {
-      setIsEnd(false);
+      navi(-1);
       console.log(error);
     }
   };
@@ -96,13 +105,16 @@ const ServiceUsing = () => {
     // after select cafe, show cafe's detail info
     <Page
       css={css`
+        background-color: ${theme.palette.Gray.c200};
         position: relative;
+        display: flex;
+        flex-direction: column;
         .center {
           display: flex;
           justify-content: center;
         }
         .innerBox {
-          background-color: ${theme.palette.White.main}BF;
+          background-color: ${theme.palette.Gray.c100};
           border-radius: 17px;
           display: flex;
           justify-content: center;
@@ -111,7 +123,7 @@ const ServiceUsing = () => {
       `}
     >
       {/* background Image & blur */}
-      <Box className="BackgroundImageBlur">
+      {/* <Box className="BackgroundImageBlur">
         <Box
           sx={{
             backgroundImage: `url("${item.imgURL[0]}")`,
@@ -135,9 +147,10 @@ const ServiceUsing = () => {
             z-index: -1;
           `}
         ></Box>
-      </Box>
+      </Box> */}
       {/* Header& h1 사용 중 */}
-      <FullBox className="Header1 center">
+      <HeaderInner bgColor="Gray.c200">사용중</HeaderInner>
+      {/* <FullBox className="Header1 center">
         <Box
           component={Button}
           onClick={() => {
@@ -150,13 +163,11 @@ const ServiceUsing = () => {
         <InBox sx={{ textAlign: "center" }}>
           <TextHeader3 sx={{ padding: "15px" }}>사용 중</TextHeader3>
         </InBox>
-      </FullBox>
+      </FullBox> */}
       {/* Header& h2 Name */}
       <FullBox className="Header2 center">
         <InBox>
-          <TextHeader2 sx={{ padding: "0px 0px 30px 0px" }}>
-            {item.name}
-          </TextHeader2>
+          <TextBox_header2 weight="Bold">{item.name}</TextBox_header2>
         </InBox>
       </FullBox>
       {/* Wifi & Toilet */}
@@ -176,27 +187,61 @@ const ServiceUsing = () => {
               height: 100%;
               margin-right: 5px;
               flex-direction: column;
+              justify-content: start !important;
+              align-items: start !important;
+              padding: 20px;
+              box-sizing: border-box;
             `}
           >
             <Box
-              css={css`
-                width: 80px;
-                height: 80px;
-                background-color: ${theme.palette.White.main};
-                border-radius: 50%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-              `}
+              display="flex"
+              alignItems="center"
+              justifyContent="start"
+              height="30px"
             >
-              <PiWifiHighBold size={"5em"} color={theme.palette.Gray.c900} />
+              <Box
+                // className="divJCC"
+                sx={{
+                  width: 20,
+                  height: 20,
+                  bgcolor: "White.main",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: "50%",
+                }}
+              >
+                <PiWifiHighBold size={"16px"} color={theme.palette.Gray.c900} />
+              </Box>
+              <TextBodyLarge color="Gray.c900" weight="Bold">
+                {"   "}와이파이
+              </TextBodyLarge>
             </Box>
-            <TextBody weight="Bold" sx={{ marginTop: "10px" }}>
-              Wifi: {item.wifiId}
-            </TextBody>
-            <TextBodySmall sx={{ fontWeight: "bold" }} color="Gray.c900">
-              Pw: {item.wifiPw}
-            </TextBodySmall>
+            <Box
+              flex="1"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+              justifyContent="center"
+            >
+              <TextBody color="Gray.c700">ID</TextBody>
+              <TextBodyLarge weight="Bold">{item.wifiId}</TextBodyLarge>
+            </Box>
+            <Box
+              flex="1"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
+              <TextBody color="Gray.c700">FW</TextBody>
+              <TextBodyLarge weight="Bold" color="Gray.c900">
+                {item.wifiPw}
+              </TextBodyLarge>
+            </Box>
           </Box>
           {/* toilet */}
           <Box
@@ -214,202 +259,96 @@ const ServiceUsing = () => {
               sx={{ flex: 1, marginBottom: "5px" }}
               className="innerBox"
               onClick={() => {
-                setManDialogOpen(true);
+                navi("#manToilet");
               }}
             >
-              <Box width={"34%"}>
+              <Box width={"32%"}>
                 <Box
                   css={css`
-                    width: 44px;
-                    height: 44px;
-                    background-color: ${theme.palette.SecondaryBrand_Back.main};
+                    width: 24px;
+                    height: 24px;
+                    background-color: ${theme.palette.White.main};
                     border-radius: 50%;
                     display: flex;
+                    /* flex-direction: column; */
                     justify-content: center;
                     align-items: center;
-                    margin: 0px 10px;
+                    justify-self: end;
+
+                    margin: 2px 10px 0 0;
                   `}
                 >
-                  <img src={manImage}></img>
+                  <img src={manImage} width={18}></img>
                 </Box>
+                {/*화장실 아이콘을 위로 올리기 위해  */}
+                <TextBody> </TextBody>
               </Box>
-              <Box width={"66%"}>
-                <TextBody
+              <Box flex={1}>
+                <TextBodyLarge
                   weight="Bold"
-                  color="Black"
+                  color="Black.main"
                   sx={{
-                    textWrap: "nowrap",
-                    textOverflow: "ellipsis",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
+                    // textWrap: "nowrap",
+                    // textOverflow: "ellipsis",
+                    // overflow: "hidden",
+                    // whiteSpace: "nowrap",
                     marginRight: "12px",
+                    marginBottom: "4px",
                   }}
                 >
-                  {item.toiletManLocation}
-                </TextBody>
-                <TextBody weight="Bold" color="Gray.c900">
-                  {item.toiletManPw}
-                </TextBody>
+                  남자 화장실
+                </TextBodyLarge>
+                <TextBody color="Gray.c700">자세히 보기</TextBody>
               </Box>
             </Box>
-            <Dialog
-              open={manDialogOpen}
-              onClose={() => {
-                setManDialogOpen(false);
-              }}
-              css={css`
-                .MuiDialog-paper {
-                  border-radius: 30px;
-                }
-              `}
-            >
-              <Box
-                css={css`
-                  display: flex;
-                  flex-direction: column;
-                  justify-content: center;
-                  align-items: center;
-                  text-align: center;
-                  width: 60vw;
-                  height: 45vw;
-                `}
-              >
-                <Box>
-                  <Box
-                    css={css`
-                      width: 44px;
-                      height: 44px;
-                      background-color: ${theme.palette.SecondaryBrand_Back
-                        .main};
-                      border-radius: 50%;
-                      display: flex;
-                      justify-content: center;
-                      align-items: center;
-                      margin: 15px;
-                    `}
-                  >
-                    <img src={manImage}></img>
-                  </Box>
-                </Box>
-                <Box>
-                  <TextBody
-                    weight="Bold"
-                    color="Black"
-                    sx={{
-                      marginRight: "12px",
-                      margin: "5px",
-                    }}
-                  >
-                    {item.toiletManLocation}
-                  </TextBody>
-                  <TextBody weight="Bold" color="Gray.c900">
-                    {item.toiletManPw}
-                  </TextBody>
-                </Box>
-              </Box>
-            </Dialog>
+
             {/* woman */}
             <Box
               sx={{ flex: 1, marginTop: "5px" }}
               className="innerBox"
               onClick={() => {
-                setWomanDialogOpen(true);
+                navi("#womanToilet");
               }}
             >
-              <Box width={"34%"}>
+              <Box width={"32%"}>
                 <Box
                   css={css`
-                    width: 44px;
-                    height: 44px;
-                    background-color: ${theme.palette.PrimaryBrand_Back.main};
+                    width: 24px;
+                    height: 24px;
+                    background-color: ${theme.palette.White.main};
                     border-radius: 50%;
                     display: flex;
+                    /* flex-direction: column; */
                     justify-content: center;
                     align-items: center;
-                    margin: 0px 10px;
+                    justify-self: end;
+
+                    margin: 2px 10px 0 0;
                   `}
                 >
-                  <img src={womanImage}></img>
+                  <img src={womanImage} width={18}></img>
                 </Box>
+                {/*화장실 아이콘을 위로 올리기 위해  */}
+                <TextBody> </TextBody>
               </Box>
-              <Box width={"66%"}>
-                <TextBody
+              <Box flex={1}>
+                <TextBodyLarge
                   weight="Bold"
-                  color="Black"
+                  color="Black.main"
                   sx={{
-                    textWrap: "nowrap",
-                    textOverflow: "ellipsis",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
+                    // textWrap: "nowrap",
+                    // textOverflow: "ellipsis",
+                    // overflow: "hidden",
+                    // whiteSpace: "nowrap",
                     marginRight: "12px",
+                    marginBottom: "4px",
                   }}
                 >
-                  {item.toiletWomanLocation}
-                </TextBody>
-                <TextBody weight="Bold" color="Gray.c900">
-                  {item.toiletWomanPw}
-                </TextBody>
+                  여자 화장실
+                </TextBodyLarge>
+                <TextBody color="Gray.c700">자세히 보기</TextBody>
               </Box>
             </Box>
-            <Dialog
-              open={womanDialogOpen}
-              onClose={() => {
-                setWomanDialogOpen(false);
-              }}
-              css={css`
-                .MuiDialog-paper {
-                  border-radius: 30px;
-                }
-              `}
-            >
-              <Box
-                css={css`
-                  display: flex;
-                  flex-direction: column;
-                  justify-content: center;
-                  align-items: center;
-                  text-align: center;
-                  width: 60vw;
-                  height: 45vw;
-                `}
-              >
-                <Box>
-                  <Box
-                    css={css`
-                      width: 44px;
-                      height: 44px;
-                      background-color: ${theme.palette.PrimaryBrand_Back.main};
-                      border-radius: 50%;
-                      display: flex;
-                      justify-content: center;
-                      align-items: center;
-                      margin: 15px;
-                    `}
-                  >
-                    <img src={womanImage}></img>
-                  </Box>
-                </Box>
-                <Box>
-                  <TextBody
-                    weight="Bold"
-                    color="Black"
-                    sx={{
-                      textWrap: "nowrap",
-                      textOverflow: "ellipsis",
-                      overflow: "hidden",
-                      whiteSpace: "nowrap",
-                      marginRight: "12px",
-                      margin: "5px",
-                    }}
-                  >
-                    {item.toiletWomanLocation}
-                  </TextBody>
-                  <TextBody weight="Bold" color="Gray.c900">
-                    {item.toiletWomanPw}
-                  </TextBody>
-                </Box>
-              </Box>
-            </Dialog>
           </Box>
         </InBox>
       </FullBox>
@@ -418,23 +357,57 @@ const ServiceUsing = () => {
         <InBox>
           <Box
             className="innerBox"
-            sx={{ marginTop: "10px", padding: "15px", flexDirection: "column" }}
+            sx={{
+              marginTop: "7%",
+              padding: "15px",
+            }}
+            css={css`
+              justify-content: space-between !important;
+              /* align-items: start; */
+            `}
           >
+            <Box
+              css={css`
+                width: 100%;
+                height: 100% !important;
+                display: flex;
+                flex-direction: column;
+                justify-content: start;
+              `}
+            >
+              <Box display="flex" alignItems="center" marginTop="7px">
+                <Box
+                  // className="divJCC"
+                  sx={{
+                    width: 20,
+                    height: 20,
+                    bgcolor: "White.main",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: "50%",
+                  }}
+                >
+                  <TextBodyLarge weight="Bold">i</TextBodyLarge>
+                </Box>
+                <TextBodyLarge weight="Bold">{"  "}이용 안내</TextBodyLarge>
+              </Box>
+              <TextBody
+                color="Gray.c800"
+                sx={{ textAlign: "start", margin: "20% 0" }}
+              >
+                화면을 보여주고
+                <br />물 한 잔을 받아주세요
+              </TextBody>
+            </Box>
             <img
               src={WelcomeImage3}
-              width={"50%"}
+              width={"40%"}
               css={css`
                 border-radius: 17px;
+                margin: 0 0 15px 0;
               `}
             ></img>
-            <TextBody
-              weight="Bold"
-              color="Gray.c900"
-              sx={{ padding: "10px", textAlign: "center" }}
-            >
-              화면을 보여주고
-              <br />물 한 잔을 받아주세요
-            </TextBody>
           </Box>
         </InBox>
       </FullBox>
@@ -444,121 +417,120 @@ const ServiceUsing = () => {
           <Box
             className="innerBox"
             width={"100%"}
-            sx={{ textAlign: "center", padding: "15px 0px", marginTop: "10px" }}
+            sx={{ textAlign: "center", padding: "20px 0px", marginTop: "7%" }}
           >
             <Box width={"50%"}>
-              <TextBodyLarge sx={{ fontWeight: "bold" }} color="Black">
+              <TextBody color="Gray.c700" marginBottom="5px">
+                사용 시간
+              </TextBody>
+              <TextHeader4 sx={{ fontWeight: "bold" }} color="Black">
                 {useDurationTime > 60
                   ? `${Math.floor(useDurationTime / 60)}시간`
                   : ``}
                 {`${useDurationTime % 60 < 0 ? "0" : useDurationTime % 60}`}분
-              </TextBodyLarge>
-              <TextBody weight="Bold" color="Gray.c900">
-                사용 시간
-              </TextBody>
+              </TextHeader4>
             </Box>
             <Box width={"50%"}>
-              <TextBodyLarge sx={{ fontWeight: "bold" }} color="Black">
-                {storeData.unitPrice * (1 + Math.floor(useDurationTime / 10))}원
-              </TextBodyLarge>
-              <TextBody weight="Bold" color="Gray.c900">
+              <TextBody color="Gray.c700" marginBottom="5px">
                 사용 요금
               </TextBody>
+              <TextHeader4 sx={{ fontWeight: "bold" }} color="Black">
+                {item.unitPrice * (1 + Math.floor(useDurationTime / 10))}원
+              </TextHeader4>
             </Box>
           </Box>
         </InBox>
       </FullBox>
       {/* end button */}
+      <Box className="EmptyBoxFlex1" flex={1}>
+        {" "}
+      </Box>
       <FullBox className="endbutton center">
         <InBox>
-          <Box
+          <DefaultBtn
             onClick={() => {
-              setIsEnd(true);
+              navi("#isEnd");
             }}
-            component={Button}
-            css={css`
-              width: 100%;
-              height: 60px;
-              margin: 30px 0px;
-              border-radius: 15px;
-              /* background-color: skyblue; */
-            `}
-            // disabled={storeState === "사용가능" ? false : true}
-            bgcolor={myTheme.palette.SecondaryBrand.main}
           >
-            <TextHeader2 color="White">사용 종료하기</TextHeader2>
-          </Box>
-          <Dialog
-            open={isEnd}
-            onClose={() => {
-              setIsEnd(false);
-            }}
-            css={css`
-              .MuiDialog-paper {
-                width: 280px;
-                height: 275px;
-                border-radius: 15px;
-                background-color: white;
-                text-align: center;
-                display: flex;
-                /* justify-content: center; */
-                align-items: center;
-              }
-            `}
-          >
-            <Box
-              sx={{
-                width: "80%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-evenly",
-                flex: 1,
-                marginBottom: "10px",
-              }}
-            >
-              <TextHeader3 color="Gray.700" sx={{ fontWeight: 700 }}>
-                종료할까요?
-              </TextHeader3>
-              <TextBody color="Gray.900">
-                종료 시 자리 청소를 위해
-                <br />
-                사장님께 종료 알림을 보내드려요
-              </TextBody>
-            </Box>
-            <Box className="divJCC" sx={{ marginBottom: "9px" }}>
-              <Box>
-                <Button
-                  sx={{
-                    marginRight: "8px",
-                    width: "127px",
-                    height: "50px",
-                    bgcolor: "Gray.c400",
-                    borderRadius: "14px",
-                  }}
-                  onClick={() => {
-                    setIsEnd(false);
-                  }}
-                >
-                  <TextBodyLarge color="White.main" sx={{ fontWeight: 700 }}>
-                    취소
-                  </TextBodyLarge>
-                </Button>
-                <Button
-                  sx={{
-                    width: "127px",
-                    height: "50px",
-                    bgcolor: "PrimaryBrand.main",
-                    borderRadius: "14px",
-                  }}
-                  onClick={usageEndClick}
-                >
-                  <TextBodyLarge color="White.main" sx={{ fontWeight: 700 }}>
-                    종료
-                  </TextBodyLarge>
-                </Button>
+            사용 종료하기
+          </DefaultBtn>
+
+          {/*Dialogs  */}
+          <DialogOK
+            open="isEnd"
+            h2="종료할까요?"
+            text={`종료 시 자리 청소를 위해\n사장님께 종료 알림을 보내드려요`}
+            isok={usageEndClick}
+            isoktext="사용 종료하기"
+          ></DialogOK>
+          <DialogInfoSimple open="manToilet">
+            <Box>
+              <Box
+                css={css`
+                  padding: 10px;
+                  background-color: ${theme.palette.White.main};
+                  border-radius: 50%;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  margin: 15px;
+                `}
+              >
+                <img src={manImage}></img>
               </Box>
             </Box>
-          </Dialog>
+            <Box>
+              <TextBody
+                weight="Bold"
+                color="Black"
+                sx={{
+                  marginRight: "12px",
+                  margin: "5px",
+                }}
+              >
+                {item.toiletManLocation}
+              </TextBody>
+              <TextBody weight="Bold" color="Gray.c900">
+                {item.toiletManPw}
+              </TextBody>
+            </Box>
+          </DialogInfoSimple>
+          <DialogInfoSimple open="womanToilet">
+            <Box>
+              <Box
+                css={css`
+                  padding: 10px;
+                  background-color: ${theme.palette.White.main};
+                  border-radius: 50%;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  margin: 15px;
+                `}
+              >
+                <img src={womanImage} width={40}></img>
+              </Box>
+            </Box>
+            <Box>
+              <TextBody
+                weight="Bold"
+                color="Black"
+                sx={{
+                  textWrap: "nowrap",
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  marginRight: "12px",
+                  margin: "5px",
+                }}
+              >
+                {item.toiletWomanLocation}
+              </TextBody>
+              <TextBody weight="Bold" color="Gray.c900">
+                {item.toiletWomanPw}
+              </TextBody>
+            </Box>
+          </DialogInfoSimple>
         </InBox>
       </FullBox>
     </Page>
