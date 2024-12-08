@@ -15,7 +15,16 @@ const {
 const { v4: uuidv4 } = require("uuid");
 const { jsDateToFirebaseDate } = require("../utils/firebaseDateConverter.js");
 const UsageTicketForm = require("../models/usageTicketForm.js");
-const e = require("express");
+const { db_store_read } = require("../utils/CRUD_storeData.js");
+const TotalPriceMath = (b, c) => {
+  console.log(typeof b, typeof c);
+  console.log(b, c);
+  console.log(b + b * 0.5 * Math.max(0, Math.ceil((c - 10) / 5)));
+  return b + b * 0.5 * Math.max(0, Math.ceil((c - 10) / 5));
+}; //b: 가격, c: 이용시간
+// 고민하다가, 나온 결로
+// 이용종료 티켓은 말 그대로 '기록' 이니 USERDATA에 남아있을 필요 없지만
+// 이용 종료 및 결제 대기중인 티켓은 USERDATA에 남아있어야 함.
 
 const usage_isUsing = async (req, res, next) => {
   const { userId } = req;
@@ -77,18 +86,32 @@ const usage_stop = async (req, res, next) => {
       ...usage,
       endTime: jsDateToFirebaseDate(new Date()),
     };
+    // 총 이용시간을 분으로 변환
+    const totalUsageDurationMinutes = Math.floor(
+      (usage.endTime.seconds - usage.startTime.seconds) / 60
+    );
+    //총 이용시간 초로 변환 소수점 두쨰자리
+    const totalUsageDurationSeconds = Math.floor(
+      (usage.endTime.seconds - usage.startTime.seconds) % 60
+    );
+    const storeRES = await db_store_read(usage.storeUUID);
+    const storeData = storeRES.data;
     usage = {
       ...usage,
-      totalUsageDuration: {
-        nanoseconds: usage.endTime.nanoseconds - usage.startTime.nanoseconds,
-        seconds: usage.endTime.seconds - usage.startTime.seconds,
-      },
+      totalUsageDurationMinutes,
+      totalUsageDurationSeconds,
+      totalUsagePrice: TotalPriceMath(
+        storeData.unitPrice,
+        totalUsageDurationMinutes
+      ),
     };
 
-    const newUsage = new UsageTicketForm({ userId });
-    userData.usage = newUsage;
+    // const newUsage = new UsageTicketForm({ userId });
+    // userData.usage = newUsage;
+    userData.usage = usage;
     req.userData = userData;
-    let dbRes = await db_user_update(userId, { usage: newUsage.usage });
+    // let dbRes = await db_user_update(userId, { usage: newUsage.usage });
+    let dbRes = await db_user_update(userId, { usage });
     if (dbRes.resultCode === 200) {
       let userRes = await db_usageTicket_end(usage);
       if (userRes.resultCode === 200) {

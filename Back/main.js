@@ -1,75 +1,33 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
-
-// import { NotionAPI } from "notion-client";
-// import express from "express";
-// import cors from "cors";
-// import user from "./routes/userRoutes.js";
-// import store from "./routes/storeRoutes.js";
-// import auth from "./routes/authRoutes.js";
-// import { restinPort } from "./configFiles/config.js";
-
-// const { onRequest } = require("firebase-functions/v2/https");
-// const logger = require("firebase-functions/logger");
-// const functions = require("firebase-functions");
-// const admin = require("");
-
 const { firebaseConfigm, admin } = require("./configFiles/firebaseConfig.js");
 
 const express = require("express");
 const cors = require("cors");
 const user = require("./routes/userRoutes.js");
-// const store require("./routes/storeRoutes.js");
+const store = require("./routes/storeRoutes.js");
 const auth = require("./routes/authRoutes.js");
 const notification = require("./routes/notificationRoutes.js");
-
-const getNotionModule = async () => {
-  const NotionModule = await import("notion-client");
-  return NotionModule;
-};
-let NotionAPIS;
-getNotionModule().then((NotionModule) => {
-  const { NotionAPI } = NotionModule;
-  NotionAPIS = NotionAPI;
-});
+const notion = require("./routes/notionsRoutes.js");
+const adminRouter = require("./admin/admin_routes.js"); //관리자 페이지 관련 라우터
+const point = require("./routes/pointRoutes.js"); //point 관련 라우터
+const purchase = require("./routes/purchaseRoutes.js"); //purchase 관련 라우터
 const app = express();
 //
-//라우터 설정
-let corsOptions = {
+// 라우터 설정
+const corsOptions = {
   origin: "*", // 출처 허용 옵션
   credential: true, // 사용자 인증이 필요한 리소스(쿠키 등) 접근
 };
 
 app.use(cors(corsOptions));
 app.use(express.json({ extended: true }));
-// app.use("/store", store);
+app.use("/store", store);
 app.use("/auth", auth);
 app.use("/user", user);
 app.use("/notification", notification);
-
-const getNotion = async (loc) => {
-  const notion = new NotionAPIS();
-  const recordMap = await notion.getPage(loc);
-  return recordMap;
-};
-// app.post;
-app.get("/useStore/:token");
-app.get("/notion/:notionPageCode", async (req, res) => {
-  console.log("getnotion : ", req.params.notionPageCode);
-  try {
-    const loc = req.params.notionPageCode;
-    // console.log(NotionAPI);
-    getNotion(loc).then((notion) => res.send(notion));
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+app.use("/notion", notion);
+app.use("/api/admin", adminRouter);
+app.use("/point", point); //point 관련 라우터
+app.use("/purchase", purchase); //purchase 관련 라우터
 app.get((req, res) => {
   res.status(404).send("not founds");
 });

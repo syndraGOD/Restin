@@ -33,6 +33,7 @@ import {
 } from "../../../components/common/DialogOk";
 
 const ServiceUsing = () => {
+  const auth_token = useSelector((state) => state.tokenR.verifiToken);
   const userData = useSelector((state) => state.userR.userData);
   const storeData = useSelector((state) => state.storeR.storeData);
   const dispatch = useDispatch();
@@ -52,7 +53,7 @@ const ServiceUsing = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          authorization: "Bearer " + userData.security?.auth_token,
+          authorization: "Bearer " + auth_token,
         },
         body: JSON.stringify({
           userData,

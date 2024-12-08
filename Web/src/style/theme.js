@@ -16,7 +16,7 @@ const palette = {
   PrimaryBrand: {
     main: "#F58515",
     Light: "#FFA554",
-    Pale: "#FFC999",
+    Pale: "#FFF6EE",
     // get default() {
     //   return this.main;
     // },
@@ -66,6 +66,38 @@ export const theme = createTheme({
     },
   },
   components: {
+    MuiBoxs: {
+      styleOverrides: {
+        root: {},
+      },
+      variants: [
+        {
+          props: { variant: "SecctionLine" },
+          style: {
+            width: "100%",
+            height: "8px",
+            backgroundColor: palette.Gray.c100,
+            // before
+          },
+        },
+        {
+          props: { variant: "TextLine" },
+          style: {
+            width: "100%",
+            minHeight: "1px",
+            backgroundColor: palette.Gray.c200,
+          },
+        },
+        {
+          props: { variant: "EmptyBox" },
+          style: {
+            width: "100%",
+            minHeight: "0px",
+            flex: "1",
+          },
+        },
+      ],
+    },
     MuiDialog: {
       default: {},
     },
@@ -129,8 +161,9 @@ export const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: "Noto Sans KR, Arial, sans-serif",
+    fontFamily: "NotoSansKR, sans-serif, Arial",
   },
   palette,
 });
+
 export default theme;

@@ -13,29 +13,33 @@ const generateToken = (payload) => {
   const month = day * 30;
 
   const now = Math.floor(Date.now() / 1000); // 현재 시각 (초 단위)
-  const tokenExp = day * 1; // 3개월을 초 단위로 환산
-  // tokenExp = now;
-  // console.log(utcFromTimestamp(tokenExp));
-  const expirationTime = now + tokenExp; // 24시간 뒤 만료
+  const tokenExp = day * 1; // 1일을 초 단위로 환산
+  const expirationTime = now + tokenExp;
+
   const options = {
+    algorithm: "HS256", // algorithms를 algorithm으로 변경
     iat: now,
     exp: expirationTime,
   };
-  // console.log();
+
   const newPayload = {
     ...payload,
-    ...options,
+    iat: options.iat,
+    exp: options.exp,
   };
-  const token = jwt.sign(newPayload, secretKey);
+
+  const token = jwt.sign(newPayload, secretKey, {
+    algorithm: options.algorithm,
+  }); // options 수정
   return token;
 };
 
 const refreshToken = (token) => {
   try {
-    // exists token is um. 음 대충 날짜지났는지, 옳은 토큰인지
-    const decodedToken = jwt.verify(token, secretKey);
+    const decodedToken = jwt.verify(token, secretKey, {
+      algorithms: ["HS256"], // verify에서는 algorithms 사용 가능
+    });
 
-    // new payload
     const payload = {
       userId: decodedToken.userId,
       userType: decodedToken.userType,

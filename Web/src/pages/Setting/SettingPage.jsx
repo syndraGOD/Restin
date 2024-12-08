@@ -114,11 +114,7 @@ const SettingPage = () => {
             }}
           >
             <TextBodyLarge weight="Bold">
-              보유 포인트{" "}
-              {userData.points.reward_points
-                ? userData.points.reward_points
-                : 0}
-              원
+              보유 포인트 {userData.point.amount ? userData.point.amount : 0}원
             </TextBodyLarge>
             <Box display="flex">
               <Box
@@ -234,15 +230,19 @@ const SettingPage = () => {
               사업자 정보
             </TextBody>
             <TextBodySmall color="Gray.c600">
-              상호명 : 레스틴(Restin)
+              상호명 : 레스틴(Restin) | 대표 김정민
             </TextBodySmall>
-            <TextBodySmall color="Gray.c600">대표자 : 김정민</TextBodySmall>
             <TextBodySmall color="Gray.c600">
               사업자등록번호 : 768-17-02378
             </TextBodySmall>
             <TextBodySmall color="Gray.c600">
-              통신판매업신고 : 2024-가나다라-1234호
+              통신판매업신고 : 제 2024-별내-2106 호
             </TextBodySmall>
+            <TextBodySmall color="Gray.c600">
+              당사는 서울보증보험에 가입된 회사입니다
+            </TextBodySmall>
+
+            <TextBodySmall color="Gray.c600"> </TextBodySmall>
             <TextBodySmall color="Gray.c600">
               주소 : 경기도 남양주시 별내3로 322
             </TextBodySmall>

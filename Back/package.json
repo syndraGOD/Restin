@@ -16,6 +16,7 @@
     "dotenv": "^16.4.5",
     "expo-server-sdk": "^3.12.0",
     "express": "^4.21.1",
+    "express-session": "^1.18.1",
     "firebase": "^10.13.2",
     "firebase-admin": "^12.7.0",
     "firebaseui": "^6.1.0",

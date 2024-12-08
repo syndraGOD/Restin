@@ -70,9 +70,9 @@
  * 사용자 포인트 정보.
  * @typedef {Object} UserPoints
  * @property {?string} userId - 사용자 고유 식별자.
- * @property {?number} reward_points - 보상 포인트.
- * @property {?string} vip_tier - VIP 등급.
- * @property {?FirebaseDateObject} points_expiration - 포인트 만료 날짜.
+ * @property {?number} amount - 소유 포인트.
+ * @property {?boolean} pending - 대기 포인트.
+ * @property {?number} pendingAmount - 대기 포인트.
  */
 
 /**
@@ -159,14 +159,14 @@ class UserForm {
       userId: this.userId,
       lastLogin: security.lastLogin ?? null,
       login_attempts: security.login_attempts ?? null,
-      auth_token: security.auth_token ?? null,
+      auth_token: security.auth_token ?? "",
     };
 
-    this.points = {
+    this.point = {
       userId: this.userId,
-      reward_points: points.reward_points ?? null,
-      vip_tier: points.vip_tier ?? null,
-      points_expiration: points.points_expiration ?? null,
+      amount: points.amount ?? 0,
+      pending: points.pending ?? false,
+      pendingAmount: points.pendingAmount ?? 0,
     };
 
     this.preference = {

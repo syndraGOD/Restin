@@ -121,3 +121,16 @@ export const style_TextBodySmall = css`
   font-size: 12px;
   letter-spacing: 0%;
 `;
+
+export const Boxs = styled("div", {
+  name: "MuiBoxs",
+  overridesResolver: (props, styles) => {
+    return [styles.root];
+  },
+})();
+// export const Badges = styled("div", {
+//   name: "MuiBoxs",
+//   overridesResolver: (props, styles) => {
+//     return [styles.root];
+//   },
+// })();

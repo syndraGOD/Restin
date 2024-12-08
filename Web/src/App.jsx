@@ -50,6 +50,8 @@ import UserInfoModify from "./pages/Setting/Setting/UserInfoModify.jsx";
 import UseGuide from "./pages/App/Home/UseGuide.jsx";
 import NotionLocList from "./api/NotionLocList.js";
 import GetNotionJSX from "./components/common/NotionPageGet.jsx";
+import PointCharge from "./pages/Point/PointCharge.jsx";
+import PointRequestComplete from "./pages/Point/PointRequestComplete.jsx";
 // import { GoogleAuthProvider } from "firebase/auth";
 
 //const app =
@@ -323,6 +325,13 @@ function App() {
                       </AuthProtect>
                     }
                   ></Route>
+                  <Route path="/point">
+                    <Route path="charge" element={<PointCharge />}></Route>
+                    <Route
+                      path="chargecomplete"
+                      element={<PointRequestComplete />}
+                    ></Route>
+                  </Route>
                 </Routes>
               </MobilePage>
 
