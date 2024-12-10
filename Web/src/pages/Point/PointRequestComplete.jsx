@@ -17,8 +17,10 @@ import theme from "@style/theme";
 import { useEffect, useState } from "react";
 import { restinAPI } from "../../api/config";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const PointRequestComplete = () => {
+  const navi = useNavigate();
   const auth_token = useSelector((state) => state.tokenR.verifiToken);
   const userData = useSelector((state) => state.userR.userData);
   const [requestTicket, setRequestTicket] = useState(null);
@@ -170,7 +172,7 @@ const PointRequestComplete = () => {
       </InBox>
 
       <InBox justifySelf="center">
-        <DefaultBtn fixed={true} onClick={() => console.log("확인")}>
+        <DefaultBtn fixed={true} onClick={() => navi('/app/home')}>
           확인
         </DefaultBtn>
       </InBox>

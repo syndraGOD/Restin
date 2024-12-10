@@ -52,7 +52,6 @@ router.post(
   checkExistingRequest,
   async (req, res) => {
     try {
-      console.log(req.body);
       const { chargeAmount, existingRequest } = req.body;
       const userId = req.userId;
 
@@ -102,13 +101,13 @@ router.post(
       const pointRequestTicket = new PointRequestTicketForm({
         userId,
         pointRequestTicketId: uuidv4(),
-        userCurrentAmount: userRes.data.point?.amount || 0,
+        // userCurrentAmount: userRes.data.point?.amount || 0,
         requestDate: new Date(),
         status: "pending",
         chargeAmount,
         bonusRate,
       });
-      console.log({ ...pointRequestTicket });
+      // console.log({ ...pointRequestTicket });
 
       // Firebase에 저장
       const ticketRef = doc(
@@ -187,7 +186,7 @@ const recordPointChange = async (req, res, next) => {
     // 결제 시 (purchaseRoutes에서 사용)
     else if (req.baseUrl.includes("/purchase")) {
       amount = -req.body.totalAmount; // 결제는 포인트 차감이므로 음수
-      description = "상품 구매";
+      description = "서비스 이용";
       linkedTicketId = req.purchaseTicketId; // purchaseRoutes에서 설정한 값
     }
 
@@ -223,49 +222,49 @@ const recordPointChange = async (req, res, next) => {
 };
 
 // 관리자용 - 포인트 충전/환불 요청 승인
-router.post("/admin/approve", recordPointChange, async (req, res) => {
-  try {
-    const { pointRequestTicketId, adminMemo, status } = req.body;
+// router.post("/admin/approve", recordPointChange, async (req, res) => {
+//   try {
+//     const { pointRequestTicketId, adminMemo, status } = req.body;
 
-    const updateData = {
-      status,
-      "admin.adminId": req.userId,
-      "admin.adminMemo": adminMemo,
-      "admin.completeDate": new Date(),
-      approvalDate: new Date(),
-      userNewAmount: req.pointTicket.afterAmount, // recordPointChange에서 계산된 값
-    };
+//     const updateData = {
+//       status,
+//       "admin.adminId": req.userId,
+//       "admin.adminMemo": adminMemo,
+//       "admin.completeDate": new Date(),
+//       approvalDate: new Date(),
+//       userNewAmount: req.pointTicket.afterAmount, // recordPointChange에서 계산된 값
+//     };
 
-    // Firebase 업데이트
-    const ticketRef = doc(db, colNameRequest, pointRequestTicketId);
-    await updateDoc(ticketRef, updateData);
+//     // Firebase 업데이트
+//     const ticketRef = doc(db, colNameRequest, pointRequestTicketId);
+//     await updateDoc(ticketRef, updateData);
 
-    res.status(200).json({ success: true });
-  } catch (error) {
-    res.status(400).json({ success: false, error: error.message });
-  }
-});
+//     res.status(200).json({ success: true });
+//   } catch (error) {
+//     res.status(400).json({ success: false, error: error.message });
+//   }
+// });
 
-// 포인트 충전/환불 요청 취소
-router.post("/request/cancel", verifyTokenMiddleware, async (req, res) => {
-  try {
-    const { pointRequestTicketId, cancelReason } = req.body;
+// // 포인트 충전/환불 요청 취소
+// router.post("/request/cancel", verifyTokenMiddleware, async (req, res) => {
+//   try {
+//     const { pointRequestTicketId, cancelReason } = req.body;
 
-    const updateData = {
-      status: "cancel",
-      "cancel.cancelDate": new Date(),
-      "cancel.cancelReason": cancelReason,
-    };
+//     const updateData = {
+//       status: "cancel",
+//       "cancel.cancelDate": new Date(),
+//       "cancel.cancelReason": cancelReason,
+//     };
 
-    // Firebase 업데이트
-    const ticketRef = doc(db, colNameRequest, pointRequestTicketId);
-    await updateDoc(ticketRef, updateData);
+//     // Firebase 업데이트
+//     const ticketRef = doc(db, colNameRequest, pointRequestTicketId);
+//     await updateDoc(ticketRef, updateData);
 
-    res.status(200).json({ success: true });
-  } catch (error) {
-    res.status(400).json({ success: false, error: error.message });
-  }
-});
+//     res.status(200).json({ success: true });
+//   } catch (error) {
+//     res.status(400).json({ success: false, error: error.message });
+//   }
+// });
 
 // 포인트 요청 상태 확인
 router.get(
@@ -285,7 +284,7 @@ router.get(
       console.log(existingRequest);
       res.status(200).json({
         success: true,
-        requestTicket: existingRequest,
+        // requestTicket: existingRequest
       });
     } catch (error) {
       res.status(400).json({ success: false, error: error.message });

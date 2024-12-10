@@ -25,7 +25,7 @@ app.use("/auth", auth);
 app.use("/user", user);
 app.use("/notification", notification);
 app.use("/notion", notion);
-app.use("/api/admin", adminRouter);
+app.use("/api/admin", adminRouter); // 관리자 페이지
 app.use("/point", point); //point 관련 라우터
 app.use("/purchase", purchase); //purchase 관련 라우터
 app.get((req, res) => {

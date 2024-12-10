@@ -3,7 +3,6 @@ class PointRequestTicketForm {
     this.info = {
       userId: args.userId ?? null,
       pointRequestTicketId: args.pointRequestTicketId ?? null,
-      userCurrentAmount: args.userCurrentAmount ?? null,
       requestDate: args.requestDate ?? null,
       status: args.status ?? null, //cancel or pending or complete
     };
