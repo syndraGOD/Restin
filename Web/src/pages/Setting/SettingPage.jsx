@@ -141,6 +141,9 @@ const SettingPage = () => {
                   // borderColor: "Gray.c400",
                   color: "White.main",
                 }}
+                onClick={() => {
+                  navi("/point/charge");
+                }}
               >
                 <TextBody weight="Bold">충전</TextBody>
               </Box>

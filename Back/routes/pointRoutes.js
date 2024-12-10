@@ -21,75 +21,112 @@ const {
 const colNamePoint = "POINT_TICKET";
 const colNameRequest = "POINT_REQUEST_TICKET";
 
-// 포인트 충전 요청
-router.post("/request/charge", verifyTokenMiddleware, async (req, res) => {
+// 포인트 요청 확인 미들웨어
+const checkExistingRequest = async (req, res, next) => {
   try {
-    console.log(req.body);
-    const { chargeAmount } = req.body;
     const userId = req.userId;
 
-    // 유저 데이터 조회
-    const userRes = await db_user_read(userId);
-    if (userRes.resultCode !== 200) {
-      return res.status(400).json({
-        success: false,
-        error: "사용자 정보를 찾을 수 없습니다.",
-      });
-    }
-
-    // 충전 금액별 보너스율 확인
-    let bonusRate = 0;
-    switch (chargeAmount) {
-      case 5000:
-        bonusRate = 0;
-        break;
-      case 10000:
-        bonusRate = 0.03;
-        break;
-      case 30000:
-        bonusRate = 0.05;
-        break;
-      case 50000:
-        bonusRate = 0.06;
-        break;
-      case 100000:
-        bonusRate = 0.075;
-        break;
-      default:
-        return res.status(400).json({
-          success: false,
-          error:
-            "올바르지 않은 충전 금액입니다. (5000, 10000, 30000, 50000, 100000원 중 선택)",
-        });
-    }
-    // 포인트 충전 요청 티켓 생성
-    const pointRequestTicket = new PointRequestTicketForm({
-      userId,
-      pointRequestTicketId: uuidv4(),
-      userCurrentAmount: userRes.data.point?.amount || 0,
-      requestDate: new Date(),
-      status: "pending",
-      chargeAmount,
-      bonusRate,
-    });
-    console.log({ ...pointRequestTicket });
-
-    // Firebase에 저장
-    const ticketRef = doc(
-      db,
-      colNameRequest,
-      pointRequestTicket.info.pointRequestTicketId
+    // 기존 신청건 확인
+    const requestColRef = collection(db, colNameRequest);
+    const q = query(
+      requestColRef,
+      where("info.userId", "==", userId),
+      where("info.status", "==", "pending")
     );
-    await setDoc(ticketRef, { ...pointRequestTicket });
+    const querySnapshot = await getDocs(q);
 
-    res.status(200).json({
-      success: true,
-    });
+    // �� 정보를 req.body에 추가
+    req.body.existingRequest = !querySnapshot.empty
+      ? querySnapshot.docs[0].data()
+      : null;
+    next();
   } catch (error) {
-    console.log(error);
     res.status(400).json({ success: false, error: error.message });
   }
-});
+};
+
+// 포인트 충전 요청
+router.post(
+  "/request/charge",
+  verifyTokenMiddleware,
+  checkExistingRequest,
+  async (req, res) => {
+    try {
+      console.log(req.body);
+      const { chargeAmount, existingRequest } = req.body;
+      const userId = req.userId;
+
+      // 기존 요청이 있으면 거부
+      if (existingRequest) {
+        return res.status(400).json({
+          success: false,
+          error: "이미 처리 중인 충전/환불 요청이 있습니다.",
+        });
+      }
+
+      // 유저 데이터 조회
+      const userRes = await db_user_read(userId);
+      if (userRes.resultCode !== 200) {
+        return res.status(400).json({
+          success: false,
+          error: "사용자 정보를 찾을 수 없습니다.",
+        });
+      }
+
+      // 충전 금액별 보너스율 확인
+      let bonusRate = 0;
+      switch (chargeAmount) {
+        case 5000:
+          bonusRate = 0;
+          break;
+        case 10000:
+          bonusRate = 0.03;
+          break;
+        case 30000:
+          bonusRate = 0.05;
+          break;
+        case 50000:
+          bonusRate = 0.06;
+          break;
+        case 100000:
+          bonusRate = 0.075;
+          break;
+        default:
+          return res.status(400).json({
+            success: false,
+            error:
+              "올바르지 않은 충전 금액입니다. (5000, 10000, 30000, 50000, 100000원 중 선택)",
+          });
+      }
+      // 포인트 충전 요청 티켓 생성
+      const pointRequestTicket = new PointRequestTicketForm({
+        userId,
+        pointRequestTicketId: uuidv4(),
+        userCurrentAmount: userRes.data.point?.amount || 0,
+        requestDate: new Date(),
+        status: "pending",
+        chargeAmount,
+        bonusRate,
+      });
+      console.log({ ...pointRequestTicket });
+
+      // Firebase에 저장
+      const ticketRef = doc(
+        db,
+        colNameRequest,
+        pointRequestTicket.info.pointRequestTicketId
+      );
+      await setDoc(ticketRef, { ...pointRequestTicket });
+
+      res.status(200).json({
+        success: true,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ success: false, error: error.message });
+    }
+  }
+);
 
 // 포인트 환불 요청
 router.post("/request/refund", verifyTokenMiddleware, async (req, res) => {
@@ -229,5 +266,31 @@ router.post("/request/cancel", verifyTokenMiddleware, async (req, res) => {
     res.status(400).json({ success: false, error: error.message });
   }
 });
+
+// 포인트 요청 상태 확인
+router.get(
+  "/request/state",
+  verifyTokenMiddleware,
+  checkExistingRequest,
+  async (req, res) => {
+    try {
+      const { existingRequest } = req.body;
+
+      if (!existingRequest) {
+        return res.status(400).json({
+          success: false,
+          error: "진행 중인 요청이 없습니다.",
+        });
+      }
+      console.log(existingRequest);
+      res.status(200).json({
+        success: true,
+        requestTicket: existingRequest,
+      });
+    } catch (error) {
+      res.status(400).json({ success: false, error: error.message });
+    }
+  }
+);
 
 module.exports = router;

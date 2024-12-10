@@ -11,7 +11,7 @@ import {
   TextBodySmall,
   TextHeader3,
 } from "./../../components/designGuide";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BsFillRecordCircleFill } from "react-icons/bs";
 import tossPayImg from "@assets/Logo/tossLogo.png";
 import kakaoPayImg from "@assets/Logo/kakaoLogo.png";
@@ -19,10 +19,14 @@ import { VscCircleLarge } from "react-icons/vsc";
 import { useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
+import { DialogAlert, DialogOK } from "../../components/common/DialogOk";
+import { restinAPI } from "../../api/config";
+import { setuserData } from "@store/modules/userSlice";
 
 const PurchaseIng = () => {
   const userData = useSelector((state) => state.userR.userData);
   const storeDataAll = useSelector((state) => state.storeR.storeData);
+  const auth_token = useSelector((state) => state.tokenR.verifiToken);
 
   const usageData = userData.usage;
   const storeData = storeDataAll.find(
@@ -30,9 +34,53 @@ const PurchaseIng = () => {
   );
 
   const [selectedPayment, setSelectedPayment] = useState("point");
+  const [failedReason, setFailedReason] = useState("");
   const navi = useNavigate();
   const location = useLocation();
-
+  const dispatch = useDispatch();
+  const nextBtnClick = () => {
+    if (selectedPayment === "point") {
+      if (userData.point.amount < usageData.totalUsagePrice) {
+        navi("#pointShortage");
+      } else {
+        paymentFunction();
+      }
+    } else {
+      paymentFunction();
+    }
+  };
+  const paymentFunction = async () => {
+    if (selectedPayment === "point") {
+      try {
+        const res = await fetch(`${restinAPI}/purchase/usage/point`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${auth_token}`,
+          },
+        });
+        const RESdata = await res.json();
+        const data = RESdata.data;
+        const New_userData = RESdata.userData;
+        if (res.status === 200) {
+          dispatch(setuserData(New_userData));
+          navi(
+            `/purchase/finish?purchaseAmount=${data.purchaseAmount}&usageDurationMinutes=${data.usageDurationMinutes}&selectedPayment=${selectedPayment}`
+          );
+        } else {
+          setFailedReason(data.message || data.error);
+          console.log(data.message || data.error);
+          navi("#failedPurchase");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    } else if (selectedPayment === "tosspay") {
+      console.log("토스페이 결제");
+    } else if (selectedPayment === "kakaopay") {
+      console.log("카카오페이 결제");
+    }
+  };
   return (
     <FullBox sx={{ height: "100%", overflowY: "auto", position: "relative" }}>
       <HeaderInner fixed={true}>결제</HeaderInner>
@@ -125,7 +173,7 @@ const PurchaseIng = () => {
                 <Boxs variant="EmptyBox" />
               </Box>
               <TextBodySmall sx={{ justifySelf: "flex-end" }}>
-                내 포인트 : 13,000원
+                내 포인트 : {String(userData.point.amount).toLocaleString()}원
               </TextBodySmall>
             </Box>
             <Box
@@ -228,10 +276,21 @@ const PurchaseIng = () => {
 
       {/* 결제하기 버튼 */}
       <InBox justifySelf="center">
-        <DefaultBtn fixed={true} onClick={() => console.log("결제 진행")}>
+        <DefaultBtn fixed={true} onClick={nextBtnClick}>
           결제하기
         </DefaultBtn>
       </InBox>
+      <DialogOK
+        open="pointShortage"
+        h2="포인트가 부족해요"
+        text={`충전 후 결제할까요?`}
+        isok={() => {
+          navi("/point/charge");
+        }}
+      />
+      <DialogAlert open="failedPurchase" h2="결제 실패">
+        {failedReason}
+      </DialogAlert>
     </FullBox>
   );
 };

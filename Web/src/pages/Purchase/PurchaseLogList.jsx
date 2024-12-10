@@ -12,8 +12,38 @@ import { Page } from "../../components/Page";
 import HeaderInner from "../../components/common/HeaderInner";
 import { DefaultBtn } from "@components/common/Btns";
 import { useNavigate } from "react-router-dom";
+import { restinAPI } from "../../api/config";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../../store/modules/varSlice";
+import { useEffect } from "react";
 
 const PurchaseLogList = () => {
+  const verifiToken = useSelector((state) => state.tokenR.verifiToken);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setLoading(true));
+    const fetchData = async () => {
+      try {
+        const res = fetch(`${restinAPI}/usage/uselist`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${verifiToken}`,
+          },
+        });
+        const data = await res.json();
+        if (res.status === 200) {
+          console.log(data);
+        } else {
+          console.log(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      // setLoading(false);
+    };
+    fetchData();
+  }, []);
   const navi = useNavigate();
   return (
     <Page sx={{ backgroundColor: "White.main" }}>

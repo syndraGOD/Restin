@@ -39,37 +39,42 @@ const usage_isUsing = async (req, res, next) => {
 };
 
 const usage_start = async (req, res, next) => {
-  const isUsage = await db_usageTicket_isuse(req.userId);
-  if (isUsage.resultCode === 500) {
-    console.log(3, "[sys] user is already in use");
-    res.status(500).json({ message: "user is already in use " });
-  } else {
-    //스토어 영업시간 이내인지 확인 만약 지났거나, 20분 이내로 남았다면 시작불가
-    const { userData, storeInfo } = req.body;
-    let { userId, usage } = userData;
-    const { id, uuid } = storeInfo;
-    usage = {
-      ...usage,
-      userId: req.userId,
-      usageLogId: uuidv4(),
-      startTime: jsDateToFirebaseDate(new Date()),
-      storeId: id,
-      storeUUID: uuid,
-    };
-    userData.usage = usage;
-    req.userData = userData;
-    let dbRes = await db_usageTicket_create(usage);
-
-    if (dbRes.resultCode === 200) {
-      let userRes = await db_user_update(userId, { usage });
-      if (userRes.resultCode === 200) {
-        next();
-      } else {
-        res.status(userRes.resultCode).json({ message: userRes.text });
-      }
+  try {
+    const isUsage = await db_usageTicket_isuse(req.userId);
+    if (isUsage.resultCode === 500) {
+      console.log(3, "[sys] user is already in use");
+      res.status(500).json({ message: "user is already in use " });
     } else {
-      res.status(dbRes.resultCode).json({ message: dbRes.text });
+      //스토어 영업시간 이내인지 확인 만약 지났거나, 20분 이내로 남았다면 시작불가
+      const { userData, storeInfo } = req.body;
+      let { userId, usage } = userData;
+      const { id, uuid } = storeInfo;
+      usage = {
+        ...usage,
+        userId: req.userId,
+        usageLogId: uuidv4(),
+        startTime: jsDateToFirebaseDate(new Date()),
+        storeId: id,
+        storeUUID: uuid,
+      };
+      userData.usage = usage;
+      req.userData = userData;
+      let dbRes = await db_usageTicket_create(usage);
+
+      if (dbRes.resultCode === 200) {
+        let userRes = await db_user_update(userId, { usage });
+        if (userRes.resultCode === 200) {
+          next();
+        } else {
+          res.status(userRes.resultCode).json({ message: userRes.text });
+        }
+      } else {
+        res.status(dbRes.resultCode).json({ message: dbRes.text });
+      }
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "server error", error });
   }
 };
 

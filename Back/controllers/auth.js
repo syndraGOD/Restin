@@ -36,6 +36,7 @@ const verifyTokenMiddleware = async (req, res, next) => {
     res.status(401).json({
       message: "token is null or undefind",
     });
+    return;
   }
   try {
     const secretKey = process.env.JWT_SECRET_KEY;
@@ -95,8 +96,13 @@ const user_verifiCodeMiddleware = (req, res, next) => {
       !phonenumber ||
       smsVerify[phonenumber] !== Number(userverificode)
     ) {
-      console.warn(82, smsVerify[phonenumber], Number(userverificode));
-      throw new Error();
+      // console.warn(82, smsVerify[phonenumber], Number(userverificode));
+      console.log(
+        "error! SMSVerify",
+        smsVerify[phonenumber],
+        Number(userverificode)
+      );
+      return;
     }
     next();
   } catch (error) {

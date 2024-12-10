@@ -37,21 +37,27 @@ const PointCharge = () => {
   ];
 
   const pointChargeRequest = async () => {
-    const res = await fetch(`${restinAPI}/point/request/charge`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${auth_token}`,
-      },
+    try {
+      const res = await fetch(`${restinAPI}/point/request/charge`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${auth_token}`,
+        },
 
-      body: JSON.stringify({
-        chargeAmount: selectedAmount,
-      }),
-    });
-    if (res.ok) {
-      navi("/point/ChargeComplete");
-    } else {
-      console.log("충전 실패");
+        body: JSON.stringify({
+          chargeAmount: selectedAmount,
+        }),
+      });
+      const data = await res.json();
+      if (res.status === 200) {
+        navi("/point/ChargeComplete");
+      } else {
+        console.log(data.error);
+        navi(-1);
+      }
+    } catch (err) {
+      console.log(err);
       navi(-1);
     }
   };

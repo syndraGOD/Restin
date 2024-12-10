@@ -15,14 +15,24 @@ import { useSelector } from "react-redux";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import theme from "@style/theme";
 import checkIcon from "@assets/icons/restin_ok_307.png";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 const PurchaseFinish = () => {
-  const userData = useSelector((state) => state.userR.userData);
-  const storeDataAll = useSelector((state) => state.storeR.storeData);
+  const navi = useNavigate();
 
-  const usageData = userData.usage;
-  const storeData = storeDataAll.find(
-    (store) => store.UUID === userData.usage.storeUUID
-  );
+  const [params] = useSearchParams();
+  const purchaseAmount = params.get("purchaseAmount");
+  const usageDurationMinutes = params.get("usageDurationMinutes");
+  const paymentMethod = params.get("selectedPayment");
+  console.log(params);
+  console.log(purchaseAmount, usageDurationMinutes, paymentMethod);
+  // const storeData = storeDataAll.find(
+  //   (store) => store.UUID === userData.usage.storeUUID
+  // );
+  const paymentMethodName = {
+    point: "포인트",
+    tosspay: "토스페이",
+    kakaopay: "카카오페이",
+  };
 
   return (
     <FullBox sx={{ height: "100%", overflowY: "auto", position: "relative" }}>
@@ -47,21 +57,21 @@ const PurchaseFinish = () => {
               총 결제 금액
             </TextHeader4>
             <TextHeader3 weight="Bold" color="PrimaryBrand.main">
-              {usageData.totalUsagePrice.toLocaleString("ko-KR")}원
+              {purchaseAmount.toLocaleString("ko-KR")}원
             </TextHeader3>
           </Box>
           <Boxs variant="TextLine" />
           <Box sx={styles.amountRow}>
             <TextBody color="Gray.c600">좌석 사용 시간</TextBody>
             <TextBody color="Gray.c600">
-              {Math.floor(usageData.totalUsageDurationMinutes / 60)}시간{" "}
-              {Math.floor(usageData.totalUsageDurationMinutes % 60)}분
+              {Math.floor(usageDurationMinutes / 60)}시간{" "}
+              {Math.floor(usageDurationMinutes % 60)}분
             </TextBody>
           </Box>
           <Box sx={styles.amountRow}>
             <TextBody color="Gray.c600">좌석 사용 금액</TextBody>
             <TextBody color="Gray.c600">
-              {usageData.totalUsagePrice.toLocaleString("ko-KR")}원
+              {purchaseAmount.toLocaleString("ko-KR")}원
             </TextBody>
           </Box>
         </Box>
@@ -74,18 +84,23 @@ const PurchaseFinish = () => {
           </TextHeader4>
           <Box sx={styles.amountRow}>
             <TextBody color="Gray.c600">결제 수단</TextBody>
-            <TextBody color="Gray.c600">토스페이</TextBody>
+            <TextBody color="Gray.c600">
+              {paymentMethodName[paymentMethod]}
+            </TextBody>
           </Box>
           <Box sx={styles.amountRow}>
             <TextBody color="Gray.c600">결제 날짜</TextBody>
             <TextBody color="Gray.c600">
-              {new Date().toLocaleString("ko-KR", {
-                year: "2-digit",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+              {new Date()
+                .toLocaleString("ko-KR", {
+                  year: "2-digit",
+                  month: "2-digit",
+                  day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hourCycle: "h23",
+                })
+                .replace(/(\d+)\. (\d+)\. (\d+)\./, "$1년 $2월 $3일") + "분"}
             </TextBody>
           </Box>
         </Box>

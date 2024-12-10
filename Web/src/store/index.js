@@ -7,6 +7,7 @@ import filterSlice from "./modules/filterSlice";
 import storeSlice from "./modules/storeSlice";
 import userSlice from "./modules/userSlice";
 import tokenSlice from "./modules/tokenSlice";
+import varSlice from "./modules/varSlice";
 
 // Persist configurations
 const storePersistConfig = {
@@ -40,6 +41,7 @@ const rootReducer = combineReducers({
   storeR: persistedStoreReducer,
   userR: persistedUserReducer,
   tokenR: persistedTokenReducer,
+  varR: varSlice,
 });
 
 // Middleware 수정

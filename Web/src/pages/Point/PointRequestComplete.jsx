@@ -14,8 +14,14 @@ import { Boxs } from "@components/designGuide";
 import checkIcon from "@assets/icons/restin_ok_307.png";
 import { IoCopyOutline } from "react-icons/io5";
 import theme from "@style/theme";
+import { useEffect, useState } from "react";
+import { restinAPI } from "../../api/config";
+import { useSelector } from "react-redux";
 
 const PointRequestComplete = () => {
+  const auth_token = useSelector((state) => state.tokenR.verifiToken);
+  const userData = useSelector((state) => state.userR.userData);
+  const [requestTicket, setRequestTicket] = useState(null);
   const copyAccountNumber = () => {
     sendMessageToRN({
       type: "copy",
@@ -24,7 +30,17 @@ const PointRequestComplete = () => {
       },
     });
   };
-
+  useEffect(() => {
+    fetch(`${restinAPI}/point/request/state`, {
+      headers: {
+        Authorization: `Bearer ${auth_token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setRequestTicket(data.requestTicket);
+      });
+  }, []);
   return (
     <FullBox sx={{ height: "100%", overflowY: "auto", position: "relative" }}>
       <HeaderInner fixed={true}>무통장 입금 안내</HeaderInner>
@@ -88,7 +104,12 @@ const PointRequestComplete = () => {
               충전 신청 금액
             </TextHeader4>
             <TextHeader3 weight="Bold" color="PrimaryBrand.main">
-              10,000원
+              {String(
+                requestTicket?.charge?.chargeAmount
+                  ? requestTicket.charge.chargeAmount
+                  : 0
+              ).toLocaleString()}
+              원
             </TextHeader3>
           </Box>
           <Boxs variant="TextLine" sx={{ mb: 2 }} />
@@ -97,7 +118,10 @@ const PointRequestComplete = () => {
               현재 보유 포인트
             </TextBody>
             <TextBody weight="Regular" color="Gray.c400">
-              0원
+              {String(
+                userData?.point?.amount ? userData.point.amount : 0
+              ).toLocaleString()}
+              원
             </TextBody>
           </Box>
           <Box sx={styles.detailRow}>
@@ -105,7 +129,12 @@ const PointRequestComplete = () => {
               충전 신청 금액
             </TextBody>
             <TextBody weight="Regular" color="Gray.c400">
-              10,000원
+              {String(
+                requestTicket?.charge?.chargeAmount
+                  ? requestTicket.charge.chargeAmount
+                  : 0
+              ).toLocaleString()}
+              원
             </TextBody>
           </Box>
           <Box sx={styles.detailRow}>
@@ -113,14 +142,28 @@ const PointRequestComplete = () => {
               리워드 혜택
             </TextBody>
             <TextBody weight="Regular" color="Gray.c400">
-              300원
+              {String(
+                requestTicket?.charge?.chargeAmount
+                  ? requestTicket.charge.chargeAmount *
+                      requestTicket.charge.bonusRate
+                  : 0
+              ).toLocaleString()}
+              원
             </TextBody>
           </Box>
           <Boxs variant="TextLine" sx={{ my: 2 }} />
           <Box sx={styles.totalRow}>
             <TextBody weight="Regular">포인트 충전 및 결제 후 잔액</TextBody>
             <TextBody weight="Regular" color="Black.main">
-              10,300원
+              {String(
+                requestTicket?.charge?.chargeAmount
+                  ? userData?.point?.amount +
+                      requestTicket.charge.chargeAmount +
+                      requestTicket.charge.chargeAmount *
+                        requestTicket.charge.bonusRate
+                  : 0
+              ).toLocaleString()}
+              원
             </TextBody>
           </Box>
         </Box>

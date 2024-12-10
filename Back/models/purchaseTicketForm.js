@@ -14,11 +14,13 @@
  */
 class PurchaseTicketForm {
   constructor(args) {
-    this.purchaseId = args.purchaseId ?? null;
     this.userId = args.userId ?? null;
-    this.storeId = args.storeId ?? null;
-    this.usageLogTicketId = args.usageLogTicketId ?? null;
+    this.purchaseTicketId = args.purchaseTicketId ?? null;
     this.pointTicketId = args.pointTicketId ?? null;
+    this.usageLogTicketId = args.usageLogTicketId ?? null;
+    this.userInfo = args.userInfo ?? null;
+    this.storeId = args.storeId ?? null;
+    this.storeUUID = args.storeUUID ?? null;
     this.amount = args.amount ?? null;
     this.purchaseDate = args.purchaseDate ?? null;
     this.paymentMethod = args.paymentMethod ?? null;
