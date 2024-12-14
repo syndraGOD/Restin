@@ -17,11 +17,17 @@ const { jsDateToFirebaseDate } = require("../utils/firebaseDateConverter.js");
 const UsageTicketForm = require("../models/usageTicketForm.js");
 const { db_store_read } = require("../utils/CRUD_storeData.js");
 const TotalPriceMath = (b, c) => {
-  console.log(typeof b, typeof c);
-  console.log(b, c);
-  console.log(b + b * 0.5 * Math.max(0, Math.ceil((c - 10) / 5)));
-  return b + b * 0.5 * Math.max(0, Math.ceil((c - 10) / 5));
-}; //b: 가격, c: 이용시간
+  b = parseInt(b);
+  c = parseInt(c);
+  const result = b + b * 0.5 * Math.max(0, Math.ceil((c - 10) / 5));
+  console.log(result);
+  return result;
+};
+
+// console.log(typeof b, typeof c);
+// console.log(b, c);
+// console.log(b + b * 0.5 * Math.max(0, Math.ceil((c - 10) / 5)));
+//b: 가격, c: 이용시간
 // 고민하다가, 나온 결로
 // 이용종료 티켓은 말 그대로 '기록' 이니 USERDATA에 남아있을 필요 없지만
 // 이용 종료 및 결제 대기중인 티켓은 USERDATA에 남아있어야 함.

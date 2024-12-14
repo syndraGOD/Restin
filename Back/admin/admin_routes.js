@@ -14,7 +14,7 @@ const {
   updateData,
   getTimestamp,
   queryReadWithConditions,
-  queryRead
+  queryRead,
 } = require("../utils/CRUD_DATA.js");
 const { collection, doc, getDoc, setDoc } = require("firebase/firestore");
 const { db } = require("../configFiles/firebaseConfig.js");
@@ -271,7 +271,7 @@ router.get("/admin_dashboard.js", adminAuthMiddleware, (req, res) => {
 router.use((req, res, next) => {
   res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
   next();
-}); 
+});
 
 // 스토어 목록 페이지
 router.get("/store-list", adminAuthMiddleware, (req, res) => {
@@ -303,14 +303,19 @@ router.get("/point-request", adminAuthMiddleware, (req, res) => {
 // 포인트 충전 요청 목록 조회
 router.get("/point-requests", adminAuthMiddleware, async (req, res) => {
   try {
-    const conditions = [{
-      field: "info.status",
-      operator: "==",
-      value: "pending"
-    }];
-    
-    const result = await queryReadWithConditions("POINT_REQUEST_TICKET", conditions);
-    
+    const conditions = [
+      {
+        field: "info.status",
+        operator: "==",
+        value: "pending",
+      },
+    ];
+
+    const result = await queryReadWithConditions(
+      "POINT_REQUEST_TICKET",
+      conditions
+    );
+
     if (result.success) {
       // JavaScript로 데이터 정렬
       const sortedData = result.data.sort((a, b) => {
@@ -321,96 +326,120 @@ router.get("/point-requests", adminAuthMiddleware, async (req, res) => {
 
       res.json({
         success: true,
-        requests: sortedData
+        requests: sortedData,
       });
     } else {
       res.status(500).json({
         success: false,
-        message: result.error
+        message: result.error,
       });
     }
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "포인트 충전 요청 목록 조회 실패"
+      message: "포인트 충전 요청 목록 조회 실패",
     });
   }
 });
 
 // 포인트 충전 요청 승인/거부 처리
-router.post("/point-requests/:id/:action",adminAuthMiddleware, async (req, res) => {
-  try {
-    const { id, action } = req.params;
-    const currentTime = getTimestamp();
-    let updateFields;
+router.post(
+  "/point-requests/:id/:action",
+  adminAuthMiddleware,
+  async (req, res) => {
+    try {
+      const { id, action } = req.params;
+      const currentTime = getTimestamp();
+      let updateFields;
 
-    //다시 티켓 조회해서 유저id가져오고, 유저id로 유더 데이터 조회해서 포인트 알아냄
-    const request_ticket = (await queryRead("POINT_REQUEST_TICKET", "info.pointRequestTicketId", id)).data[0];
-    const userId = request_ticket.info.userId;
+      //다시 티켓 조회해서 유저id가져오고, 유저id로 유더 데이터 조회해서 포인트 알아냄
+      const request_ticket = (
+        await queryRead("POINT_REQUEST_TICKET", "info.pointRequestTicketId", id)
+      ).data[0];
+      const userId = request_ticket.info.userId;
 
+      if (action === "approve") {
+        updateFields = {
+          "info.status": "approved",
+          "after.approvalDate": currentTime,
+          // "after.adminId": req.session.adminInfo.adminId,
+          "after.completeDate": currentTime,
+          "after.adminMemo": "승인 완료",
+        };
+      } else if (action === "reject") {
+        updateFields = {
+          "info.status": "rejected",
+          "cancel.cancelDate": currentTime,
+          "cancel.cancelReason": req.body.reason,
+          // "after.adminId": req.session.adminInfo.adminId,
+          "after.completeDate": currentTime,
+          "after.adminMemo": `거부 사유: ${req.body.reason}`,
+        };
+      }
 
-    if (action === 'approve') {
-      updateFields = {
-        "info.status": "approved",
-        "after.approvalDate": currentTime,
-        // "after.adminId": req.session.adminInfo.adminId,
-        "after.completeDate": currentTime,
-        "after.adminMemo": "승인 완료"
+      const userDataDoc = doc(collection(db, "USER"), userId);
+      const userData = (await getDoc(userDataDoc)).data();
+      const totalPoint =
+        userData.point.amount +
+        request_ticket.charge.chargeAmount *
+          (request_ticket.charge.bonusRate + 1);
+
+      const pointTicketId = uuidv4();
+      const pointLog = {
+        afterAmount: totalPoint,
+        amount:
+          request_ticket.charge.chargeAmount *
+          (request_ticket.charge.bonusRate + 1),
+        beforeAmount: userData.point.amount,
+        description: "포인트 충전",
+        pointTicketId: pointTicketId,
+        requestTicket: request_ticket.info.pointRequestTicketId,
+        requestDate: new Date(),
+        userId: userId,
       };
-    } else if (action === 'reject') {
-      updateFields = {
-        "info.status": "rejected",
-        "cancel.cancelDate": currentTime,
-        "cancel.cancelReason": req.body.reason,
-        // "after.adminId": req.session.adminInfo.adminId,
-        "after.completeDate": currentTime,
-        "after.adminMemo": `거부 사유: ${req.body.reason}`
-      };
-    }
+      // throw new Error("test");
 
-    const userDataDoc = doc(collection(db, "USER"), userId);
-    const userData = (await getDoc(userDataDoc)).data();
-    const totalPoint = userData.point.amount + (request_ticket.charge.chargeAmount * (request_ticket.charge.bonusRate+1));
-   
-    const pointTicketId = uuidv4();
-    const pointLog = {
-      afterAmount: totalPoint,
-      amount: request_ticket.charge.chargeAmount * (request_ticket.charge.bonusRate+1),
-      beforeAmount: userData.point.amount,
-      description: '포인트 충전',
-      pointTicketId: pointTicketId,
-      requestTicket: request_ticket.info.pointRequestTicketId,
-      userId: userId
-    }
-    // throw new Error("test");
-
-    const result = await updateData("POINT_REQUEST_TICKET", id, updateFields);
-    const pointLogUpdateResult = await setDoc(doc(collection(db, "POINT_TICKET"), pointTicketId), pointLog);
-    const pointUpdateResult = await updateData("USER", userId, {
-      "point.amount": totalPoint
-    });
-    
-    if (result.success) {
-      console.log(userId,'+', (request_ticket.charge.chargeAmount * (request_ticket.charge.bonusRate+1)), ' : ', totalPoint, 'Point');
-      res.json({
-        success: true,
-        message: `포인트 충전 요청이 ${action === 'approve' ? '승인' : '거부'}되었습니다.`
+      const result = await updateData("POINT_REQUEST_TICKET", id, updateFields);
+      const pointLogUpdateResult = await setDoc(
+        doc(collection(db, "POINT_TICKET"), pointTicketId),
+        pointLog
+      );
+      const pointUpdateResult = await updateData("USER", userId, {
+        "point.amount": totalPoint,
       });
-    } else {
-      console.log(result.error);
+
+      if (result.success) {
+        console.log(
+          userId,
+          "+",
+          request_ticket.charge.chargeAmount *
+            (request_ticket.charge.bonusRate + 1),
+          " : ",
+          totalPoint,
+          "Point"
+        );
+        res.json({
+          success: true,
+          message: `포인트 충전 요청이 ${
+            action === "approve" ? "승인" : "거부"
+          }되었습니다.`,
+        });
+      } else {
+        console.log(result.error);
+        res.status(500).json({
+          success: false,
+          message: result.error,
+        });
+      }
+    } catch (error) {
+      console.log(error);
       res.status(500).json({
         success: false,
-        message: result.error
+        message: "처리 중 오류가 발생했습니다.",
       });
     }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: "처리 중 오류가 발생했습니다."
-    });
   }
-});
+);
 
 // CSS와 JS 파일에 대한 접근 권한 설정에 추가
 router.get("/point-request.css", adminAuthMiddleware, (req, res) => {

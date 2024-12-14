@@ -20,16 +20,18 @@ import SubwayLineIcon_19 from "../assets/subwayicons/line (19).png";
 import SubwayLineIcon_20 from "../assets/subwayicons/line (20).png";
 import SubwayLineIcon_21 from "../assets/subwayicons/line (21).png";
 import SubwayLineIcon_22 from "../assets/subwayicons/line (22).png";
+import SubwayLineIcon_23 from "../assets/subwayicons/line (23).png";
 
-export const stationList = {
-  line1: ["수원", "금정"],
-  line2: ["당산", "신당"],
-  line5: ["신금호"],
-  line6: ["신당"],
-  line9: ["당산"],
-};
+// export const stationList = {
+//   // ...uniqueSubwayStation,
+//   line1: ["수원", "금정"],
+//   line2: ["당산", "신당"],
+//   line5: ["신금호"],
+//   line6: ["신당"],
+//   line9: ["당산"],
+// };
 
-export const stationIncludeLine = (station) => {
+export const stationIncludeLine = (station, stationList) => {
   return Object.keys(stationList).filter((line) =>
     stationList[line].includes(station)
   );
@@ -60,7 +62,49 @@ export const LineInfo = {
     color: "#E21A65",
   },
   line9: {
-    color: "#BEB193",
+    color: "#BFB396",
+  },
+  line10: {
+    color: "#4d5156",
+  },
+  line11: {
+    color: "#0b62ae",
+  },
+  line12: {
+    color: "#7dc6a6",
+  },
+  line13: {
+    color: "#219078",
+  },
+  line14: {
+    color: "#0494d4",
+  },
+  line15: {
+    color: "#85ac1d",
+  },
+  line16: {
+    color: "#fac00b",
+  },
+  line17: {
+    color: "#6d8dcc",
+  },
+  line18: {
+    color: "#d60b43",
+  },
+  line19: {
+    color: "#5eae37",
+  },
+  line20: {
+    color: "#bac657",
+  },
+  line21: {
+    color: "#fb850b",
+  },
+  line22: {
+    color: "#7b9ecf",
+  },
+  line23: {
+    color: "#ee8f04",
   },
 };
 
@@ -95,6 +139,8 @@ export const SubwayIcons = {
   line19: SubwayLineIcon_19,
   line20: SubwayLineIcon_20,
   line21: SubwayLineIcon_21,
+  line22: SubwayLineIcon_22,
+  line23: SubwayLineIcon_23,
 };
 
 // const test = async () => {

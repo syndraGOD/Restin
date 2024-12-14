@@ -2,7 +2,6 @@ import { styled } from "@mui/system";
 import { Box } from "@mui/material";
 
 import { useTheme } from "@mui/material/styles";
-import asd from "@pages/sample/img1.png";
 function DeepChild() {
   const theme = useTheme();
   return <span>{`spacing ${theme.spacing}`}</span>;
@@ -23,13 +22,9 @@ export const Page = ({ children, bg, bgimg, ...args }) => {
     height: 100%;
     align-items: center;
     /* background-image: ${bgimg ? `url("${bgimg}")` : null || "aqua"}; */
-    /* background-image: "url(${asd})"; */
   `;
   return (
-    <NewPage
-    // style={{ backgroundImage: `url(${asd})` }}
-    // sx={{ backgroundImage: `url(${asd})` }}
-    >
+    <NewPage>
       <PageInner {...args}>{children}</PageInner>
     </NewPage>
   );

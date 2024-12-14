@@ -10,15 +10,18 @@ import { Box } from "@mui/material";
 import { Page } from "@components/Page.jsx";
 // import image from "../../assets/images/WelcomeImage1.png";
 import { useEffect, useState } from "react";
-import { db } from "@api/firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
-import StoreItem from "../../components/Home/StoreItem.jsx";
+import StoreItem from "./StoreItem.jsx";
 import Navigation from "../../components/common/Navigation.jsx";
 import InBox from "../../components/common/InBox.jsx";
 import FullBox from "../../components/common/FullBox.jsx";
 import { useTheme } from "@mui/material/styles";
-import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
-import { getImg, getImgList } from "../../api/fsImgDown.js";
+import {
+  Link,
+  Navigate,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { setStoreData } from "../../store/modules/storeSlice.js";
 import { DialogList } from "../../components/common/DialogOk.jsx";
 import HeaderText from "../../components/common/HeaderText.jsx";
@@ -39,10 +42,10 @@ const Home = () => {
       text: "거리 순",
       identifier: "distance",
     },
-    populer: {
-      text: "인기 순",
-      identifier: "populer",
-    },
+    // populer: {
+    //   text: "인기 순",
+    //   identifier: "populer",
+    // },
     payment: {
       text: "가격 순",
       identifier: "payment",
@@ -58,105 +61,140 @@ const Home = () => {
   const navi = useNavigate();
   const dispatch = useDispatch();
   const myTheme = useTheme();
+  // const storeListGetAll = async (db) => {
+  //   if (storeData.length === 0) {
+  //     const colName = "STORE";
+  //     const col = collection(db, colName);
 
-  const storeListGetAll = async (db) => {
-    if (storeData.length === 0) {
-      const colName = "STORE";
-      const col = collection(db, colName);
+  //     const temps = await getDocs(col);
+  //     const resData = [];
+  //     temps.forEach((item) => {
+  //       resData.push(item.data());
+  //     });
+  //     const getItemImgList = async (array) => {
+  //       const newImgList = await Promise.all(
+  //         array.map(async (item) => {
+  //           let imgArr = [];
+  //           const ref = `StoreImage/store(${item.id})`;
+  //           const itemImgList = await getImgList(ref);
+  //           await Promise.all(
+  //             itemImgList.items.map(async (img) => {
+  //               const imgURL = await getImg(img.fullPath);
+  //               imgArr.push(imgURL);
+  //             })
+  //           );
+  //           return { ...item, imgURL: imgArr };
+  //         })
+  //       );
+  //       dispatch(setStoreData(newImgList));
+  //     };
+  //     await getItemImgList(resData);
+  //   } else {
+  //     return;
+  //   }
+  // };
 
-      const temps = await getDocs(col);
-      const resData = [];
-      temps.forEach((item) => {
-        resData.push(item.data());
+  // useEffect(() => {
+  //   console.log("이미지 다운로드 및 실행");
+  //   const init = async () => {
+  //     await storeListGetAll(db);
+  //     await storeListFilltering();
+  //     setLoading(true);
+  //   };
+  //   init();
+  // }, []);
+
+  const storeListFilltering = async () => {
+    //필터링
+    let newData = storeData.filter((item, idx) => {
+      let result;
+      Object.values(item.subwayStation).map((e) => {
+        if (e.includes(filter.station)) {
+          result = true;
+        }
       });
-      const getItemImgList = async (array) => {
-        const newImgList = await Promise.all(
-          array.map(async (item) => {
-            let imgArr = [];
-            const ref = `StoreImage/store(${item.id})`;
-            const itemImgList = await getImgList(ref);
-            await Promise.all(
-              itemImgList.items.map(async (img) => {
-                const imgURL = await getImg(img.fullPath);
-                imgArr.push(imgURL);
-              })
-            );
-            return { ...item, imgURL: imgArr };
-          })
-        );
-        dispatch(setStoreData(newImgList));
-      };
-      await getItemImgList(resData);
+      console.log(item.name, result);
+      return result;
+    });
+    if (newData.length === 0) {
+      setData([]);
     } else {
-      return;
+      //sort index 생성
+      const sortDataIndex = newData.map((item, idx) => {
+        if (!item.stationDistance)
+          return {
+            item,
+            distance: 0,
+            payment: 0,
+          };
+        return {
+          item,
+          distance: item.stationDistance[filter.station].distance,
+          // distance: Math.min(
+          //   ...Object.entries(item.stationDistance).map(([key, value]) => {
+          //     return parseInt(value.distance);
+          //   })
+          // ),
+          payment: item.unitPrice,
+        };
+      });
+      // storeSortIndex.recommend = sortDataIndex.sort(
+      //   (a, b) => a.distance - b.distance
+      // );
+
+      if (
+        sortUser.identifier === "distance" ||
+        sortUser.identifier === "recommend"
+      ) {
+        sortDataIndex.sort((a, b) => a.distance - b.distance);
+      } else if (sortUser.identifier === "payment") {
+        sortDataIndex.sort((a, b) => a.payment - b.payment);
+      }
+      // storeSortIndex.payment = sortDataIndex.sort(
+      //   (a, b) => a.payment - b.payment
+      // );
+      setData(sortDataIndex);
     }
   };
 
-  const storeListFilltering = async () => {
-    let newData = storeData.filter((item, idx) => {
-      const arrSet = new Set(...Object.values(item.subwayStation));
-      return arrSet.has(filter.station);
-    });
-    setData(newData);
-    if (newData.length === 0) setData();
-  };
-
-  useEffect(() => {
-    console.log("이미지 다운로드 및 실행");
-    const init = async () => {
-      await storeListGetAll(db);
-      await storeListFilltering();
-      setLoading(true);
-    };
-    init();
-  }, []);
   useEffect(() => {
     storeListFilltering();
-  }, [filter]);
-  // useEffect(() => {
-  //   storeListFilltering();
-  // }, [storeData]);
+  }, [filter, sortUser]);
 
-  // useEffect(() => {
-  //   if (!Loading && Array.isArray(data) && data.length !== 0) {
-  //     setLoading(true);
-  //   }
-  // }, [data]);
-
+  const location = useLocation();
   return (
     <>
-      {Loading ? (
-        <Page
+      <Page
+        className="divJCC"
+        // bgimg="../../assets/images/WelcomeImage1.png"
+        css={css`
+          height: 100%;
+        `}
+      >
+        {/* h2 */}
+        <HeaderText sx={{ margin: "10px 0" }}>
+          <img src={logo_small} height={"21px"} />
+        </HeaderText>
+        {/* header */}
+        <FullBox
           className="divJCC"
-          // bgimg="../../assets/images/WelcomeImage1.png"
-          css={css`
-            height: 100%;
-          `}
+          flexDirection={"row"}
+          padding={1.5}
+          borderBottom={`1px solid ${theme.palette.Gray.c300}`}
         >
-          {/* h2 */}
-          <HeaderText sx={{ margin: "10px 0" }}>
-            <img src={logo_small} height={"21px"} />
-          </HeaderText>
-          {/* header */}
-          <FullBox
-            className="divJCC"
-            flexDirection={"row"}
-            padding={1.5}
-            borderBottom={`1px solid ${theme.palette.Gray.c300}`}
-          >
-            <InBox textAlign={"start"}>
-              <Box
-                display={"flex"}
-                alignItems={"center"}
-                onClick={() => {
-                  navi("/app/filter");
-                }}
-              >
-                <TextHeader3 weight="Bold">{filter.station}역 </TextHeader3>
-                <IoIosArrowDown size={24} color={theme.palette.Gray.c900} />
-              </Box>
-            </InBox>
-            {/* <Box
+          <InBox textAlign={"start"}>
+            <Box
+              display={"flex"}
+              alignItems={"center"}
+              onClick={() => {
+                navi("/app/filter");
+              }}
+            >
+              <TextHeader3 weight="Bold">{filter.station}역 </TextHeader3>
+              <IoIosArrowDown size={24} color={theme.palette.Gray.c900} />
+            </Box>
+          </InBox>
+          {/* <Box
               sx={{
                 width: 1 / 2,
                 borderRadius: "0px",
@@ -199,109 +237,108 @@ const Home = () => {
               </TextBody>
             </Box> */}
 
-            <DialogList
-              title="정렬"
-              data={Object.values(sortList).map((obj) => {
-                return (
-                  <Box key={obj.text} display="flex" alignItems={"center"}>
-                    {obj.text !== sortUser.text ? (
-                      <VscCircleLarge size={20} />
-                    ) : (
-                      <BsFillRecordCircleFill
-                        color={theme.palette.PrimaryBrand.main}
-                        size={20}
-                      />
-                    )}
+          <DialogList
+            title="정렬"
+            data={Object.values(sortList).map((obj) => {
+              return (
+                <Box key={obj.text} display="flex" alignItems={"center"}>
+                  {obj.text !== sortUser.text ? (
+                    <VscCircleLarge size={20} />
+                  ) : (
+                    <BsFillRecordCircleFill
+                      color={theme.palette.PrimaryBrand.main}
+                      size={20}
+                    />
+                  )}
 
-                    {"    " + obj.text}
-                    {/* <TextBody>{obj.text}</TextBody> */}
-                  </Box>
-                );
-              })}
-              selectedValue={sortUser.text}
-              open={SortPageOpen}
-              onClose={(value) => {
-                setSortPageOpen(false);
-                sortUserSet(
-                  ...Object.values(sortList).filter((obj) => obj.text === value)
-                );
-              }}
-            ></DialogList>
-          </FullBox>
-          {/* contents */}
-          <FullBox
-            className="divJCC"
-            bgcolor={myTheme.palette.White.main}
+                  {"    " + obj.text}
+                  {/* <TextBody>{obj.text}</TextBody> */}
+                </Box>
+              );
+            })}
+            selectedValue={sortUser.text}
+            open={SortPageOpen}
+            onClose={(value) => {
+              setSortPageOpen(false);
+              sortUserSet(
+                ...Object.values(sortList).filter((obj) => obj.text === value)
+              );
+            }}
+          ></DialogList>
+        </FullBox>
+        {/* contents */}
+        <FullBox
+          className="divJCC"
+          bgcolor={myTheme.palette.White.main}
+          sx={{
+            flexGrow: 1,
+            alignItems: "center",
+            justifyContent: "start",
+            position: "relative",
+            overflowY: "scroll",
+          }}
+        >
+          <InBox
+            className="contents"
             sx={{
-              flexGrow: 1,
-              alignItems: "center",
-              justifyContent: "start",
-              position: "relative",
-              overflowY: "scroll",
+              display: "block",
             }}
           >
-            <InBox
-              className="contents"
+            <Box
               sx={{
-                display: "block",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                // textAlign: "start",
+                margin: "24px 0 24px 0",
               }}
             >
+              <TextBody color="Gray.c900">
+                {data ? data.length : 0}개의 카페
+              </TextBody>
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  // textAlign: "start",
-                  margin: "24px 0 24px 0",
+                  maxHeight: "30px",
+                  border: `1px solid ${theme.palette.Gray.c300}`,
+                  borderRadius: "16px",
+                  padding: "4px 12px",
+                }}
+                onClick={() => {
+                  setSortPageOpen(true);
                 }}
               >
-                <TextBody color="Gray.c900">
-                  {data ? data.length : 0}개의 카페
+                <TextBody weight="Bold" color="Gray.c700">
+                  {sortUser.text}
                 </TextBody>
-                <Box
-                  sx={{
-                    maxHeight: "30px",
-                    border: `1px solid ${theme.palette.Gray.c300}`,
-                    borderRadius: "16px",
-                    padding: "4px 12px",
-                  }}
-                  onClick={() => {
-                    setSortPageOpen(true);
-                  }}
-                >
-                  <TextBody weight="Bold" color="Gray.c700">
-                    {sortUser.text}
-                  </TextBody>
-                </Box>
               </Box>
-              <Box display="block">
-                {data
-                  ? data.map((item, idx) => {
-                      return (
-                        <StoreItem
-                          key={item.id}
-                          item={item}
-                          userDistance={5}
-                        ></StoreItem>
-                      );
-                    })
-                  : null}
-              </Box>
-            </InBox>
-          </FullBox>
-          {/* navigation */}
-          <Box
-            bgcolor={myTheme.palette.White.main}
-            sx={
-              {
-                // borderRadius: "15px 15px 0 0",
-              }
+            </Box>
+            <Box display="block">
+              {data
+                ? data.map(({ item }, idx) => {
+                    return (
+                      <StoreItem
+                        key={item.id}
+                        item={item}
+                        userDistance={5}
+                      ></StoreItem>
+                    );
+                  })
+                : null}
+            </Box>
+          </InBox>
+        </FullBox>
+        {/* navigation */}
+        <Box
+          bgcolor={myTheme.palette.White.main}
+          sx={
+            {
+              // borderRadius: "15px 15px 0 0",
             }
-          >
-            <Navigation select="home" />
-          </Box>
-        </Page>
-      ) : null}
+          }
+        >
+          <Navigation select="home" />
+        </Box>
+      </Page>
     </>
   );
 };

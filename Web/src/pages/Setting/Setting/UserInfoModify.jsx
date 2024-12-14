@@ -5,14 +5,17 @@ import InBox from "../../../components/common/InBox";
 import { TextBodyLarge } from "../../../components/designGuide";
 import { Page } from "../../../components/Page";
 import { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { DefaultBtn } from "../../../components/common/Btns";
 import { DialogOK } from "../../../components/common/DialogOk";
 import { useLocation, useNavigate } from "react-router-dom";
+import { restinAPI } from "../../../api/config";
+import { setuserData } from "../../../store/modules/userSlice";
 
 const UserInfoModify = () => {
   const location = useLocation();
   const navi = useNavigate();
+  const dispatch = useDispatch();
   const userData = useSelector((state) => state.userR.userData);
   const nameRef = useRef();
   const phoneRef = useRef();
@@ -30,27 +33,33 @@ const UserInfoModify = () => {
 
   const userDataUpdate = async () => {
     try {
-      const res = await fetch(``, {
+      const res = await fetch(`${restinAPI}/user/userdata`, {
         mode: "cors",
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           authorization: "Bearer " + userData.security?.auth_token,
         },
+        body: JSON.stringify({
+          nick: nameState,
+        }),
       });
       if (res.status === 200) {
-        // dispatch(setuserData({}));
-        // dispatch(setVerifiToken(""));
-        // navi("/purchase/payment", { state: { item } });
+        console.log("회원정보 수정 완료");
+        dispatch(
+          setuserData({
+            ...userData,
+            profile: { ...userData.profile, nick: nameState },
+          })
+        );
       } else {
-        navi(-1);
         const awaitRES = await res.json();
         console.log("회원정보 수정 실패", awaitRES.message);
       }
     } catch (error) {
-      navi(-1);
       console.log("front error!", error);
     }
+    navi(-2);
   };
   return (
     <FullBox height="100%" display="flex" flexDirection="column">

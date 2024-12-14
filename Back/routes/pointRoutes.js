@@ -16,7 +16,10 @@ const {
   query,
   where,
   getDocs,
+  deleteDoc,
 } = require("firebase/firestore");
+const { queryRead } = require("../utils/CRUD_DATA.js");
+const { firebaseDateToJSDate } = require("../utils/firebaseDateConverter.js");
 
 const colNamePoint = "POINT_TICKET";
 const colNameRequest = "POINT_REQUEST_TICKET";
@@ -122,6 +125,30 @@ router.post(
       });
     } catch (error) {
       console.log(error);
+      res.status(400).json({ success: false, error: error.message });
+    }
+  }
+);
+
+//포인트 충전 취소 요청
+router.delete(
+  "/request/charge",
+  verifyTokenMiddleware,
+  checkExistingRequest,
+  async (req, res) => {
+    try {
+      const { existingRequest } = req.body;
+      const userId = req.userId;
+      const requestColRef = collection(db, colNameRequest);
+      //firebase에서 삭제
+      const ticketRef = doc(
+        db,
+        colNameRequest,
+        existingRequest.info.pointRequestTicketId
+      );
+      await deleteDoc(ticketRef);
+      res.status(200).json({ success: true });
+    } catch (error) {
       res.status(400).json({ success: false, error: error.message });
     }
   }
@@ -286,6 +313,74 @@ router.get(
         success: true,
         // requestTicket: existingRequest
       });
+    } catch (error) {
+      res.status(400).json({ success: false, error: error.message });
+    }
+  }
+);
+
+// 포인트 내역 조회
+router.get(
+  "/loglist",
+  verifyTokenMiddleware,
+  checkExistingRequest,
+  async (req, res) => {
+    try {
+      const userId = req.userId;
+      const { existingRequest } = req.body;
+      const pointLogList = await queryRead(
+        colNamePoint,
+        "userId",
+        userId,
+        (a, b) => {
+          return b.requestDate - a.requestDate;
+        }
+      );
+      let newPointLogList = pointLogList.data.map((item) => {
+        return {
+          storeUUID: item.storeUUID,
+          description: item.description,
+          date:
+            firebaseDateToJSDate(item.requestDate)
+              .toLocaleDateString()
+              .replaceAll(" ", "")
+              .slice(0, 10) +
+            " " +
+            firebaseDateToJSDate(item.requestDate)
+              .toLocaleTimeString("en-GB")
+              .slice(0, 5),
+          // .slice(),
+          changePoint: item.amount,
+          afterPoint: item.afterAmount,
+          isDelete: false,
+        };
+      });
+      if (existingRequest) {
+        const newDate = existingRequest.info.requestDate;
+        newPointLogList = [
+          {
+            description: "포인트 충전 (처리중)",
+            date:
+              firebaseDateToJSDate(existingRequest.info.requestDate)
+                .toLocaleDateString()
+                .replaceAll(" ", "")
+                .slice(0, 10) +
+              " " +
+              firebaseDateToJSDate(existingRequest.info.requestDate)
+                .toLocaleTimeString("en-GB")
+                .slice(0, 5),
+            changePoint: existingRequest.charge.chargeAmount,
+            isDelete: true,
+          },
+          ...newPointLogList,
+        ];
+      }
+      //empty array?
+      if (newPointLogList.length === 0) {
+        return res.status(200).json({ success: true, data: [] });
+      } else {
+        return res.status(200).json({ success: true, data: newPointLogList });
+      }
     } catch (error) {
       res.status(400).json({ success: false, error: error.message });
     }

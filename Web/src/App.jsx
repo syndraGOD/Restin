@@ -15,7 +15,7 @@ import Home from "./pages/App/Home";
 import LoginPage from "./pages/Auth/LoginPage";
 import React, { useEffect, useState } from "react";
 import MobilePage from "./style/Mobile.jsx";
-import LogoPage from "./pages/LogoPage";
+import LoadingPage from "./pages/LoadingPage.jsx";
 import Welcome1 from "./pages/Auth/welcomPage/Welcome1";
 import Welcome2 from "./pages/Auth/welcomPage/Welcome2";
 import Welcome3 from "./pages/Auth/welcomPage/Welcome3";
@@ -44,7 +44,6 @@ import { restinAPI } from "./api/config";
 import { setuserData } from "./store/modules/userSlice";
 import { setVerifiToken } from "./store/modules/tokenSlice";
 import { sendMessageToRN } from "./api/RN/RNsend";
-import * as PortOne from "@portone/browser-sdk/v2";
 import KakaoChannelGuide from "./pages/Setting/Setting/KakaoChannelGuide.jsx";
 import UserInfoModify from "./pages/Setting/Setting/UserInfoModify.jsx";
 import UseGuide from "./pages/App/Home/UseGuide.jsx";
@@ -52,7 +51,8 @@ import NotionLocList from "./api/NotionLocList.js";
 import GetNotionJSX from "./components/common/NotionPageGet.jsx";
 import PointCharge from "./pages/Point/PointCharge.jsx";
 import PointRequestComplete from "./pages/Point/PointRequestComplete.jsx";
-// import { GoogleAuthProvider } from "firebase/auth";
+import PointLogList from "./pages/Point/PointLogList.jsx";
+import PurchaseLogDetail from "./pages/Purchase/PurchaseLogDetail.jsx";
 
 //const app =
 
@@ -64,124 +64,21 @@ function App() {
   const userData = useSelector((state) => state.userR.userData);
   const auth_Token = useSelector((state) => state.tokenR.verifiToken);
   const dispatch = useDispatch();
-  // const location = useLocation();
-  const tokenLogin = async () => {
-    if (JSON.stringify(userData) !== "{}") {
-      console.log("로그인되어있음 - 유지");
-      return;
-    }
-    if (auth_Token === "") {
-      console.log("토큰 없음-로그인 진행");
-      return;
-    } else {
-      console.log("토큰 발견 > 데이터 내부 토큰으로 로그인 진행");
-      try {
-        const res = await fetch(`${restinAPI}/auth/login`, {
-          mode: "cors",
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: "Bearer " + auth_Token,
-          },
-        });
-        if (res.status === 200) {
-          const awaitRES = await res.json();
-          const resUserData = awaitRES.user.data;
-          dispatch(setuserData(resUserData));
-          dispatch(setVerifiToken(resUserData.security.auth_token));
-          console.log("토큰 로그인 성공!");
-        } else {
-          dispatch(setVerifiToken(""));
-          console.log("토큰 로그인 실패..");
-        }
-      } catch (error) {
-        //토큰로그인 오류가 났다고 해서 자동로그인 데이터를 초기화하는게 맞는가?
-        //한번 고민해보자, 그런데 만약 계속 에러가나는 상황이면, 초기화해주는게 오히려 나은데 말이지
-        dispatch(setVerifiToken(""));
-        console.log("토큰 로그인 에러!", error);
-      }
-    }
-  };
-  useEffect(() => {
-    const webInit = async () => {
-      const displaySet = () => {
-        document.documentElement.style.setProperty(
-          "--vh",
-          `${window.innerHeight * 0.01}px`
-        );
-      };
-      const storeImgDownload = async () => {};
-      const autoLogin = async () => {
-        await tokenLogin();
-      };
-      await displaySet();
-      await storeImgDownload();
-      await autoLogin();
-      setLoading(false);
-    };
-    webInit();
-  }, []);
-  const loginProcess = async () => {
-    //진입시 userData 확인
-    //  있으면 그대로 children return
-    //  없으면 토큰 있는지 확인
-    //    토큰 있으면 토큰 로그인 시도
-    //
-    //    토큰 없으면
-  };
-  const loginInit = () => {
-    sendMessageToRN({
-      type: "token",
-      payload: {
-        auth_token: userData.security.auth_token,
-      },
-    });
-  };
+
   const AuthProtect = ({ children }) => {
-    // const location = useLocation();
-    // console.log(location.pathname);
+    const location = useLocation();
     if (JSON.stringify(userData) !== "{}") {
       return children;
     } else {
-      console.log("userData : ", userData);
-      console.log("token : ", auth_Token);
       return <Navigate to="/login/isuser"></Navigate>;
     }
   };
-  const uid = Date.now().toString(16);
   return (
     <>
       <GlobalStyle />
       <Reducer store={store}>
-        <PersistGate loading={<LogoPage />} persistor={persistor}>
+        <PersistGate loading={<LoadingPage />} persistor={persistor}>
           <ThemeProvider theme={theme}>
-            {/* <Button
-                  sx={{ p: 3, m: 3 }}
-                  onClick={async () => {
-                    // window.location = "kakaotalk://kakaopay/home";
-                    // dispatch(setuserData({}));
-                    const response = await PortOne.requestPayment({
-                      storeId: "store-3aaf2448-f4cd-44ca-8162-0c81eb934d6e",
-                      channelKey:
-                        "channel-key-453920ce-40b4-4f6d-b50f-c2aa365b9adb",
-                      paymentId: uid,
-                      orderName: "주문명",
-                      totalAmount: 1000,
-                      currency: "CURRENCY_KRW",
-                      payMethod: "EASY_PAY",
-                      redirectUrl: `http://test.restin.co.kr/`,
-                      // customer: {
-                      //   fullName: "김",
-                      // },
-                    });
-                    if (response.code !== undefined) {
-                      // 오류 발생
-                      return alert(response.message);
-                    }
-                  }}
-                >
-                  react
-                </Button> */}
             <BrowserRouter>
               <MobilePage>
                 <Routes>
@@ -284,6 +181,14 @@ function App() {
                         </AuthProtect>
                       }
                     ></Route>
+                    <Route
+                      path="detail"
+                      element={
+                        <AuthProtect>
+                          <PurchaseLogDetail />
+                        </AuthProtect>
+                      }
+                    ></Route>
                   </Route>
                   <Route
                     path="/myInfo/home"
@@ -331,6 +236,7 @@ function App() {
                       path="chargecomplete"
                       element={<PointRequestComplete />}
                     ></Route>
+                    <Route path="loglist" element={<PointLogList />}></Route>
                   </Route>
                 </Routes>
               </MobilePage>

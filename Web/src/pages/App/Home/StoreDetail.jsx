@@ -16,6 +16,7 @@ import InBox from "../../../components/common/InBox";
 import { GrMapLocation } from "react-icons/gr";
 import { useTheme } from "@mui/material/styles";
 import {
+  Boxs,
   TextBody,
   TextBodyLarge,
   TextBodySmall,
@@ -50,6 +51,7 @@ import UseGuide from "./UseGuide.png";
 import { DialogOK } from "../../../components/common/DialogOk";
 
 const StoreDetail = () => {
+  const filter = useSelector((state) => state.filterR.filter);
   const userData = useSelector((state) => state.userR.userData);
   const storeData = useSelector((state) => state.storeR.storeData);
   const dispatch = useDispatch();
@@ -272,23 +274,34 @@ const StoreDetail = () => {
     const today = new Date();
     const todayText = String(today).substring(0, 3).toLowerCase();
     const open = openData[`${todayText}open`];
+    const close = openData[`${todayText}close`];
     const todayHourMin = `${for0To9ToText(today.getHours())}${for0To9ToText(
       today.getMinutes()
     )}`;
     if (userData.usage.startTime) {
-      return <DefaultBtn disabled={true}>다른 카페를 사용 중이에요</DefaultBtn>;
-    } else if (open === null && close === null) {
-      return <DefaultBtn disabled={true}>휴무일이에요</DefaultBtn>;
+      return (
+        <DefaultBtn fixed={true} disabled={true}>
+          다른 카페를 사용 중이에요
+        </DefaultBtn>
+      );
+    } else if (!open && !close) {
+      return (
+        <DefaultBtn fixed={true} disabled={true}>
+          휴무일이에요
+        </DefaultBtn>
+      );
     } else if (!(open < todayHourMin && todayHourMin < close)) {
       return (
-        <DefaultBtn disabled={true}>
+        <DefaultBtn disabled={true} fixed={true}>
           {open.substring(0, 2) + ":" + open.substring(2, 4)} 부터 사용할 수
           있어요
         </DefaultBtn>
       );
-    } else {
+    } else if (open < todayHourMin && todayHourMin < close) {
+      console.log(open, close, todayHourMin);
       return (
         <DefaultBtn
+          fixed={true}
           onClick={() => {
             navi(`${location.search}#isStart`);
           }}
@@ -296,8 +309,28 @@ const StoreDetail = () => {
           사용 시작하기
         </DefaultBtn>
       );
+    } else {
+      console.log("오류 발생");
     }
   };
+  let minDistanceStation = null;
+  let minDistanceTime = Infinity;
+  let minDistanceWayOut = null;
+  if (item.stationDistance) {
+    minDistanceTime = item.stationDistance[filter.station].distance;
+    minDistanceStation = filter.station;
+    minDistanceWayOut = item.stationDistance[filter.station].wayOut;
+    // for (const [key, value] of Object.entries(item.stationDistance)) {
+    //   const distance = parseInt(value.distance);
+    //   if (distance < minDistanceTime) {
+    //     minDistanceTime = distance;
+    //     minDistanceStation = key;
+    //     minDistanceWayOut = value.wayOut;
+    //   }
+    // }
+  }
+
+  // console.log(`가장 가까운 역: ${minDistanceStation}, 거리: ${minDistanceTime}`);
   return (
     <Page className="divJCC">
       <FullBox
@@ -307,7 +340,6 @@ const StoreDetail = () => {
           overflow: "auto",
           backgroundColor: "white",
           justifyContent: "start",
-          marginTop: "50px", //HeaderInner 들어갈 자리
         }}
       >
         {/* BackButton */}
@@ -327,24 +359,7 @@ const StoreDetail = () => {
           <IoIosArrowBack size={"50px"} color={theme.palette.White.main} />
         </Box> */}
 
-        <HeaderInner
-          position={"fixed"}
-          css={css`
-            justify-content: end;
-            z-index: 2;
-          `}
-        >
-          <Box
-            height={"100%"}
-            onClick={() => {
-              navi("/app/useguide");
-            }}
-          >
-            <TextBody weight="Bold" color="Gray.c700">
-              이용 안내
-            </TextBody>
-          </Box>
-        </HeaderInner>
+        <HeaderInner fixed={true}>이용 안내</HeaderInner>
         {/* image slider */}
         <FullBox
           className="slider-container"
@@ -368,7 +383,8 @@ const StoreDetail = () => {
           `}
         >
           <Slider {...settings}>
-            {item.imgURL.map((URL) => {
+            {item.imgURL.map((URL, idx) => {
+              if (idx === item.imgURL.length - 1) return null;
               return (
                 <div key={URL}>
                   <img src={URL} alt="cafeImage" width={"100%"} />
@@ -402,9 +418,16 @@ const StoreDetail = () => {
                   `}
                   color="Black.main"
                 >
-                  수원역 8번출구에서 1분
+                  {minDistanceStation !== null ? (
+                    <>
+                      {minDistanceStation}역 {minDistanceWayOut}번 출구에서 도보{" "}
+                      {minDistanceTime}분
+                    </>
+                  ) : (
+                    "역 출구 도보 정보가 없습니다"
+                  )}
                 </TextBodyLarge>
-                <TextBodyLarge
+                {/* <TextBodyLarge
                   css={css`
                     display: inline-block;
                   `}
@@ -412,29 +435,7 @@ const StoreDetail = () => {
                 >
                   {" "}
                   · {70}m
-                </TextBodyLarge>
-                <TextBodyLarge display="inline-flex" color="Gray.c600" mt="7px">
-                  {item.location}
-                  {"  "}
-                  <Box
-                    sx={{
-                      display: "inline-flex",
-                      height: "100%",
-                      color: "Gray.c600",
-                      transform: "scaleX(-1)",
-                    }}
-                    onClick={() => {
-                      sendMessageToRN({
-                        type: "copy",
-                        payload: {
-                          text: item.location,
-                        },
-                      });
-                    }}
-                  >
-                    <GoCopy size={24} />
-                  </Box>
-                </TextBodyLarge>
+                </TextBodyLarge> */}
               </Box>
               <Box
                 css={css`
@@ -456,15 +457,7 @@ const StoreDetail = () => {
               </Box>
             </InBox>
           </FullBox>
-          <FullBox>
-            <Box
-              css={css`
-                height: 10px;
-                margin: 20px 0px;
-              `}
-              bgcolor={myTheme.palette.Gray.c100}
-            ></Box>
-          </FullBox>
+          <Boxs variant="SecctionLine" sx={{ my: 2.5 }}></Boxs>
           <FullBox
             css={css`
               display: flex;
@@ -634,19 +627,70 @@ const StoreDetail = () => {
               </InnerBox>
             </InBox>
           </FullBox>
-        </FullBox>
-        {/* start button */}
-        <Box width="100vw" height={150}></Box>
-        <FullBox
-          className="divJCC"
-          css={css`
-            position: fixed;
-            bottom: 0;
-          `}
-        >
-          <InBox>
-            <NextButton></NextButton>
+
+          <Boxs variant="SecctionLine" sx={{ my: 2.5 }}></Boxs>
+          <InBox
+            sx={{
+              justifySelf: "center",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "start",
+              gap: 1,
+            }}
+          >
+            <TextBodyLarge weight="Bold" color="Black.main">
+              카페 길찾기
+            </TextBodyLarge>
+
+            <TextBodyLarge
+              weight="Medium"
+              display="inline-flex"
+              color="Gray.c600"
+            >
+              {item.location}
+              {"  "}
+              <Box
+                sx={{
+                  display: "inline-flex",
+                  height: "100%",
+                  color: "Gray.c600",
+                  transform: "scaleX(-1)",
+                }}
+                onClick={() => {
+                  sendMessageToRN({
+                    type: "copy",
+                    payload: {
+                      text: item.location,
+                    },
+                  });
+                }}
+              >
+                <GoCopy size={20} />
+              </Box>
+            </TextBodyLarge>
+
+            {Object.entries(item.stationDistance).map(([key, value]) => {
+              return (
+                <TextBody color="Gray.c400">
+                  {/* <Box sx={{ display: "inline" }}></Box> */}⦁ {key}역{" "}
+                  {value.wayOut}번 출구에서 도보 {value.distance}분
+                </TextBody>
+              );
+            })}
+
+            <Box
+              sx={{
+                borderRadius: "16px",
+                my: 3,
+              }}
+              component="img"
+              width={"100%"}
+              src={item.imgURL[item.imgURL.length - 1]}
+            ></Box>
           </InBox>
+
+          {/* start button */}
+          <NextButton></NextButton>
         </FullBox>
       </FullBox>
 

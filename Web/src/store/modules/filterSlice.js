@@ -1,10 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { stationList } from "../../api/stationList";
 
 const initialState = {
   filter: {
     line: "line1",
-    station: stationList["line1"][0],
+    station: "수원",
   },
 };
 

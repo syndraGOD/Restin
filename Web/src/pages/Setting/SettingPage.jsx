@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setuserData } from "../../store/modules/userSlice";
 import { setVerifiToken } from "../../store/modules/tokenSlice";
 import { DialogOK } from "../../components/common/DialogOk";
+import { restinAPI } from "../../api/config";
 
 export const SettingInfoBox = ({ onClick, children }) => {
   return (
@@ -59,9 +60,9 @@ const SettingPage = () => {
 
   const userDeleteId = async () => {
     try {
-      const res = await fetch(``, {
+      const res = await fetch(`${restinAPI}/user/userdata`, {
         mode: "cors",
-        method: "POST",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           authorization: "Bearer " + userData.security?.auth_token,
@@ -127,6 +128,9 @@ const SettingPage = () => {
                   borderColor: "Gray.c400",
                   color: "Gray.c800",
                   mr: 1,
+                }}
+                onClick={() => {
+                  navi("/point/loglist");
                 }}
               >
                 <TextBody weight="Bold">내역</TextBody>

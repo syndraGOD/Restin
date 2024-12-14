@@ -22,6 +22,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { DialogAlert, DialogOK } from "../../components/common/DialogOk";
 import { restinAPI } from "../../api/config";
 import { setuserData } from "@store/modules/userSlice";
+import * as PortOne from "@portone/browser-sdk/v2";
 
 const PurchaseIng = () => {
   const userData = useSelector((state) => state.userR.userData);
@@ -50,6 +51,22 @@ const PurchaseIng = () => {
     }
   };
   const paymentFunction = async () => {
+    const portOnePayment = async (data) => {
+      console.log("ㅎㅇ?");
+      const uid = Date.now().toString(16);
+      const response = await PortOne.requestPayment({
+        storeId: import.meta.env.VITE_PORTONE_STORE_ID,
+        paymentId: uid,
+        orderName: "주문명",
+        currency: "CURRENCY_KRW",
+        // redirectUrl: `http://test.restin.co.kr/`,
+        ...data,
+      });
+      if (response.code !== undefined) {
+        // 오류 발생
+        return alert(response.message);
+      }
+    };
     if (selectedPayment === "point") {
       try {
         const res = await fetch(`${restinAPI}/purchase/usage/point`, {
@@ -76,9 +93,19 @@ const PurchaseIng = () => {
         console.error("Error:", error);
       }
     } else if (selectedPayment === "tosspay") {
-      console.log("토스페이 결제");
+      const data = {
+        channelKey: import.meta.env.VITE_PORTONE_TOSSPAY_TEST,
+        totalAmount: parseInt(usageData.totalUsagePrice),
+        payMethod: "EASY_PAY",
+      };
+      portOnePayment(data);
     } else if (selectedPayment === "kakaopay") {
-      console.log("카카오페이 결제");
+      const data = {
+        channelKey: import.meta.env.VITE_PORTONE_KAKAOPAY_TEST,
+        totalAmount: parseInt(usageData.totalUsagePrice),
+        payMethod: "EASY_PAY",
+      };
+      portOnePayment(data);
     }
   };
   return (
@@ -141,9 +168,17 @@ const PurchaseIng = () => {
           <TextHeader4 color="Black" weight="Bold">
             결제 수단
           </TextHeader4>
-          <Box sx={styles.paymentMethod}>
+          <Box
+            sx={{
+              ...styles.paymentMethod,
+            }}
+          >
             <Box
-              sx={styles.methodItem}
+              sx={{
+                ...styles.methodItem,
+                width: "100%",
+                justifyContent: "space-between",
+              }}
               onClick={() => setSelectedPayment("point")}
             >
               <Box display="flex" alignItems="center" gap={1.5}>
@@ -172,9 +207,12 @@ const PurchaseIng = () => {
                 </TextBodyLarge>
                 <Boxs variant="EmptyBox" />
               </Box>
-              <TextBodySmall sx={{ justifySelf: "flex-end" }}>
-                내 포인트 : {String(userData.point.amount).toLocaleString()}원
-              </TextBodySmall>
+              <Box sx={{ justifySelf: "flex-end" }}>
+                <TextBodySmall>내 포인트</TextBodySmall>
+                <TextBodySmall>
+                  {String(userData.point.amount).toLocaleString()}원
+                </TextBodySmall>
+              </Box>
             </Box>
             <Box
               sx={styles.methodItem}
@@ -189,7 +227,12 @@ const PurchaseIng = () => {
                 <VscCircleLarge size={20} color={theme.palette.Gray.c400} />
               )}
               <Box display="flex" alignItems="center" gap={1}>
-                <Box component="img" src={tossPayImg} alt="토스페이" />
+                <Box
+                  component="img"
+                  src={tossPayImg}
+                  alt="토스페이"
+                  height="20px"
+                />
                 <TextBodyLarge>토스페이</TextBodyLarge>
               </Box>
             </Box>
@@ -206,7 +249,12 @@ const PurchaseIng = () => {
                 <VscCircleLarge size={20} color={theme.palette.Gray.c400} />
               )}
               <Box display="flex" alignItems="center" gap={1}>
-                <Box component="img" src={kakaoPayImg} alt="카카오페이" />
+                <Box
+                  component="img"
+                  src={kakaoPayImg}
+                  alt="카카오페이"
+                  height="20px"
+                />
                 <TextBodyLarge>카카오페이</TextBodyLarge>
               </Box>
             </Box>

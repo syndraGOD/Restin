@@ -228,9 +228,9 @@ export const Input_SMSVerify = ({
         </Box>
       )}
 
-      <Box className="EmptyBox" sx={{ flex: 1 }}></Box>
       {!isFirstVerifiCodeSend ? (
         <DefaultBtn
+          fixed={true}
           disabled={inputPhoneNumber.length !== 13}
           onClick={VerifiSendBtnClick}
         >
@@ -238,12 +238,14 @@ export const Input_SMSVerify = ({
         </DefaultBtn>
       ) : (
         <DefaultBtn
+        fixed={true}
           disabled={!confirmBtn || !isFirstVerifiCodeSend}
           onClick={NextBtnClick}
         >
           인증 확인
-        </DefaultBtn>
-      )}
+          </DefaultBtn>
+        )}
     </InBox>
   );
 };
+

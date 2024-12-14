@@ -11,20 +11,22 @@ export const DefaultBtn = ({ fixed = false, children, ...args }) => {
       sx={{
         // width: "1",
         height: "60px",
+
+        marginBottom: "6vw",
         position: "relative",
         justifySelf: "center",
+        backgroundColor: "transparent",
       }}
     >
       <Button
         css={css`
           width: inherit;
-          height: inherit;
+          height: 60px;
           max-width: inherit;
           // box-sizing: border-box;
           margin-bottom: 4vw;
           position: ${fixed ? "fixed" : "static"};
           bottom: ${fixed ? "0" : ""};
-          // left: 0;
 
           border-radius: 16px;
           color: ${theme.palette.White.main};
@@ -33,6 +35,7 @@ export const DefaultBtn = ({ fixed = false, children, ...args }) => {
             background-color: ${theme.palette.Gray.c400};
             color: ${theme.palette.Black.main};
           }
+          display: flex; //절대 없애지 말것
         `}
         {...args}
       >

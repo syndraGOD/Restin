@@ -1,6 +1,5 @@
 import { Button, Box, Link, Input } from "@mui/material";
 import { initializeApp } from "firebase/app";
-import { fbAuth } from "@/api/firebaseConfig.js";
 import {
   getAuth,
   GoogleAuthProvider,
@@ -17,7 +16,6 @@ import {
   TextBodySmall,
   TextHeader1,
 } from "../../components/designGuide";
-import { firebaseConfig } from "../../api/firebaseConfig";
 import { useRef, useState } from "react";
 
 const LoginPage = () => {

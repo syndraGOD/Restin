@@ -14,7 +14,6 @@ import {
 } from "../designGuide";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getImg } from "../../api/fsImgDown";
 import { IoIosArrowUp } from "react-icons/io";
 import theme from "../../style/theme";
 //@ts-check
@@ -28,8 +27,8 @@ const Navigation = ({ select }) => {
   const [storeImage, setstoreImage] = useState();
   // const [useStoreData, setUseStoreData] = useState();
   const now = new Date();
-
-  const fbDate = userData.usage.startTime || { seconds: 0, nanoseconds: 0 };
+  const usageData = userData?.usage;
+  const fbDate = usageData.startTime || { seconds: 0, nanoseconds: 0 };
   const [useDurationTime, setuseDurationTime] = useState(
     Math.floor(
       (now.getTime() - (fbDate.seconds * 1000 + fbDate.nanoseconds / 1e6)) /
@@ -40,12 +39,12 @@ const Navigation = ({ select }) => {
   // const [useStoreData, setuseStoreData] = useState();
 
   const useStoreData = storeData.find(
-    (store) => store.UUID === userData?.usage.storeUUID
+    (store) => store.UUID === usageData.storeUUID
   );
   useEffect(() => {
     const isUsage = async () => {
-      if (userData?.usage?.startTime) {
-        const fbDate = userData.usage.startTime;
+      if (usageData.startTime) {
+        const fbDate = usageData.startTime;
         // const ref = `StoreImage/store(${userData.usage.storeId})/img1.png`;
         // const res = await getImg(ref);
         // setstoreImage(res);
@@ -78,7 +77,7 @@ const Navigation = ({ select }) => {
   }, []);
   return (
     <Box>
-      {userData?.usage?.startTime && useStoreData ? (
+      {usageData.startTime && useStoreData ? (
         <Box
           sx={{
             backgroundColor: "Gray.c900",
@@ -111,58 +110,67 @@ const Navigation = ({ select }) => {
             >
               <Box>
                 <TextBodySmall color="Gray" weight="Reguler">
-                  이용중
+                  {usageData.endTime ? "결제 요청" : "이용중"}
                 </TextBodySmall>
               </Box>
               <Box>
                 <TextBodyLarge sx={{ fontWeight: 700 }}>
-                  {useStoreData?.name}
+                  {usageData.endTime
+                    ? "미 결제한 내역이 있어요"
+                    : useStoreData?.name}
+                  {}
                 </TextBodyLarge>
               </Box>
             </Box>
           </Box>
-          <Box
-            textAlign="start"
-            display="flex"
-            flexDirection="column"
-            justifyContent="space-between"
-            height="100%"
-          >
-            <TextBodySmall color="Gray" weight="Reguler">
-              이용 요금
-            </TextBodySmall>
-            {useDurationTime !== 0 ? (
-              <Box display="flex" alignItems="center">
-                <TextHeader4 weight="Bold" color="White.main">
-                  {Math.floor(useDurationTime / 60)}시간 {useDurationTime % 60}
-                  분
-                </TextHeader4>
-                <TextBody color="Gray.c300">
-                  {"  "}|{"  "}
-                </TextBody>
+          {usageData.endTime ? null : (
+            <Box
+              textAlign="start"
+              display="flex"
+              flexDirection="column"
+              justifyContent="space-between"
+              height="100%"
+            >
+              <TextBodySmall color="Gray" weight="Reguler">
+                이용 요금
+              </TextBodySmall>
+              {useDurationTime !== 0 ? (
+                <Box display="flex" alignItems="center">
+                  <TextHeader4 weight="Bold" color="White.main">
+                    {Math.floor(useDurationTime / 60)}시간{" "}
+                    {useDurationTime % 60}분
+                  </TextHeader4>
+                  <TextBody color="Gray.c300">
+                    {"  "}|{"  "}
+                  </TextBody>
 
-                <TextHeader4 weight="Bold" color="White.main">
-                  {useStoreData?.unitPrice *
-                    (1 + Math.floor(useDurationTime / 10))}
-                  원
-                </TextHeader4>
-              </Box>
-            ) : (
-              " "
-            )}
-          </Box>
+                  <TextHeader4 weight="Bold" color="White.main">
+                    {useStoreData?.unitPrice *
+                      (1 + Math.floor(useDurationTime / 10))}
+                    원
+                  </TextHeader4>
+                </Box>
+              ) : (
+                " "
+              )}
+            </Box>
+          )}
           <Box
             height="100%"
             display="flex"
             alignItems="start"
             onClick={() => {
-              navi("/app/using", {
-                state: {
-                  item: storeData.find(
-                    (store) => store.UUID === userData.usage.storeUUID
-                  ),
-                },
-              });
+              if (usageData.endTime) {
+                navi("/purchase/payment");
+              } else {
+                navi("/app/using", {
+                  state: {
+                    item: storeData.find(
+                      (store) => store.UUID === userData.usage.storeUUID
+                    ),
+                  },
+                });
+              }
             }}
           >
             <IoIosArrowUp

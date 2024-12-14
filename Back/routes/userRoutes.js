@@ -1,3 +1,5 @@
+const { doc, deleteDoc, updateDoc } = require("firebase/firestore");
+const { db } = require("../configFiles/firebaseConfig.js");
 const { verifyTokenMiddleware } = require("../controllers/auth.js");
 const {
   usage_isUsing,
@@ -22,5 +24,28 @@ router.post("/usage/isUsage", usage_isUsing, (req, res) => {
     startTime: req.startTime,
   });
 });
-
+router.put("/userdata", async (req, res) => {
+  try {
+    const { userId } = req;
+    const { nick } = req.body;
+    const docRef = doc(db, "USER", userId);
+    await updateDoc(docRef, { "profile.nick": nick });
+    res.status(200).json({ message: "user data update complete" });
+    console.log("complete");
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "user data update failed" });
+  }
+});
+router.delete("/userdata", async (req, res) => {
+  try {
+    const { userId } = req;
+    const docRef = doc(db, "USER", userId);
+    await deleteDoc(docRef);
+    res.status(200).json({ message: "user data update complete" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "user data update failed" });
+  }
+});
 module.exports = router;

@@ -19,6 +19,7 @@ const PurchaseTicketForm = require("../models/purchaseTicketForm");
 const PointTicketForm = require("../models/pointTicketForm");
 const UsageTicketForm = require("../models/usageTicketForm");
 const { queryRead } = require("../utils/CRUD_DATA.js");
+const { firebaseDateToJSDate } = require("../utils/firebaseDateConverter.js");
 
 router.post("/usage/point", verifyTokenMiddleware, async (req, res) => {
   try {
@@ -85,8 +86,9 @@ router.post("/usage/point", verifyTokenMiddleware, async (req, res) => {
       amount: -userRes.data.usage.totalUsagePrice,
       beforeAmount: currentPoint,
       afterAmount: currentPoint - totalAmount,
-      description: "상품 구매",
+      description: "서비스 이용",
       purchaseTicket: purchaseTicketUUID,
+      storeUUID: userRes.data.usage.storeUUID,
     });
 
     // 초기화된 usage 데이터 생성
@@ -151,4 +153,46 @@ router.post("/usage/point", verifyTokenMiddleware, async (req, res) => {
   }
 });
 
+// 결제 내역 조회
+router.get("/loglist", verifyTokenMiddleware, async (req, res) => {
+  try {
+    const userId = req.userId;
+    const purchaseLogList = await queryRead(
+      "USAGE_END_TICKET",
+      "usage.userId",
+      userId,
+      (a, b) => {
+        return b.usage.startTime.seconds - a.usage.startTime.seconds;
+      }
+    );
+    let newPurchaseLogList = purchaseLogList.data.map((item) => {
+      return {
+        storeUUID: item.usage.storeUUID,
+        // description: item.usage.description,
+        date:
+          firebaseDateToJSDate(item.usage.startTime)
+            .toLocaleDateString()
+            .replaceAll(" ", "")
+            .slice(0, 10) +
+          " " +
+          firebaseDateToJSDate(item.usage.startTime)
+            .toLocaleTimeString("en-GB")
+            .slice(0, 5),
+        // .slice(),
+        changePoint: item.usage.totalUsagePrice,
+        // afterPoint: item.afterAmount,
+        // isDelete: false,
+      };
+    });
+    console.log(newPurchaseLogList);
+    //empty array?
+    if (newPurchaseLogList.length === 0) {
+      return res.status(200).json({ success: true, data: [] });
+    } else {
+      return res.status(200).json({ success: true, data: newPurchaseLogList });
+    }
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+});
 module.exports = router;

@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import {
   LineInfo,
   stationIncludeLine,
-  stationList,
   SubwayIcons,
 } from "../../../api/stationList";
 import HeaderInner from "../../../components/common/HeaderInner";
@@ -18,6 +17,8 @@ import theme from "../../../style/theme";
 import { TextBodyLarge } from "../../../components/designGuide";
 
 const StoreFilterPage = () => {
+  const storeData = useSelector((state) => state.storeR.storeData);
+
   // console.log("ㅎㅇ");
   //   const { line, station } = filter;
   // stationList = stationList.
@@ -32,6 +33,38 @@ const StoreFilterPage = () => {
   const navigate = useNavigate();
   const myTheme = useTheme();
   const [select, setSelect] = useState(filter);
+
+  // 각 노선을 순회하면서 중복된 역을 제거
+  let stationList = {};
+  storeData.map((store) => {
+    for (const [line, stations] of Object.entries(store.subwayStation)) {
+      // Set을 사용하여 중복된 역 제거
+      // console.log(line, stations);
+      const uniqueStations = new Set();
+      uniqueStations.add(...stations);
+      // const Array_uniqueStations = [...uniqueStations];
+      // stationList[line] = Array_uniqueStations;
+      if (stationList[line] === undefined) {
+        stationList[line] = uniqueStations;
+      } else {
+        stationList[line].add(...uniqueStations);
+      }
+    }
+  });
+  //집합을 배열로 변환
+  Object.entries(stationList).forEach(([line, stations]) => {
+    stationList[line] = [...stationList[line]];
+  });
+  //호선 순으로 정렬
+  const sortedStationList = Object.keys(stationList)
+    .map((line) => parseInt(line.replace("line", "")))
+    .sort((a, b) => a - b) // 키를 정렬
+    .map((line) => `line${line}`);
+  // .reduce((acc, key) => {
+  //   acc[key] = stationList[key];
+  //   return acc;
+  // }, {});
+
   return (
     <FullBox
       className="divJCC"
@@ -65,8 +98,7 @@ const StoreFilterPage = () => {
             justifyContent: "start",
           }}
         >
-          {Object.keys(stationList).map((line) => {
-            // const lineNum =
+          {sortedStationList.map((line) => {
             return (
               <Box
                 sx={{
@@ -180,10 +212,11 @@ const StoreFilterPage = () => {
                   {station}
                 </TextBodyLarge>
                 <Box display={"flex"} alignItems={"center"}>
-                  {stationIncludeLine(station).map((color_line, idx) => {
-                    return (
-                      <>
-                        {/* <img
+                  {stationIncludeLine(station, stationList).map(
+                    (color_line, idx) => {
+                      return (
+                        <>
+                          {/* <img
                           src={SubwayIcons[color_line]}
                           alt="subway line icons"
                           width={"20px"}
@@ -193,20 +226,21 @@ const StoreFilterPage = () => {
                             border-radius: 10px;
                           `}
                         /> */}
-                      </>
-                      // <Box
-                      //   key={color_line}
-                      //   css={css`
-                      //     display: inline-block;
-                      //     width: 8px;
-                      //     height: 8px;
-                      //     margin-left: 10px;
-                      //     border-radius: 50%;
-                      //     /* background-color: ${LineInfo[color_line].color}; */
-                      //   `}
-                      // ></Box>
-                    );
-                  })}
+                        </>
+                        // <Box
+                        //   key={color_line}
+                        //   css={css`
+                        //     display: inline-block;
+                        //     width: 8px;
+                        //     height: 8px;
+                        //     margin-left: 10px;
+                        //     border-radius: 50%;
+                        //     /* background-color: ${LineInfo[color_line].color}; */
+                        //   `}
+                        // ></Box>
+                      );
+                    }
+                  )}
                 </Box>
               </Box>
             );

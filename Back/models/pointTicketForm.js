@@ -9,6 +9,8 @@ class PointTicketForm {
     this.beforeAmount = args.beforeAmount ?? null;
     this.afterAmount = args.afterAmount ?? null;
     this.description = args.description ?? null;
+    this.requestDate = args.requestDate ?? new Date();
+    this.storeUUID = args.storeUUID ?? null;
   }
 }
 module.exports = PointTicketForm;
