@@ -24,7 +24,6 @@ import {
 } from "react-router-dom";
 import { setStoreData } from "../../store/modules/storeSlice.js";
 import { DialogList } from "../../components/common/DialogOk.jsx";
-import HeaderText from "../../components/common/HeaderText.jsx";
 import logo_small from "@assets/Logo/logo_small.png";
 import { IoIosArrowDown } from "react-icons/io";
 import theme from "../../style/theme.js";
@@ -113,7 +112,7 @@ const Home = () => {
           result = true;
         }
       });
-      console.log(item.name, result);
+      // console.log(item.name, result);
       return result;
     });
     if (newData.length === 0) {
@@ -165,20 +164,45 @@ const Home = () => {
   return (
     <>
       <Page
-        className="divJCC"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          flexDirection: "column",
+          textAlign: "center",
+          // bgcolor: "red",
+        }}
+        className=""
         // bgimg="../../assets/images/WelcomeImage1.png"
         css={css`
           height: 100%;
         `}
       >
         {/* h2 */}
-        <HeaderText sx={{ margin: "10px 0" }}>
-          <img src={logo_small} height={"21px"} />
-        </HeaderText>
+        <InBox
+          sx={{
+            my: 3,
+            mt: 5,
+            display: "flex",
+            justifyContent: "flex-start",
+          }}
+        >
+          <Box
+            component={"img"}
+            src={logo_small}
+            height={"21px"}
+            justifySelf="flex-start"
+          />
+        </InBox>
         {/* header */}
         <FullBox
-          className="divJCC"
-          flexDirection={"row"}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignContent: "center",
+            flexDirection: "row",
+            textAlign: "center",
+          }}
           padding={1.5}
           borderBottom={`1px solid ${theme.palette.Gray.c300}`}
         >
@@ -268,9 +292,12 @@ const Home = () => {
         </FullBox>
         {/* contents */}
         <FullBox
-          className="divJCC"
           bgcolor={myTheme.palette.White.main}
           sx={{
+            display: "flex",
+            alignContent: "center",
+            flexDirection: "column",
+            textAlign: "center",
             flexGrow: 1,
             alignItems: "center",
             justifyContent: "start",

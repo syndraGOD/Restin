@@ -58,8 +58,12 @@ const StoreItem = ({ item, userDistance, onClick }) => {
         }}
       >
         <Box
-          className="TextBox divJCC"
+          className="TextBox"
           sx={{
+            display: "flex",
+            alignContent: "center",
+            textAlign: "center",
+
             flexDirection: "row",
             backgroundColor: "White.main",
             height: "96px",
@@ -74,8 +78,11 @@ const StoreItem = ({ item, userDistance, onClick }) => {
           }}
         >
           <Box
-            className="LeftBox divJCC"
+            className="LeftBox"
             sx={{
+              display: "flex",
+              alignContent: "center",
+              textAlign: "center",
               flexDirection: "column",
               alignItems: "start",
               justifyContent: "space-between",
@@ -102,8 +109,12 @@ const StoreItem = ({ item, userDistance, onClick }) => {
             </Box>
           </Box>
           <Box
-            className="RightBox divJCC"
+            className="RightBox"
             sx={{
+              display: "flex",
+              alignContent: "center",
+              textAlign: "center",
+
               alignItems: "end",
               flexDirection: "row",
               verticalAlign: "center",

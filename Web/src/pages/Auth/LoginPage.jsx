@@ -85,14 +85,31 @@ const LoginPage = () => {
   const [test, setTest] = useState();
   const [testVerifi, setTestVerifi] = useState();
   return (
-    <Box className="divJCC" sx={{ position: "relative" }}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignContent: "center",
+        flexDirection: "column",
+        textAlign: "center",
+        position: "relative",
+      }}
+    >
       <Box
         id="recaptcha-container"
         // sx={{ position: "absolute", width: "100px" }}
       >
         asd
       </Box>
-      <Box className="divJCC">
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          flexDirection: "column",
+          textAlign: "center",
+        }}
+      >
         <Box sx={{ flexDirection: "row", alignItems: "center" }}>
           <img src={Logo} alt="" width={50} height={50} />
           <TextHeader1 color="">Restin</TextHeader1>

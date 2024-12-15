@@ -2,7 +2,7 @@
 import { css } from "@emotion/react";
 import { useEffect, useRef, useState } from "react";
 import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { DialogPage } from "../components/common/DialogOk";
+import { DialogOK, DialogPage } from "../components/common/DialogOk";
 import GetNotionJSX from "../components/common/NotionPageGet";
 import NotionLocList from "../api/NotionLocList";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +13,7 @@ import { setVerifiToken } from "../store/modules/tokenSlice";
 import { setStoreData } from "../store/modules/storeSlice";
 import { restinAPI } from "../api/config";
 import LoadingPage from "../pages/LoadingPage";
+import { sendMessageToRN } from "../api/RN/RNsend";
 
 export const MobilePage = ({ children }) => {
   const userData = useSelector((state) => state.userR.userData);
@@ -123,6 +124,41 @@ export const MobilePage = ({ children }) => {
   //
   //
   //
+  useEffect(() => {
+    // const receiver = platform === ios ? window : document;
+    const receiver = (event) => {
+      // const loc = useLocation(); useLocation 값이 왼지는 모르겠으나
+      // 처음 참고한 그시점에서 고정되어버림 window사용
+      console.log("pathname", window.location.pathname);
+      console.log("hash", window.location.hash);
+      const { type, data } = JSON.parse(event.data);
+      if (type === "back") {
+        if (window.location.hash === "#isMobileAppEnd") {
+          sendMessageToRN({
+            type: "close",
+            payload: {},
+          });
+        } else if (
+          window.location.pathname === "/app/home" ||
+          window.location.pathname === "/welcome/1" ||
+          window.location.pathname === "/login/isuser"
+        ) {
+          navi("#isMobileAppEnd");
+        } else {
+          // console.log(location.pathname, "back");
+          navi(-1);
+        }
+      }
+      // const handler = receiveWebviewMessageMap.get(type);
+      // handler?.(data);
+    };
+    window.addEventListener("message", receiver);
+    document.addEventListener("message", receiver);
+    return () => {
+      window.removeEventListener("message", receiver);
+      document.removeEventListener("message", receiver);
+    };
+  }, []);
 
   return (
     <div
@@ -133,6 +169,9 @@ export const MobilePage = ({ children }) => {
         }
         min-width: 360px;
         width: 100vw;
+        max-width: 100vw;
+        max-height: 100vh;
+        overflow: hidden;
         /* margin: 0px 6vw; */
         height: ${windowViewHeight}px;
         position: absolute;
@@ -156,6 +195,19 @@ export const MobilePage = ({ children }) => {
       >
         <GetNotionJSX loc={NotionLocList[location.hash.replace("#", "")]} />
       </DialogPage>
+      <DialogOK
+        open="isMobileAppEnd"
+        h2="어플을 종료하시겠어요?"
+        text={`종료 키 또는 뒤로가기 추가 입력시 어플이 종료됩니다`}
+        isok={() => {
+          navi(-1);
+          sendMessageToRN({
+            type: "close",
+            payload: {},
+          });
+        }}
+        isoktext="종료하기"
+      ></DialogOK>
     </div>
   );
 };

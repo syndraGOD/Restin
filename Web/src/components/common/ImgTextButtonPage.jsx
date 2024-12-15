@@ -16,7 +16,15 @@ const WelcomeStyle = styled.div`
 const ImgTextButtonPage = ({ children }) => {
   const [img, text, button, ...args] = children;
   return (
-    <Page className="divJCC">
+    <Page
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignContent: "center",
+        flexDirection: "column",
+        textAlign: "center",
+      }}
+    >
       <InBox
         css={css`
           display: flex;

@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import FullBox from "../../components/common/FullBox";
-import HeaderText from "../../components/common/HeaderText";
 import InBox from "../../components/common/InBox";
 import Navigation from "../../components/common/Navigation";
 import {
@@ -171,17 +170,21 @@ const PointLogList = () => {
           </InBox>
         ) : (
           <InBox
-            className="divJCC"
-            sx={{ flex: 1, backgroundColor: "White.main" }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignContent: "center",
+              flexDirection: "column",
+              textAlign: "center",
+              flex: 1,
+              backgroundColor: "White.main",
+            }}
           >
             <TextHeader4 color="Black.main">
               아직 포인트 내역이 없어요
             </TextHeader4>
           </InBox>
         )}
-        {/* <Box className="divJCC">
-          <Navigation select={"purchase"} />
-        </Box> */}
       </FullBox>
     </Page>
   );

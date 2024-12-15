@@ -155,7 +155,17 @@ export const DialogOK = ({
           </TextBodyLarge>
           {children}
         </Box>
-        <Box className="divJCC" sx={{ marginBottom: "9px", marginTop: "12px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignContent: "center",
+            flexDirection: "column",
+            textAlign: "center",
+            marginBottom: "9px",
+            marginTop: "12px",
+          }}
+        >
           <Box>
             <Button
               sx={{

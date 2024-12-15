@@ -3,7 +3,6 @@ import { css, useTheme } from "@emotion/react";
 import theme from "../../style/theme";
 import React, { useState } from "react";
 import { Page } from "../../components/Page";
-import HeaderText from "../../components/common/HeaderText";
 import FullBox from "../../components/common/FullBox";
 import InBox from "../../components/common/InBox";
 import InfoBox from "../../components/common/InfoBox";
@@ -155,8 +154,10 @@ const SettingPage = () => {
           </Box>
         </InBox>
         <FullBox
-          className="divJCC"
           sx={{
+            alignContent: "center",
+            flexDirection: "column",
+            textAlign: "center",
             flex: 1,
             overflowY: "auto",
             boxSizing: "border-box",

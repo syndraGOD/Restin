@@ -16,7 +16,15 @@ const Welcome6 = () => {
   const navi = useNavigate();
   return (
     <ImgTextButtonPage>
-      <Box className="divJCC">
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          flexDirection: "column",
+          textAlign: "center",
+        }}
+      >
         <Box
           sx={{
             display: "flex",

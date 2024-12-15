@@ -201,7 +201,6 @@ const ServiceUsing = () => {
               height="30px"
             >
               <Box
-                // className="divJCC"
                 sx={{
                   width: 20,
                   height: 20,
@@ -378,7 +377,6 @@ const ServiceUsing = () => {
             >
               <Box display="flex" alignItems="center" marginTop="7px">
                 <Box
-                  // className="divJCC"
                   sx={{
                     width: 20,
                     height: 20,

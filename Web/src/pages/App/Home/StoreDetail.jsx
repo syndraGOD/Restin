@@ -40,8 +40,6 @@ import { restinAPI } from "../../../api/config";
 import { useDispatch, useSelector } from "react-redux";
 import { setuserData } from "../../../store/modules/userSlice";
 
-import { refundRule, TermsOfUse } from "../../../api/Rules/TermsOfUse";
-import HeaderText from "../../../components/common/HeaderText";
 import GetNotionJSX from "../../../components/common/NotionPageGet";
 import HeaderInner from "../../../components/common/HeaderInner";
 import { GoCopy } from "react-icons/go";
@@ -49,6 +47,7 @@ import { DefaultBtn } from "../../../components/common/Btns";
 // import UseGuide from "./UseGuide";
 import UseGuide from "./UseGuide.png";
 import { DialogOK } from "../../../components/common/DialogOk";
+import { sendMessageToRN } from "../../../api/RN/RNsend";
 
 const StoreDetail = () => {
   const filter = useSelector((state) => state.filterR.filter);
@@ -332,7 +331,15 @@ const StoreDetail = () => {
 
   // console.log(`가장 가까운 역: ${minDistanceStation}, 거리: ${minDistanceTime}`);
   return (
-    <Page className="divJCC">
+    <Page
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignContent: "center",
+        flexDirection: "column",
+        textAlign: "center",
+      }}
+    >
       <FullBox
         sx={{
           // position: "absolute",
@@ -395,7 +402,15 @@ const StoreDetail = () => {
         </FullBox>
         {/* Contents */}
         <FullBox>
-          <FullBox className="divJCC">
+          <FullBox
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignContent: "center",
+              flexDirection: "column",
+              textAlign: "center",
+            }}
+          >
             <InBox
               sx={{
                 justifyContent: "start",
@@ -646,6 +661,7 @@ const StoreDetail = () => {
               weight="Medium"
               display="inline-flex"
               color="Gray.c600"
+              textAlign="start"
             >
               {item.location}
               {"  "}

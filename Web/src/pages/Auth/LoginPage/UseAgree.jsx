@@ -57,7 +57,16 @@ const UseAgree = () => {
   return (
     <FullBox sx={{ height: "100%" }}>
       <BgColorDefault />
-      <FullBox className="divJCC" sx={{ height: "100%", display: "flex" }}>
+      <FullBox
+        sx={{
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          flexDirection: "column",
+          textAlign: "center",
+        }}
+      >
         <HeaderInner></HeaderInner>
 
         <TextBox_header2>

@@ -7,7 +7,13 @@ import React from "react";
 const InfoBox = ({ children, ...props }) => {
   return (
     <Box
-      className="divJCC"
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignContent: "center",
+        flexDirection: "column",
+        textAlign: "center",
+      }}
       css={css`
         background-color: ${theme.palette.White.main};
         border-radius: 25px;

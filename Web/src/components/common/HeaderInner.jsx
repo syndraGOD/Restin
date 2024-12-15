@@ -27,7 +27,13 @@ const HeaderInner = ({
   return (
     <Box sx={{ height: "50px" }}>
       <FullBox
-        className="divJCC"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          flexDirection: "column",
+          textAlign: "center",
+        }}
         position={fixed ? "fixed" : "relative"}
         top={0}
         zIndex={2}

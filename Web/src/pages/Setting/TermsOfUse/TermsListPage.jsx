@@ -34,8 +34,14 @@ const TermsListPage = () => {
       <HeaderInner>서비스 약관</HeaderInner>
 
       <FullBox
-        className="divJCC"
-        sx={{ flex: 1, display: "flex", flexDirection: "column" }}
+        sx={{
+          justifyContent: "center",
+          alignContent: "center",
+          textAlign: "center",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+        }}
       >
         <InBox>
           <SettingInfoBox

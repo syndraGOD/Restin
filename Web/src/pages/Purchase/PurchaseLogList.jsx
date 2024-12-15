@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import FullBox from "../../components/common/FullBox";
-import HeaderText from "../../components/common/HeaderText";
 import InBox from "../../components/common/InBox";
 import Navigation from "../../components/common/Navigation";
 import {
@@ -149,8 +148,16 @@ const PurchaseLogList = () => {
           </InBox>
         ) : (
           <InBox
-            className="divJCC"
-            sx={{ flex: 1, backgroundColor: "White.main", m: 4 }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignContent: "center",
+              flexDirection: "column",
+              textAlign: "center",
+              flex: 1,
+              backgroundColor: "White.main",
+              m: 4,
+            }}
           >
             <TextHeader4 color="Black.main">
               아직 이용 내역이 없어요
@@ -168,7 +175,15 @@ const PurchaseLogList = () => {
             </Box>
           </InBox>
         )}
-        <Box className="divJCC">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignContent: "center",
+            flexDirection: "column",
+            textAlign: "center",
+          }}
+        >
           <Navigation select={"purchase"} />
         </Box>
       </FullBox>

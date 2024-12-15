@@ -36,7 +36,16 @@ const RegisterPage = () => {
   return (
     <FullBox sx={{ height: "100%" }}>
       <BgColorDefault />
-      <FullBox className="divJCC" sx={{ height: "100%", display: "flex" }}>
+      <FullBox
+        sx={{
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          flexDirection: "column",
+          textAlign: "center",
+        }}
+      >
         <HeaderInner></HeaderInner>
         {!isNext ? (
           <TextBox_header2>
@@ -126,7 +135,12 @@ const RegisterPage = () => {
         </InBox>
 
         {/* <InBox sx={{ flexDirection: "column", flex: 1, display: "flex" }}>
-          <Box className="divJCC" sx={{ width: "100%", flex: 1 }}>
+          <Box  sx={{ width: "100%", flex: 1
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          flexDirection: "column",
+          textAlign: "center", }}>
             <TextField
               inputRef={nameRef}
               maxRows={5}

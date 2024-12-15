@@ -41,7 +41,16 @@ const IsExistUser = () => {
   return (
     <FullBox sx={{ height: "100%" }}>
       <BgColorDefault />
-      <FullBox className="divJCC" sx={{ height: "100%" }}>
+      <FullBox
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          flexDirection: "column",
+          textAlign: "center",
+          height: "100%",
+        }}
+      >
         <HeaderInner></HeaderInner>
         {!isFirstVerifiCodeSend ? (
           <TextBox_header2>

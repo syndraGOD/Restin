@@ -134,7 +134,7 @@ const Navigation = ({ select }) => {
               <TextBodySmall color="Gray" weight="Reguler">
                 이용 요금
               </TextBodySmall>
-              {useDurationTime !== 0 ? (
+              {useDurationTime !== null ? (
                 <Box display="flex" alignItems="center">
                   <TextHeader4 weight="Bold" color="White.main">
                     {Math.floor(useDurationTime / 60)}시간{" "}
@@ -192,8 +192,12 @@ const Navigation = ({ select }) => {
           overflowY: "hidden",
           borderRadius: "15px 15px 0 0",
           backgroundColor: "white",
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          textAlign: "center",
         }}
-        className="Navigation divJCC"
+        className="Navigation"
       >
         {/* home */}
         <Box

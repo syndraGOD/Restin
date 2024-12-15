@@ -67,8 +67,12 @@ const StoreFilterPage = () => {
 
   return (
     <FullBox
-      className="divJCC"
       sx={{
+        display: "flex",
+        alignContent: "center",
+        flexDirection: "column",
+        textAlign: "center",
+
         position: "absolute",
         height: "100%",
         zIndex: 1,
@@ -80,8 +84,11 @@ const StoreFilterPage = () => {
       <HeaderInner>지역 선택</HeaderInner>
       {/* Fillter */}
       <FullBox
-        className="divJCC"
         sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          textAlign: "center",
           flexDirection: "row",
           flexGrow: 1,
           // borderTop: `1px solid ${theme.palette.Gray.c400}`,
@@ -89,8 +96,10 @@ const StoreFilterPage = () => {
       >
         {/* line */}
         <Box
-          className="divJCC"
           sx={{
+            display: "flex",
+            alignContent: "center",
+            textAlign: "center",
             flexDirection: "column",
             backgroundColor: `${myTheme.palette.Gray.c100}`,
             width: "35%",
@@ -171,8 +180,10 @@ const StoreFilterPage = () => {
         </Box>
         {/* station */}
         <Box
-          className="divJCC"
           sx={{
+            display: "flex",
+            alignContent: "center",
+            textAlign: "center",
             flexDirection: "column",
             marginLeft: "5%",
             width: "60%",

@@ -13,6 +13,7 @@ import {
   Button,
   Linking,
 } from 'react-native';
+// import Clipboard from '@react-native-clipboard/clipboard';
 import {WebView as RNCWebView} from 'react-native-webview';
 
 import {getStatusBarHeight} from 'react-native-status-bar-height';
@@ -69,7 +70,12 @@ function App() {
       getLocation();
     }
     if (message.type === 'copy') {
-      console.log('복사 클릭');
+      // console.log(message.payload.text);
+      // Clipboard.setString(message.payload.text);
+      // await navigator.clipboard.writeText(message.payload.text);
+    }
+    if (message.type === 'close') {
+      BackHandler.exitApp();
     }
     if (message.type === 'token') {
       // console.log("token RES", message.payload.auth_token);
@@ -105,20 +111,19 @@ function App() {
   const [canGoBack, setCanGoBack] = useState(false);
   // 이벤트 동작
   const handleBackButton = () => {
-    if (canGoBack) {
-      if (
-        currentUrl === 'http://test.restin.co.kr/app/home' ||
-        currentUrl === 'http://test.restin.co.kr/welcome/1' ||
-        currentUrl === 'http://test.restin.co.kr/login/isuser'
-      ) {
-        close();
-      } else {
-        webViewRef.current.goBack();
-      }
-    } else {
-      close();
-    }
+    webViewRef.current.postMessage(JSON.stringify({type: 'back', payload: {}}));
     return true;
+    // console.log(webViewRef.current);
+    // if (
+    //   currentUrl === 'http://test.restin.co.kr/app/home' ||
+    //   currentUrl === 'http://test.restin.co.kr/welcome/1' ||
+    //   currentUrl === 'http://test.restin.co.kr/login/isuser'
+    // ) {
+    //   close();
+    // } else {
+    //   webViewRef.current.goBack();
+    // }
+    // return true;
   };
   // 이벤트 등록
   useEffect(() => {
@@ -142,10 +147,10 @@ function App() {
         onShouldStartLoadWithRequest={event => {
           return onShouldStartLoadWithRequest(event);
         }}
-        // onNavigationStateChange={navState => {
-        //   setCurrentUrl(navState.url);
-        //   setCanGoBack(navState.canGoBack);
-        // }}
+        onNavigationStateChange={navState => {
+          setCurrentUrl(navState.url);
+          setCanGoBack(navState.canGoBack);
+        }}
       />
       {/* <Button
         title="react native"
