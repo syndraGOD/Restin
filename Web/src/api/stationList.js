@@ -36,74 +36,98 @@ export const stationIncludeLine = (station, stationList) => {
     stationList[line].includes(station)
   );
 };
+
 export const LineInfo = {
   line1: {
+    name: "1호선",
     color: "#0D3692",
   },
   line2: {
+    name: "2호선",
     color: "#26AE29",
   },
   line3: {
+    name: "3호선",
     color: "#F75730",
   },
   line4: {
+    name: "4호선",
     color: "#3F63CC",
   },
   line5: {
+    name: "5호선",
     color: "#9446B8",
   },
   line6: {
+    name: "6호선",
     color: "#8D4718",
   },
   line7: {
+    name: "7호선",
     color: "#54640C",
   },
   line8: {
+    name: "8호선",
     color: "#E21A65",
   },
   line9: {
+    name: "9호선",
     color: "#BFB396",
   },
   line10: {
+    name: "GTX-A",
     color: "#4d5156",
   },
   line11: {
+    name: "경강선",
     color: "#0b62ae",
   },
   line12: {
+    name: "경의중앙선",
     color: "#7dc6a6",
   },
   line13: {
+    name: "경춘선",
     color: "#219078",
   },
   line14: {
+    name: "공항 철도선",
     color: "#0494d4",
   },
   line15: {
+    name: "서해선",
     color: "#85ac1d",
   },
   line16: {
+    name: "수인 분당선",
     color: "#fac00b",
   },
   line17: {
+    name: "신림선",
     color: "#6d8dcc",
   },
   line18: {
+    name: "신분당선",
     color: "#d60b43",
   },
   line19: {
+    name: "에버라인선",
     color: "#5eae37",
   },
   line20: {
+    name: "우이신설선",
     color: "#bac657",
   },
   line21: {
+    name: "의정부 경전철",
     color: "#fb850b",
   },
   line22: {
+    name: "인천 1호선",
     color: "#7b9ecf",
   },
   line23: {
+    name: "인천 2호선",
     color: "#ee8f04",
   },
 };

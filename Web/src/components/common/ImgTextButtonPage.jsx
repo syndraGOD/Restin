@@ -13,8 +13,9 @@ const WelcomeStyle = styled.div`
   flex-direction: column;
   font-size: 24px;
 `;
-const ImgTextButtonPage = ({ children }) => {
+const ImgTextButtonPage = ({ count, children }) => {
   const [img, text, button, ...args] = children;
+  const currentPage = [0, 0, 0, 0, 0];
   return (
     <Page
       sx={{
@@ -48,7 +49,7 @@ const ImgTextButtonPage = ({ children }) => {
           .contents_btn > button {
             width: 100%;
             height: 60px;
-            margin-bottom: 10vw;
+            margin-bottom: 4vw;
             border-radius: 16px;
             color: ${theme.palette.White};
             background-color: ${theme.palette.PrimaryBrand.main};
@@ -56,6 +57,22 @@ const ImgTextButtonPage = ({ children }) => {
         `}
       >
         <Box className="contents contents_img">{img}</Box>
+        <Box display={"flex"} mt={"4vw"} gap={1}>
+          {currentPage.map((i, idx) => {
+            return (
+              <Box
+                sx={{
+                  width: "8px",
+                  height: "8px",
+                  borderRadius: "50%",
+                  backgroundColor: `${
+                    idx + 1 !== count ? "Gray.c200" : "Gray.c400"
+                  }`,
+                }}
+              ></Box>
+            );
+          })}
+        </Box>
         <Box
           css={css`
             flex: 1;

@@ -29,9 +29,12 @@ import { IoIosArrowDown } from "react-icons/io";
 import theme from "../../style/theme.js";
 import { BsFillRecordCircleFill } from "react-icons/bs";
 import { VscCircleLarge } from "react-icons/vsc";
+import { AnnounceBanner } from "../../components/common/Banner.jsx";
+import Slider from "react-slick/lib/slider.js";
+import { restinAPI } from "../../api/config.js";
 
+// window.location.reload();
 const Home = () => {
-  console.log("렌더링");
   const sortList = {
     recommend: {
       text: "추천 순",
@@ -53,11 +56,14 @@ const Home = () => {
   const filter = useSelector((state) => state.filterR.filter);
   const storeData = useSelector((state) => state.storeR.storeData);
   const userData = useSelector((state) => state.userR.userData);
-  const [Loading, setLoading] = useState(false);
+  const auth_Token = useSelector((state) => state.tokenR.verifiToken);
+  const announceImgs = useSelector((state) => state.varR.announceImgs);
   const [data, setData] = useState();
   const [SortPageOpen, setSortPageOpen] = useState(false);
   const [sortUser, sortUserSet] = useState(sortList.recommend);
+
   const navi = useNavigate();
+  // console.log(window.history);
   const dispatch = useDispatch();
   const myTheme = useTheme();
   // const storeListGetAll = async (db) => {
@@ -105,6 +111,8 @@ const Home = () => {
 
   const storeListFilltering = async () => {
     //필터링
+    if (storeData.length === 0) return;
+
     let newData = storeData.filter((item, idx) => {
       let result;
       Object.values(item.subwayStation).map((e) => {
@@ -158,9 +166,19 @@ const Home = () => {
 
   useEffect(() => {
     storeListFilltering();
-  }, [filter, sortUser]);
+  }, [filter, sortUser, storeData]);
 
-  const location = useLocation();
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    autoplay: true,
+    autoplaySpeed: 6000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    useCSS: true,
+    nextArrow: <></>, // nextn=button delete
+  };
   return (
     <>
       <Page
@@ -311,6 +329,40 @@ const Home = () => {
               display: "block",
             }}
           >
+            <Box mt={3} borderRadius="20px">
+              <Slider
+                {...settings}
+                css={css`
+                  border-radius: 24px;
+                  height: 25vw;
+                `}
+              >
+                {announceImgs.map((URL, idx) => {
+                  // if (idx === AnnounceImgs.length - 1) return null;
+                  return (
+                    <Box
+                      key={URL}
+                      onClick={() => {
+                        if (idx === 0) {
+                          navi("/point/charge");
+                        } else if (idx === 1) {
+                          navi("/app/useguide");
+                        }
+                      }}
+                    >
+                      <img
+                        src={URL}
+                        alt="announceImage"
+                        width={"100%"}
+                        css={css`
+                          border-radius: 24px;
+                        `}
+                      />
+                    </Box>
+                  );
+                })}
+              </Slider>
+            </Box>
             <Box
               sx={{
                 display: "flex",
@@ -322,6 +374,7 @@ const Home = () => {
             >
               <TextBody color="Gray.c900">
                 {data ? data.length : 0}개의 카페
+                {/* test: 1.143156 */}
               </TextBody>
               <Box
                 sx={{

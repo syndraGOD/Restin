@@ -24,8 +24,16 @@ router.get("/getStoreData", verifyTokenMiddleware, async (req, res) => {
   try {
     const result = await db_store_read_all();
 
+    const filterResult = result.data.filter((store) => {
+      // console.log(store.BusinessState);
+      if (store.BusinessState === "true" || store.BusinessState === true) {
+        return true;
+      }
+    });
+
     if (result.resultCode === 200) {
-      const publicData = removeSensitiveInfo(result.data);
+      const publicData = removeSensitiveInfo(filterResult);
+
       res.status(200).json({
         success: true,
         data: publicData,

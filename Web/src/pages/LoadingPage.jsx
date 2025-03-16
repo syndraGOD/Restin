@@ -69,7 +69,7 @@ const LoadingPage = () => {
         sx={{
           width: "inherit",
           height: "inherit",
-          bgcolor: "white",
+          // bgcolor: "white",
           position: "absolute",
           top: 0,
           left: 0,

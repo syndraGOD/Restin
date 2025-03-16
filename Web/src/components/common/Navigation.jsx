@@ -16,6 +16,9 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { IoIosArrowUp } from "react-icons/io";
 import theme from "../../style/theme";
+import { TotalPriceMath } from "../../api/usageMath";
+
+// import { createBrowserHistory } from "history"
 //@ts-check
 /**@param select 네비게이션 선택*/
 /**@param {"home"|"purchase"|"info"|null} select*/
@@ -145,9 +148,7 @@ const Navigation = ({ select }) => {
                   </TextBody>
 
                   <TextHeader4 weight="Bold" color="White.main">
-                    {useStoreData?.unitPrice *
-                      (1 + Math.floor(useDurationTime / 10))}
-                    원
+                    {TotalPriceMath(useStoreData?.unitPrice, useDurationTime)}원
                   </TextHeader4>
                 </Box>
               ) : (
@@ -201,9 +202,18 @@ const Navigation = ({ select }) => {
       >
         {/* home */}
         <Box
-          sx={{ flex: 1, height: "100%", alignContent: "center" }}
+          sx={{
+            flex: 1,
+            height: "100%",
+            alignContent: "center",
+            // justifyContent: "center",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
           component={RouterLink}
           to="/app/home"
+          // onClick={async () => {}}
         >
           <Box sx={{ alignItems: "center", marginBottom: "5px" }}>
             <RiHome2Line
@@ -232,7 +242,14 @@ const Navigation = ({ select }) => {
         </Box>
         {/* purchase */}
         <Box
-          sx={{ flex: 1, height: "100%", alignContent: "center" }}
+          sx={{
+            flex: 1,
+            height: "100%",
+            alignContent: "center",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
           component={RouterLink}
           to="/purchase/listLog"
         >
@@ -260,7 +277,14 @@ const Navigation = ({ select }) => {
         </Box>
         {/* info */}
         <Box
-          sx={{ flex: 1, height: "100%", alignContent: "center" }}
+          sx={{
+            flex: 1,
+            height: "100%",
+            alignContent: "center",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
           component={RouterLink}
           to="/myInfo/home"
         >

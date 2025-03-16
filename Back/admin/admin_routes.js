@@ -318,9 +318,10 @@ router.get("/point-requests", adminAuthMiddleware, async (req, res) => {
 
     if (result.success) {
       // JavaScript로 데이터 정렬
+      console.log(result.data);
       const sortedData = result.data.sort((a, b) => {
-        const dateA = a.existingRequest.info.requestDate.seconds;
-        const dateB = b.existingRequest.info.requestDate.seconds;
+        const dateA = a.info.requestDate;
+        const dateB = b.info.requestDate;
         return dateB - dateA; // 내림차순 정렬
       });
 
@@ -333,12 +334,14 @@ router.get("/point-requests", adminAuthMiddleware, async (req, res) => {
         success: false,
         message: result.error,
       });
+      console.log(result.error);
     }
   } catch (error) {
     res.status(500).json({
       success: false,
       message: "포인트 충전 요청 목록 조회 실패",
     });
+    console.log(error);
   }
 });
 
@@ -366,6 +369,34 @@ router.post(
           "after.completeDate": currentTime,
           "after.adminMemo": "승인 완료",
         };
+
+        const userDataDoc = doc(collection(db, "USER"), userId);
+        const userData = (await getDoc(userDataDoc)).data();
+        const totalPoint =
+          userData.point.amount +
+          request_ticket.charge.chargeAmount *
+            (request_ticket.charge.bonusRate + 1);
+
+        const pointTicketId = uuidv4();
+        const pointLog = {
+          afterAmount: totalPoint,
+          amount:
+            request_ticket.charge.chargeAmount *
+            (request_ticket.charge.bonusRate + 1),
+          beforeAmount: userData.point.amount,
+          description: "포인트 충전",
+          pointTicketId: pointTicketId,
+          requestTicket: request_ticket.info.pointRequestTicketId,
+          requestDate: new Date(),
+          userId: userId,
+        };
+        const pointLogUpdateResult = await setDoc(
+          doc(collection(db, "POINT_TICKET"), pointTicketId),
+          pointLog
+        );
+        const pointUpdateResult = await updateData("USER", userId, {
+          "point.amount": totalPoint,
+        });
       } else if (action === "reject") {
         updateFields = {
           "info.status": "rejected",
@@ -377,53 +408,22 @@ router.post(
         };
       }
 
-      const userDataDoc = doc(collection(db, "USER"), userId);
-      const userData = (await getDoc(userDataDoc)).data();
-      const totalPoint =
-        userData.point.amount +
-        request_ticket.charge.chargeAmount *
-          (request_ticket.charge.bonusRate + 1);
-
-      const pointTicketId = uuidv4();
-      const pointLog = {
-        afterAmount: totalPoint,
-        amount:
-          request_ticket.charge.chargeAmount *
-          (request_ticket.charge.bonusRate + 1),
-        beforeAmount: userData.point.amount,
-        description: "포인트 충전",
-        pointTicketId: pointTicketId,
-        requestTicket: request_ticket.info.pointRequestTicketId,
-        requestDate: new Date(),
-        userId: userId,
-      };
       // throw new Error("test");
 
       const result = await updateData("POINT_REQUEST_TICKET", id, updateFields);
-      const pointLogUpdateResult = await setDoc(
-        doc(collection(db, "POINT_TICKET"), pointTicketId),
-        pointLog
-      );
-      const pointUpdateResult = await updateData("USER", userId, {
-        "point.amount": totalPoint,
-      });
 
       if (result.success) {
-        console.log(
-          userId,
-          "+",
-          request_ticket.charge.chargeAmount *
-            (request_ticket.charge.bonusRate + 1),
-          " : ",
-          totalPoint,
-          "Point"
-        );
         res.json({
           success: true,
           message: `포인트 충전 요청이 ${
             action === "approve" ? "승인" : "거부"
           }되었습니다.`,
         });
+        console.log(
+          `포인트 충전 요청이 ${
+            action === "approve" ? "승인" : "거부"
+          }되었습니다.`
+        );
       } else {
         console.log(result.error);
         res.status(500).json({

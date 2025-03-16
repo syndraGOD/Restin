@@ -64,7 +64,11 @@ const user_smsVerifyMiddleware = async (req, res, next) => {
 
     req.body.verifiCode = verifiCode;
     try {
-      if (phoneNumber === "01072105819" || phoneNumber === "01066540149") {
+      if (
+        phoneNumber === "01072105819" ||
+        phoneNumber === "01066540149" ||
+        phoneNumber === "01023961736"
+      ) {
         verifiCode = 111111;
         req.body.verifiCode = verifiCode;
         smsVerify[req.body.phoneNumber] = req.body.verifiCode;
@@ -102,6 +106,9 @@ const user_verifiCodeMiddleware = (req, res, next) => {
         smsVerify[phonenumber],
         Number(userverificode)
       );
+      res.status(412).json({
+        message: "verifiCode is null or undefind or invaild",
+      });
       return;
     }
     next();
@@ -140,8 +147,8 @@ const user_loginMiddleware = async (req, res, next) => {
   console.log(userId, req.userId, req.headers.userId);
   const user = await db_user_read(userId);
 
-  if (user.resultCode === 404 || user.resultCode === 500) {
-    res.status(404).json({ message: user.text });
+  if (user.resultCode === 404 || user.resultCode === 500 || !user.data) {
+    return res.status(404).json({ message: user.text });
   }
   const payload = {
     userId: user.data.userId,

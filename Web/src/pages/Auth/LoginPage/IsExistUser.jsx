@@ -49,17 +49,18 @@ const IsExistUser = () => {
           flexDirection: "column",
           textAlign: "center",
           height: "100%",
+          gap: 1,
         }}
       >
         <HeaderInner></HeaderInner>
         {!isFirstVerifiCodeSend ? (
-          <TextBox_header2>
+          <TextBox_header2 weight="Bold">
             안녕하세요!
             <br />
             휴대폰 번호를 알려주세요
           </TextBox_header2>
         ) : (
-          <TextBox_header2>
+          <TextBox_header2 weight="Bold">
             인증번호를
             <br />
             입력해 주세요

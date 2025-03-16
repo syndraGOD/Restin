@@ -30,7 +30,7 @@ const StoreFilterPage = () => {
 
   const filter = useSelector((state) => state.filterR.filter);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const navi = useNavigate();
   const myTheme = useTheme();
   const [select, setSelect] = useState(filter);
 
@@ -99,7 +99,7 @@ const StoreFilterPage = () => {
           sx={{
             display: "flex",
             alignContent: "center",
-            textAlign: "center",
+            textAlign: "start",
             flexDirection: "column",
             backgroundColor: `${myTheme.palette.Gray.c100}`,
             width: "35%",
@@ -122,6 +122,10 @@ const StoreFilterPage = () => {
                   boxSizing: "border-box",
                   textDecoration: "none",
                   backgroundColor: "Gray.c100",
+                  // display: "flex",
+                  // alignItems: "center",
+                  // justifyContent: "start",
+                  // marginLeft: "16px",
                 }}
                 component={Button}
                 onClick={() => {
@@ -171,7 +175,7 @@ const StoreFilterPage = () => {
                       }
                     `}
                   >
-                    {line.replace("line", "")}호선
+                    {LineInfo[line].name}
                   </TextBodyLarge>
                 </Box>
               </Box>
@@ -211,7 +215,7 @@ const StoreFilterPage = () => {
                     })
                   );
                   // ToggleFilterPage();
-                  navigate(-1);
+                  navi(-1);
                 }}
                 key={idx}
               >

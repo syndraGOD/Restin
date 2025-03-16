@@ -20,11 +20,14 @@ import theme from "@style/theme";
 import { sendMessageToRN } from "@api/RN/RNsend";
 import { restinAPI } from "../../api/config";
 import { useSelector } from "react-redux";
-import { DialogOK } from "../../components/common/DialogOk";
+import { DialogAlert, DialogOK } from "../../components/common/DialogOk";
 
 const PointCharge = () => {
+  const userData = useSelector((state) => state.userR.userData);
   const auth_token = useSelector((state) => state.tokenR.verifiToken);
   const [selectedAmount, setSelectedAmount] = useState(5000);
+
+  const [failedReason, setFailedReason] = useState("");
   const navi = useNavigate();
   const location = useLocation();
 
@@ -51,7 +54,12 @@ const PointCharge = () => {
       });
       const data = await res.json();
       if (res.status === 200) {
-        navi("/point/ChargeComplete");
+        navi("/point/chargecomplete", { replace: true });
+      } else if (res.status === 409) {
+        console.log("이미 충전중!");
+        // navi(-1);
+        setFailedReason("이미 처리중인 충전 요청이 있습니다.");
+        navi("#failedPurchase", { replace: true });
       } else {
         console.log(data.error);
         navi(-1);
@@ -71,14 +79,26 @@ const PointCharge = () => {
   };
 
   return (
-    <FullBox sx={{ height: "100%", overflowY: "auto", position: "relative" }}>
+    <FullBox
+      sx={{
+        height: "100%",
+        overflowY: "auto",
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "start",
+        alignItems: "center",
+      }}
+    >
       <HeaderInner fixed={true}>포인트 충전 신청</HeaderInner>
       <InBox justifySelf="center">
         <Box sx={styles.section}>
           <TextHeader4 weight="Bold" color="Black.main" mb={1}>
             충전 금액을 선택해 주세요
           </TextHeader4>
-          <TextBody color="Gray.c600">보유중인 포인트 : 0원</TextBody>
+          <TextBody color="Gray.c600">
+            보유중인 포인트 : {userData.point.amount}원
+          </TextBody>
 
           {chargeAmounts.map((item) => (
             <Box
@@ -183,6 +203,13 @@ const PointCharge = () => {
             <TextBodySmall color="Gray.c600">개인정보 처리방침</TextBodySmall>
             <IoIosArrowForward color={theme.palette.Gray.c600} />
           </Box>
+          <Box
+            sx={styles.termItem}
+            onClick={() => navi(`${location.search}#pointterms`)}
+          >
+            <TextBodySmall color="Gray.c600">포인트 이용약관</TextBodySmall>
+            <IoIosArrowForward color={theme.palette.Gray.c600} />
+          </Box>
 
           <TextBodySmall mt={2} color="Gray.c400">
             레스틴(Restin)은 통신판매 중개자로서 통신판매의 당사자가 아니며
@@ -216,6 +243,10 @@ const PointCharge = () => {
         text={`${selectedAmount.toLocaleString()}원 충전 신청하시겠어요?`}
         isok={pointChargeRequest}
       />
+
+      <DialogAlert open="failedPurchase" h2="요청 실패">
+        {failedReason}
+      </DialogAlert>
     </FullBox>
   );
 };

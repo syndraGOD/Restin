@@ -25,19 +25,11 @@ const PurchaseLogItem = ({
   // description,
   date,
   changePoint,
+  usedStoreData,
   // afterPoint,
   // isDelete,
-  purchaseLogList,
-  setPurchaseLogList,
 }) => {
-  const verifiToken = useSelector((state) => state.tokenR.verifiToken);
-  const storeData = useSelector((state) => state.storeR.storeData);
-  let storeName;
-  if (storeUUID) {
-    storeName = storeData.find((item) => item.UUID === storeUUID).name;
-  } else {
-    storeName = "카페 이용";
-  }
+  const storeName = usedStoreData.name;
   const styles = {
     mainBox: {
       width: "100%",
@@ -87,7 +79,10 @@ const PurchaseLogItem = ({
 };
 
 const PurchaseLogList = () => {
+  console.log("PurchaseLogList");
   const verifiToken = useSelector((state) => state.tokenR.verifiToken);
+  const storeData = useSelector((state) => state.storeR.storeData);
+  const loading = useSelector((state) => state.varR.loading);
   const dispatch = useDispatch();
   const [purchaseLogList, setPurchaseLogList] = useState([]);
   useEffect(() => {
@@ -104,7 +99,7 @@ const PurchaseLogList = () => {
         const resData = await res.json();
         if (res.status === 200) {
           setPurchaseLogList(resData.data);
-          console.log(resData.data);
+          // console.log(resData.data);
         } else {
           console.log(resData.error);
         }
@@ -121,60 +116,74 @@ const PurchaseLogList = () => {
       <FullBox
         sx={{ display: "flex", flexDirection: "column", height: "100%" }}
       >
-        <HeaderInner backArrow={false}>포인트 내역</HeaderInner>
-        {purchaseLogList.length > 0 ? (
-          <InBox
-            sx={{
-              my: 3,
-              flex: 1,
-              backgroundColor: "White.main",
-              overflowY: "auto",
-              "&::-webkit-scrollbar": {
-                display: "none",
-              },
-            }}
-          >
-            {purchaseLogList.map((item) => {
-              console.log(item);
-              return (
-                <PurchaseLogItem
-                  key={uuidv4()}
-                  {...item}
-                  purchaseLogList={purchaseLogList}
-                  setPurchaseLogList={setPurchaseLogList}
-                />
-              );
-            })}
-          </InBox>
+        <HeaderInner backArrow={false}>이용 내역</HeaderInner>
+        {/* {console.log(purchaseLogList)} */}
+        {!loading ? (
+          purchaseLogList.length > 0 ? (
+            <InBox
+              sx={{
+                my: 3,
+                flex: 1,
+                backgroundColor: "White.main",
+                overflowY: "auto",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+              }}
+            >
+              {purchaseLogList.map((item) => {
+                const usedStoreData = storeData.find(
+                  // (store) => store.UUID === item.storeUUID
+                  (store) => store.UUID === item.storeUUID
+                );
+                // if (storeUUID) {
+                //   storeName = storeData.find((item) => item.UUID === storeUUID).name;
+                // } else {
+                //   storeName = "카페 이용";
+                // }
+                return (
+                  <PurchaseLogItem
+                    key={uuidv4()}
+                    {...item}
+                    usedStoreData={usedStoreData}
+                  />
+                );
+              })}
+            </InBox>
+          ) : (
+            <InBox
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignContent: "center",
+                flexDirection: "column",
+                textAlign: "center",
+                flex: 1,
+                backgroundColor: "White.main",
+                m: 4,
+                gap: 3,
+              }}
+            >
+              <TextHeader4 color="Black.main">
+                아직 이용 내역이 없어요
+              </TextHeader4>
+              {/* <TextHeader3 color="Black">카페 찾아보기</TextHeader3> */}
+              <Box>
+                <DefaultBtn
+                  onClick={() => {
+                    navi("/app/home");
+                  }}
+                  sx={{ marginTop: 2 }}
+                >
+                  카페 찾아보기
+                </DefaultBtn>
+              </Box>
+            </InBox>
+          )
         ) : (
-          <InBox
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignContent: "center",
-              flexDirection: "column",
-              textAlign: "center",
-              flex: 1,
-              backgroundColor: "White.main",
-              m: 4,
-            }}
-          >
-            <TextHeader4 color="Black.main">
-              아직 이용 내역이 없어요
-            </TextHeader4>
-            {/* <TextHeader3 color="Black">카페 찾아보기</TextHeader3> */}
-            <Box width={"52%"}>
-              <DefaultBtn
-                onClick={() => {
-                  navi("/app/home");
-                }}
-                sx={{ marginTop: 2 }}
-              >
-                카페 찾아보기
-              </DefaultBtn>
-            </Box>
-          </InBox>
+          <Boxs variant="EmptyBox" />
         )}
+
         <Box
           sx={{
             display: "flex",

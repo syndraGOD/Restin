@@ -7,7 +7,16 @@ import useguideimg from "./UseGuide.png";
 const UseGuide = () => {
   return (
     <Page>
-      <FullBox sx={{ height: "100%", overflowY: "auto" }}>
+      <FullBox
+        sx={{
+          height: "100%",
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "start",
+          alignItems: "center",
+        }}
+      >
         <HeaderInner>이용 안내</HeaderInner>
         <InBox justifySelf="center">
           <img src={useguideimg} width={"100%"} />

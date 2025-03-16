@@ -6,5 +6,6 @@ const NotionLocList = {
   locationinformation: "13c0844ba32f81f2853ad626e56d66d7", //위치정보
   refundrule: "13c0844ba32f81da97fff9d3e8412d29", // 취소/환불 규정
   otp_marketing: "13c0844ba32f803ebf31f6d03ad0557d", //마케팅 정보 수신 동의
+  pointterms: "15e0844ba32f801880b7ed5f75522ede",
 };
 export default NotionLocList;

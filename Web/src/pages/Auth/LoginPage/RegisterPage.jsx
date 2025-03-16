@@ -44,17 +44,18 @@ const RegisterPage = () => {
           alignContent: "center",
           flexDirection: "column",
           textAlign: "center",
+          gap: 1,
         }}
       >
         <HeaderInner></HeaderInner>
         {!isNext ? (
-          <TextBox_header2>
+          <TextBox_header2 weight="Bold">
             이름 또는 닉네임을
             <br />
             알려주세요
           </TextBox_header2>
         ) : (
-          <TextBox_header2>
+          <TextBox_header2 weight="Bold">
             생년월일을 입력하고
             <br />
             시작해볼까요?
@@ -96,8 +97,8 @@ const RegisterPage = () => {
                 inputRef={birthRef}
                 variant="standard"
                 fullWidth
-                label="생년월일"
-                placeholder="010809"
+                label="주민등록번호 앞 6자리"
+                placeholder="YYMMDD (Ex : 990212)"
                 color="PrimaryBrand"
                 value={birthdayState}
                 onChange={(e) => {

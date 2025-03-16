@@ -27,6 +27,7 @@ class PurchaseTicketForm {
     this.status = args.status ?? null;
     this.refundDate = args.refundDate ?? null;
     this.storeName = args.storeName ?? null;
+    this.selectedPayment = args.selectedPayment ?? null;
   }
 }
 

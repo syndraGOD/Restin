@@ -16,9 +16,9 @@ import { useSelector } from "react-redux";
 const StoreItem = ({ item, userDistance, onClick }) => {
   const filter = useSelector((state) => state.filterR.filter);
   const { id, imgURL, name, unitPrice } = item;
-  const navigate = useNavigate();
+  const navi = useNavigate();
   const onClickStore = () => {
-    navigate(`/app/store?UUID=${item.UUID}`);
+    navi(`/app/store?UUID=${item.UUID}`);
   };
 
   let minDistanceStation = null;
@@ -121,12 +121,21 @@ const StoreItem = ({ item, userDistance, onClick }) => {
               justifyContent: "end",
             }}
           >
-            <TextBodyLarge weight="Bold" color="Gray.c700">
-              {unitPrice}원{" "}
-            </TextBodyLarge>
-            <TextBodyLarge weight="Bold" color="PrimaryBrand">
-              /10분
-            </TextBodyLarge>
+            {unitPrice === 0 || unitPrice === "0" ? (
+              <TextBodyLarge weight="Bold" color="PrimaryBrand">
+                무료 공간
+              </TextBodyLarge>
+            ) : (
+              <>
+                {" "}
+                <TextBodyLarge weight="Bold" color="Gray.c700">
+                  {unitPrice}원{" "}
+                </TextBodyLarge>
+                <TextBodyLarge weight="Bold" color="PrimaryBrand">
+                  /10분당
+                </TextBodyLarge>
+              </>
+            )}
           </Box>
         </Box>
       </Box>

@@ -117,6 +117,8 @@ const UserInfoModify = () => {
           {"  "}
         </Box>
         <DefaultBtn
+          disabled={nameState.length < 2 || nameState.length > 8}
+          fixed={true}
           onClick={() => {
             navi("#isOK");
           }}

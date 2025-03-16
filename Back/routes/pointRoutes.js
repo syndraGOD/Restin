@@ -60,7 +60,7 @@ router.post(
 
       // 기존 요청이 있으면 거부
       if (existingRequest) {
-        return res.status(400).json({
+        return res.status(409).json({
           success: false,
           error: "이미 처리 중인 충전/환불 요청이 있습니다.",
         });
@@ -311,7 +311,7 @@ router.get(
       console.log(existingRequest);
       res.status(200).json({
         success: true,
-        // requestTicket: existingRequest
+        requestTicket: existingRequest,
       });
     } catch (error) {
       res.status(400).json({ success: false, error: error.message });

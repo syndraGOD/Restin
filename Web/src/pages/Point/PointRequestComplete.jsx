@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { restinAPI } from "../../api/config";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { sendMessageToRN } from "@api/RN/RNsend";
 
 const PointRequestComplete = () => {
   const navi = useNavigate();
@@ -40,12 +41,25 @@ const PointRequestComplete = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         setRequestTicket(data.requestTicket);
       });
   }, []);
   return (
-    <FullBox sx={{ height: "100%", overflowY: "auto", position: "relative" }}>
-      <HeaderInner fixed={true}>무통장 입금 안내</HeaderInner>
+    <FullBox
+      sx={{
+        height: "100%",
+        overflowY: "auto",
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "start",
+        alignItems: "center",
+      }}
+    >
+      <HeaderInner fixed={true} backTo={-2}>
+        무통장 입금 안내
+      </HeaderInner>
 
       <InBox justifySelf="center">
         <Box sx={styles.section}>
@@ -172,7 +186,7 @@ const PointRequestComplete = () => {
       </InBox>
 
       <InBox justifySelf="center">
-        <DefaultBtn fixed={true} onClick={() => navi('/app/home')}>
+        <DefaultBtn fixed={true} onClick={() => navi(-2)}>
           확인
         </DefaultBtn>
       </InBox>

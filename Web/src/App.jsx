@@ -66,13 +66,17 @@ function App() {
   const dispatch = useDispatch();
 
   const AuthProtect = ({ children }) => {
-    const location = useLocation();
+    // const location = useLocation();
     if (JSON.stringify(userData) !== "{}") {
       return children;
     } else {
-      return <Navigate to="/login/isuser"></Navigate>;
+      return <Navigate to="/welcome/1"></Navigate>;
     }
   };
+  // useEffect(() => {
+  //   Kakao.init("7415160bf8619505eebab62daf4f41c5");
+  //   Kakao.isInitialized();
+  // }, []);
   return (
     <>
       <GlobalStyle />
@@ -82,7 +86,7 @@ function App() {
             <BrowserRouter>
               <MobilePage>
                 <Routes>
-                  <Route
+                  {/* <Route
                     path="/"
                     element={
                       JSON.stringify(userData) !== "{}" ? (
@@ -91,7 +95,7 @@ function App() {
                         <Navigate to="/welcome/1" />
                       )
                     }
-                  />
+                  /> */}
                   {/* 밑에는 AuthProtect 미적용 */}
                   <Route path="/welcome">
                     <Route index path="1" element={<Welcome1 />}></Route>

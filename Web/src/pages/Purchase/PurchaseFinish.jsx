@@ -35,7 +35,16 @@ const PurchaseFinish = () => {
   };
 
   return (
-    <FullBox sx={{ height: "100%", overflowY: "auto", position: "relative" }}>
+    <FullBox
+      sx={{
+        height: "100%",
+        overflowY: "auto",
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
       <InBox justifySelf="center" mt={10}>
         <Box sx={styles.section}>
           <Box sx={styles.checkIcon}>

@@ -4,23 +4,24 @@ import { TextHeader2, TextHeader3 } from "@components/designGuide";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { BgColorDefault } from "../../../components/common/Bg";
+import { TextBodyLarge } from "../../../components/designGuide";
 const Welcome3 = () => {
   const navi = useNavigate();
   return (
-    <ImgTextButtonPage>
+    <ImgTextButtonPage count={3}>
       <img src={WelcomeImage3} alt="" />
-      <TextHeader3>
+      <TextHeader2 weight="Bold">
         화면을 보여드리고
         <br />물 한 잔을 받아주세요
-      </TextHeader3>
+      </TextHeader2>
       <Button
         onClick={() => {
           navi("/welcome/4");
         }}
       >
-        <TextHeader2 weight="Bold" color="White.main">
+        <TextBodyLarge weight="Bold" color="White.main">
           따듯하군요
-        </TextHeader2>
+        </TextBodyLarge>
       </Button>
       <BgColorDefault bgColor="White.main" />
     </ImgTextButtonPage>

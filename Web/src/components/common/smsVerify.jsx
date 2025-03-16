@@ -16,6 +16,7 @@ import { restinAPI } from "@api/config";
 import { setuserData } from "@store/modules/userSlice";
 import { useDispatch } from "react-redux";
 import { setVerifiToken } from "@store/modules/tokenSlice";
+import { DialogAlert } from "./DialogOk";
 
 export const smsVerifiCode_isTrue = () => {};
 export const Input_SMSVerify = ({
@@ -41,6 +42,7 @@ export const Input_SMSVerify = ({
   const [confirmBtn, setConfirmBtn] = useState(false);
   const [verifiCode, setVerifiCode] = useState();
   const [verifiFail, setVerifiFail] = useState(false);
+  const [failedReason, setFailedReason] = useState("");
   //input - 인증번호 폼을 실시간 규격화
 
   const NextBtnClick = async (e) => {
@@ -61,7 +63,7 @@ export const Input_SMSVerify = ({
         dispatch(setuserData(userData));
         dispatch(setVerifiToken(userData.security.auth_token));
         //global state에 유저정보 set
-        navi("/app/home");
+        navi("/app/home", { replace: true });
       } else if (res.status === 200 && !resData.exist) {
         navi("/login/register", {
           state: { phoneNumber: inputPhoneNumber.replaceAll(" ", "") },
@@ -73,9 +75,13 @@ export const Input_SMSVerify = ({
         setConfirmBtn(false);
       } else {
         console.log(res.status, resData);
+        setFailedReason("인증에 실패하였습니다. 잠시 후 다시 시도해주세요");
+        navi("#failedPurchase");
       }
     } catch (error) {
       console.log(error);
+      setFailedReason("인증에 실패하였습니다. 잠시 후 다시 시도해주세요");
+      navi("#failedPurchase");
     }
   };
 
@@ -96,8 +102,8 @@ export const Input_SMSVerify = ({
   //인증번호가 동일하면 버튼 disables를 비활성화, 보안에 문제있는 방식이긴 하겠지만,
   // 우선은 디자이너 의도에 따라 개발
   const VerifiSendBtnClick = async () => {
-    setIsFirstVerifiCodeSend(true);
     try {
+      console.log(`loc : ${restinAPI}/auth/smsVerify`);
       const phoneNumber = inputPhoneNumber.replaceAll(" ", "");
       const res = await fetch(`${restinAPI}/auth/smsVerify`, {
         mode: "cors",
@@ -109,11 +115,19 @@ export const Input_SMSVerify = ({
           phoneNumber,
         }),
       });
-      const data = await res.json();
+      if (res.status === 200) {
+        setIsFirstVerifiCodeSend(true);
+      } else {
+        console.log(res.status, resData);
+        setFailedReason("전송에 실패하였습니다. 잠시 후 다시 시도해주세요");
+        navi("#failedPurchase");
+      }
       // const awaitData = await data.verifiCode;
       // setVerifiCode(String(awaitData));
     } catch (error) {
       console.log(error);
+      setFailedReason("전송에 실패하였습니다. 잠시 후 다시 시도해주세요");
+      navi("#failedPurchase");
     }
     //res = { message, verifiCode }
     verifiRef.current.focus();
@@ -238,14 +252,16 @@ export const Input_SMSVerify = ({
         </DefaultBtn>
       ) : (
         <DefaultBtn
-        fixed={true}
+          fixed={true}
           disabled={!confirmBtn || !isFirstVerifiCodeSend}
           onClick={NextBtnClick}
         >
           인증 확인
-          </DefaultBtn>
-        )}
+        </DefaultBtn>
+      )}
+      <DialogAlert open="failedPurchase" h2="인증 실패">
+        {failedReason}
+      </DialogAlert>
     </InBox>
   );
 };
-

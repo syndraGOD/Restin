@@ -26,6 +26,7 @@ import { setuserData } from "../../store/modules/userSlice";
 import { setVerifiToken } from "../../store/modules/tokenSlice";
 import { DialogOK } from "../../components/common/DialogOk";
 import { restinAPI } from "../../api/config";
+import { sendMessageToRN } from "../../api/RN/RNsend";
 
 export const SettingInfoBox = ({ onClick, children }) => {
   return (
@@ -175,13 +176,13 @@ const SettingPage = () => {
             >
               내 정보 수정
             </SettingInfoBox>
-            <SettingInfoBox
+            {/* <SettingInfoBox
               onClick={() => {
                 navi("/myInfo/notifi");
               }}
             >
               알림 설정
-            </SettingInfoBox>
+            </SettingInfoBox> */}
             <SettingInfoBox
               onClick={() => {
                 navi("#announce");
@@ -198,7 +199,14 @@ const SettingPage = () => {
             </SettingInfoBox>
             <SettingInfoBox
               onClick={() => {
-                navi("/myInfo/kakaochannel");
+                // navi("/myInfo/kakaochannel");
+                sendMessageToRN({
+                  type: "addkakaofriend",
+                  payload: {},
+                });
+                // Kakao.Channel.addChannel({
+                //   channelPublicId: "_xexnIln",
+                // });
               }}
             >
               1:1 채팅 상담 (10:00~19:00)
@@ -249,7 +257,6 @@ const SettingPage = () => {
             <TextBodySmall color="Gray.c600">
               당사는 서울보증보험에 가입된 회사입니다
             </TextBodySmall>
-
             <TextBodySmall color="Gray.c600"> </TextBodySmall>
             <TextBodySmall color="Gray.c600">
               주소 : 경기도 남양주시 별내3로 322
@@ -260,6 +267,8 @@ const SettingPage = () => {
             <TextBodySmall color="Gray.c600">
               고객센터 : 070-8095-9289 (10:00~19:00)
             </TextBodySmall>
+            <TextBodySmall color="Gray.c600"> </TextBodySmall>
+            <TextBodySmall color="Gray.c600">v1.05</TextBodySmall>
           </InBox>
         </FullBox>
 

@@ -30,10 +30,9 @@ import InnerBox from "../../../components/common/InnerBox";
 import { FaRegClock } from "react-icons/fa";
 import { BiArrowToRight, BiPhoneCall } from "react-icons/bi";
 import { FaInstagram } from "react-icons/fa";
-import BtnDefault from "../../../components/BtnDefault";
 import { today } from "../../../api/timeCheck";
 import { FaAngleDown } from "react-icons/fa6";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import theme from "../../../style/theme";
 import NotionLocList from "../../../api/NotionLocList";
 import { restinAPI } from "../../../api/config";
@@ -48,6 +47,8 @@ import { DefaultBtn } from "../../../components/common/Btns";
 import UseGuide from "./UseGuide.png";
 import { DialogOK } from "../../../components/common/DialogOk";
 import { sendMessageToRN } from "../../../api/RN/RNsend";
+import { BsTranslate } from "react-icons/bs";
+import { MdOutlineChair } from "react-icons/md";
 
 const StoreDetail = () => {
   const filter = useSelector((state) => state.filterR.filter);
@@ -64,9 +65,42 @@ const StoreDetail = () => {
   // const { item } = location.state || {};
   const item = storeData.filter((store) => store.UUID === selectUUID)[0];
   const [accordionIsVisible, setAccordionIsVisible] = useState(false);
+  const [storeAllowMaxCount, setstoreAllowMaxCount] = useState(0);
+  const [storeCurrentUsageCount, setstoreCurrentUsageCount] = useState(0);
   const innerSize = "12px";
   let nextButtonText = "이용 시작하기";
 
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const res = await fetch(`${restinAPI}/user/usage/storeUsageCount`, {
+          mode: "cors",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: "Bearer " + userData.security?.auth_token,
+          },
+          body: JSON.stringify({
+            storeInfo: {
+              uuid: item.UUID,
+            },
+          }),
+        });
+        if (res.status === 200) {
+          const awaitRES = await res.json();
+          setstoreAllowMaxCount(awaitRES.storeAllowMaxCount);
+          setstoreCurrentUsageCount(awaitRES.storeCurrentUsageCount);
+        } else {
+          navi(-1);
+          console.log("현재 사용중인 좌석 수 정보 불러오기 실패");
+        }
+      } catch (error) {
+        navi(-1);
+        console.log(error);
+      }
+    };
+    init();
+  }, []);
   // console.log("detail 리로드", "localstate : ", location.state || {});
   const settings = {
     dots: true,
@@ -99,7 +133,7 @@ const StoreDetail = () => {
         const awaitRES = await res.json();
         const resUserData = awaitRES.data;
         dispatch(setuserData(resUserData));
-        navi("/app/using", { state: { item } });
+        navi("/app/using", { state: { item }, replace: true });
       } else {
         navi(-1);
         console.log("이용시작 실패");
@@ -109,8 +143,6 @@ const StoreDetail = () => {
       console.log(error);
     }
     //resultCODE가 200일때와 아닐때 예외처리
-
-    // navigate("", { state: { item } });
   };
   const timeForText = (open, close, breakTime) => {
     const Forkey = ({ children }) => {
@@ -118,6 +150,7 @@ const StoreDetail = () => {
     };
     let resultText = "";
     let plusComponent = [];
+    // 꺽쇠 누르면 나오는 오픈,마감, 브레이크 타임 전체표기해주는부분
     if (open && close) {
       resultText =
         "   " +
@@ -237,6 +270,9 @@ const StoreDetail = () => {
               "   피크타임"
             }`,
           ];
+          // nextButtonText = `${
+          //   open.substring(0, 2) + ":" + open.substring(2, 4)
+          // } 부터 사용할 수 있어요`;
         }
       });
       return result;
@@ -245,7 +281,6 @@ const StoreDetail = () => {
   };
   const [storeState, storeCloseReason] = StoreOpeningText();
 
-  const navigate = useNavigate();
   const [markdown, setMarkdown] = useState("");
   // useEffect(() => {
   //   fetch("../../../api/Rules/allRules.md")
@@ -274,9 +309,23 @@ const StoreDetail = () => {
     const todayText = String(today).substring(0, 3).toLowerCase();
     const open = openData[`${todayText}open`];
     const close = openData[`${todayText}close`];
+    const breaks = openData[`${todayText}break`];
     const todayHourMin = `${for0To9ToText(today.getHours())}${for0To9ToText(
       today.getMinutes()
     )}`;
+    let breakResult = false;
+    breaks.map((breakOne) => {
+      const breakOpen = breakOne.substring(0, 4);
+      const breakClose = breakOne.substring(4, 8);
+      if (breakOpen < todayHourMin && todayHourMin < breakClose) {
+        breakResult = `${
+          breakClose.substring(0, 2) + ":" + breakClose.substring(2, 4)
+        } 부터 사용할 수 있어요`;
+      }
+    });
+
+    // console.log(breakResult);
+
     if (userData.usage.startTime) {
       return (
         <DefaultBtn fixed={true} disabled={true}>
@@ -296,8 +345,24 @@ const StoreDetail = () => {
           있어요
         </DefaultBtn>
       );
+    } else if (
+      storeAllowMaxCount !== 0 &&
+      storeAllowMaxCount <= storeCurrentUsageCount
+    ) {
+      return (
+        <DefaultBtn disabled={true} fixed={true}>
+          지금은 만석이에요
+        </DefaultBtn>
+      );
+    } else if (breakResult) {
+      //브레이크 타임
+
+      return (
+        <DefaultBtn disabled={true} fixed={true}>
+          {breakResult}
+        </DefaultBtn>
+      );
     } else if (open < todayHourMin && todayHourMin < close) {
-      console.log(open, close, todayHourMin);
       return (
         <DefaultBtn
           fixed={true}
@@ -329,7 +394,13 @@ const StoreDetail = () => {
     // }
   }
 
-  // console.log(`가장 가까운 역: ${minDistanceStation}, 거리: ${minDistanceTime}`);
+  // const scrollRef = useRef(0);
+  // const scrollPosition = useRef(0);
+  // useEffect(() => {
+  //   // scrollPosition.current = scrollRef.current.scrollTop;
+  //   scrollPosition.current = window.scrollY;
+  //   window.scrollTo(0, scrollPosition.current);
+  // }, [accordionIsVisible]);
   return (
     <Page
       sx={{
@@ -341,6 +412,7 @@ const StoreDetail = () => {
       }}
     >
       <FullBox
+        // ref={scrollPosition}
         sx={{
           // position: "absolute",
           // height: "130vh",
@@ -353,7 +425,7 @@ const StoreDetail = () => {
         {/* <Box
           component={Button}
           onClick={() => {
-            navigate(-1);
+            navi(-1);
           }}
           sx={{
             position: "absolute",
@@ -366,7 +438,20 @@ const StoreDetail = () => {
           <IoIosArrowBack size={"50px"} color={theme.palette.White.main} />
         </Box> */}
 
-        <HeaderInner fixed={true}>이용 안내</HeaderInner>
+        <HeaderInner fixed={true}>
+          <Box
+            onClick={() => {
+              navi("/app/useguide");
+            }}
+            sx={{
+              position: "absolute",
+              top: "15px",
+              right: "8vw",
+            }}
+          >
+            <TextBody weight="Bold">이용 안내</TextBody>
+          </Box>
+        </HeaderInner>
         {/* image slider */}
         <FullBox
           className="slider-container"
@@ -618,6 +703,23 @@ const StoreDetail = () => {
                   ) : null}
                 </Box>
               </InnerBox>
+
+              {storeAllowMaxCount === 0 ? null : (
+                <InnerBox
+                  w={innerBoxWidth}
+                  text={
+                    <MdOutlineChair
+                      color={myTheme.palette.Gray.c400}
+                      size={innerBoxIconSize}
+                    />
+                  }
+                >
+                  <TextBody color="Gray.c600">
+                    여유 좌석 : {storeCurrentUsageCount}명 /{" "}
+                    {storeAllowMaxCount}명
+                  </TextBody>
+                </InnerBox>
+              )}
               <InnerBox
                 w={innerBoxWidth}
                 text={
@@ -644,69 +746,73 @@ const StoreDetail = () => {
           </FullBox>
 
           <Boxs variant="SecctionLine" sx={{ my: 2.5 }}></Boxs>
-          <InBox
-            sx={{
-              justifySelf: "center",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "start",
-              gap: 1,
-            }}
-          >
-            <TextBodyLarge weight="Bold" color="Black.main">
-              카페 길찾기
-            </TextBodyLarge>
-
-            <TextBodyLarge
-              weight="Medium"
-              display="inline-flex"
-              color="Gray.c600"
-              textAlign="start"
+          <FullBox sx={{ display: "flex", justifyContent: "center" }}>
+            <InBox
+              sx={{
+                justifySelf: "center",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "start",
+                gap: 1,
+              }}
             >
-              {item.location}
-              {"  "}
+              <TextBodyLarge weight="Bold" color="Black.main">
+                카페 길찾기
+              </TextBodyLarge>
+
+              <TextBodyLarge
+                weight="Medium"
+                display="inline-flex"
+                color="Gray.c600"
+                textAlign="start"
+              >
+                {item.location}
+                {"  "}
+                <Box
+                  sx={{
+                    display: "inline-flex",
+                    height: "100%",
+                    color: "Gray.c600",
+                    transform: "scaleX(-1)",
+                  }}
+                  onClick={() => {
+                    sendMessageToRN({
+                      type: "copy",
+                      payload: {
+                        text: item.location,
+                      },
+                    });
+                  }}
+                >
+                  <GoCopy size={20} />
+                </Box>
+              </TextBodyLarge>
+
+              {Object.entries(item.stationDistance).map(([key, value]) => {
+                return (
+                  <TextBody color="Gray.c400">
+                    {/* <Box sx={{ display: "inline" }}></Box> */}⦁ {key}역{" "}
+                    {value.wayOut}번 출구에서 도보 {value.distance}분
+                  </TextBody>
+                );
+              })}
+
               <Box
                 sx={{
-                  display: "inline-flex",
-                  height: "100%",
-                  color: "Gray.c600",
-                  transform: "scaleX(-1)",
+                  borderRadius: "16px",
+                  my: 3,
                 }}
-                onClick={() => {
-                  sendMessageToRN({
-                    type: "copy",
-                    payload: {
-                      text: item.location,
-                    },
-                  });
-                }}
-              >
-                <GoCopy size={20} />
-              </Box>
-            </TextBodyLarge>
-
-            {Object.entries(item.stationDistance).map(([key, value]) => {
-              return (
-                <TextBody color="Gray.c400">
-                  {/* <Box sx={{ display: "inline" }}></Box> */}⦁ {key}역{" "}
-                  {value.wayOut}번 출구에서 도보 {value.distance}분
-                </TextBody>
-              );
-            })}
-
-            <Box
-              sx={{
-                borderRadius: "16px",
-                my: 3,
-              }}
-              component="img"
-              width={"100%"}
-              src={item.imgURL[item.imgURL.length - 1]}
-            ></Box>
-          </InBox>
+                component="img"
+                width={"100%"}
+                src={item.imgURL[item.imgURL.length - 1]}
+              ></Box>
+            </InBox>
+          </FullBox>
 
           {/* start button */}
-          <NextButton></NextButton>
+          <FullBox sx={{ display: "flex", justifyContent: "center" }}>
+            <NextButton></NextButton>
+          </FullBox>
         </FullBox>
       </FullBox>
 

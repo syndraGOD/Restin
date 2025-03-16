@@ -17,17 +17,29 @@ import { css } from "@emotion/react";
 const HeaderInner = ({
   fixed = false,
   backArrow = true,
+  backTo = -1,
   bgColor,
   onClise,
   position,
   children,
   ...props
 }) => {
-  const navigate = useNavigate();
+  const navi = useNavigate();
   return (
-    <Box sx={{ height: "50px" }}>
+    <Box
+      sx={{
+        // width: "100vw",
+        height: "50px",
+        minHeight: "50px", // IOS에서 height이 안먹힘
+        position: "relative",
+        justifySelf: "center",
+        // backgroundColor: "red",
+        backgroundColor: "transparent",
+      }}
+    >
       <FullBox
         sx={{
+          height: "50px",
           display: "flex",
           justifyContent: "center",
           alignContent: "center",
@@ -36,6 +48,7 @@ const HeaderInner = ({
         }}
         position={fixed ? "fixed" : "relative"}
         top={0}
+        left={0}
         zIndex={2}
         backgroundColor={bgColor ? bgColor : "White.main"}
         height="inherit"
@@ -44,7 +57,7 @@ const HeaderInner = ({
         {backArrow ? (
           <Box
             onClick={() => {
-              navigate(-1);
+              navi(backTo);
             }}
             sx={{
               position: "absolute",

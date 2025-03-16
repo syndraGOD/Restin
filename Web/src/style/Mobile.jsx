@@ -14,6 +14,7 @@ import { setStoreData } from "../store/modules/storeSlice";
 import { restinAPI } from "../api/config";
 import LoadingPage from "../pages/LoadingPage";
 import { sendMessageToRN } from "../api/RN/RNsend";
+import { setAnnounceImgs, setLoading } from "../store/modules/varSlice";
 
 export const MobilePage = ({ children }) => {
   const userData = useSelector((state) => state.userR.userData);
@@ -27,6 +28,10 @@ export const MobilePage = ({ children }) => {
   );
   const dispatch = useDispatch();
   useEffect(() => {
+    sendMessageToRN({
+      type: "cacheClear",
+      payload: {},
+    });
     const handleResize = () => {
       setwindowViewHeight(window.visualViewport?.height || window.innerHeight);
       console.log("높이", window.visualViewport?.height || window.innerHeight);
@@ -49,6 +54,8 @@ export const MobilePage = ({ children }) => {
   //
   //
   useEffect(() => {
+    console.log("WEB View : V 1.016");
+    dispatch(setLoading(true));
     const tokenLogin = async () => {
       if (auth_Token !== "") {
         try {
@@ -69,8 +76,10 @@ export const MobilePage = ({ children }) => {
             navi("/app/home");
           } else if (res.status === 401) {
             dispatch(setVerifiToken(""));
+            navi("/welcome/1");
             console.log("토큰 로그인 실패 (잘못된 토큰)");
           } else {
+            navi("/welcome/1");
             console.log("토큰 로그인 실패 (서버 오류)");
           }
         } catch (error) {
@@ -80,14 +89,35 @@ export const MobilePage = ({ children }) => {
       if (auth_Token === "") {
         console.log("토큰 없음-로그인 진행");
         navi("/welcome/1");
-        return;
       }
+      dispatch(setLoading(false));
     };
 
     tokenLogin();
   }, []);
   useEffect(() => {
     const storeDataSet = async () => {
+      try {
+        const res = await fetch(`${restinAPI}/imgs/announce_list`, {
+          mode: "cors",
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: "Bearer " + auth_Token,
+          },
+        });
+        if (res.status === 200) {
+          const RESjson = await res.json();
+          const imgs = RESjson.data;
+          dispatch(setAnnounceImgs(imgs));
+          // console.log("imgs : ", imgs);
+          console.log("공지 이미지 로드 성공!");
+        } else {
+          console.log("공지 이미지 로드 실패");
+        }
+      } catch (error) {
+        console.log("공지 이미지 로드 에러", error);
+      }
       try {
         const res = await fetch(`${restinAPI}/store/getStoreData`, {
           mode: "cors",
@@ -113,13 +143,14 @@ export const MobilePage = ({ children }) => {
     }
   }, [auth_Token]);
 
+  useEffect(() => {
+    if (storeData.length === 0) {
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
+  }, [storeData]);
   // const loginInit = () => {
-  //   sendMessageToRN({
-  //     type: "token",
-  //     payload: {
-  //       auth_token: userData.security.auth_token,
-  //     },
-  //   });
   // };
   //
   //
@@ -129,34 +160,55 @@ export const MobilePage = ({ children }) => {
     const receiver = (event) => {
       // const loc = useLocation(); useLocation 값이 왼지는 모르겠으나
       // 처음 참고한 그시점에서 고정되어버림 window사용
-      console.log("pathname", window.location.pathname);
-      console.log("hash", window.location.hash);
-      const { type, data } = JSON.parse(event.data);
-      if (type === "back") {
-        if (window.location.hash === "#isMobileAppEnd") {
-          sendMessageToRN({
-            type: "close",
-            payload: {},
-          });
-        } else if (
-          window.location.pathname === "/app/home" ||
-          window.location.pathname === "/welcome/1" ||
-          window.location.pathname === "/login/isuser"
-        ) {
-          navi("#isMobileAppEnd");
-        } else {
-          // console.log(location.pathname, "back");
-          navi(-1);
+
+      if (typeof window !== "undefined" && window.ReactNativeWebView) {
+        console.log("pathname", window.location.pathname);
+        console.log("hash", window.location.hash);
+        // console.log("event", event);
+        const { type, payload } = JSON.parse(event.data);
+        if (type === "back") {
+          if (window.location.hash !== "") {
+            if (window.location.hash === "#isMobileAppEnd") {
+              sendMessageToRN({
+                type: "close",
+                payload: {},
+              });
+            } else {
+              navi(-1);
+            }
+            return;
+          } else if (
+            window.location.pathname === "/app/home" ||
+            window.location.pathname === "/welcome/1" ||
+            window.location.pathname === "/login/isuser"
+          ) {
+            navi(window.location.pathname + "#isMobileAppEnd");
+          } else if (
+            window.location.pathname === "/purchase/payment" ||
+            window.location.pathname === "/purchase/finish"
+          ) {
+            navi("/app/home");
+          } else if (window.location.pathname === "/point/chargecomplete") {
+            navi(-2);
+          } else {
+            // console.log(location.pathname, "back");
+            navi(-1);
+          }
+        } else if (type === "loading") {
+          dispatch(setLoading(payload));
         }
+        // const handler = receiveWebviewMessageMap.get(type);
+        // handler?.(data);
       }
-      // const handler = receiveWebviewMessageMap.get(type);
-      // handler?.(data);
     };
+    // const BackHandle = () => {};
     window.addEventListener("message", receiver);
     document.addEventListener("message", receiver);
+    // window.addEventListener("popstate", receiver);
     return () => {
       window.removeEventListener("message", receiver);
       document.removeEventListener("message", receiver);
+      // window.removeEventListener("popstate", receiver);
     };
   }, []);
 
@@ -180,6 +232,7 @@ export const MobilePage = ({ children }) => {
         transform: translateX(-50%);
         /* transform: translate(-50%, -50%); */
         box-sizing: border-box;
+        //IOS설정
       `}
     >
       {loading ? <LoadingPage /> : null}

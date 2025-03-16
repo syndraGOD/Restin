@@ -48,7 +48,7 @@ const UseAgree = () => {
       dispatch(setuserData(user.data));
       dispatch(setVerifiToken(user.data.security.auth_token));
       //userState에 연결
-      navi("/app/home");
+      navi("/app/home", { replace: true });
     } else {
       console.log(error);
     }

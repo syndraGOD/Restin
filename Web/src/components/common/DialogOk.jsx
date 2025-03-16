@@ -10,6 +10,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import { DefaultBtn } from "./Btns";
+import { useEffect } from "react";
 
 export const DialogAlert = ({ open, h2, children }) => {
   const navi = useNavigate();
@@ -32,10 +33,13 @@ export const DialogAlert = ({ open, h2, children }) => {
           flex-direction: column;
           justify-content: center;
           align-items: center;
+          padding: 12px;
         }
       `}
     >
-      <TextHeader3 weight="Bold">{h2}</TextHeader3>
+      <TextHeader3 weight="Bold" mb={2}>
+        {h2}
+      </TextHeader3>
       <TextBodyLarge>{children}</TextBodyLarge>
       {/* <DefaultBtn onClick={onClose}>확인</DefaultBtn> */}
     </Dialog>
@@ -117,7 +121,7 @@ export const DialogOK = ({
   const onClose = () => {
     navi(-1);
   };
-
+  useEffect(() => {}, []);
   return (
     <>
       {/* {location.hash === "#dialog" ? ( */}

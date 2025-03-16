@@ -34,7 +34,11 @@ const PointLogItem = ({
   const storeData = useSelector((state) => state.storeR.storeData);
   let storeName;
   if (storeUUID) {
-    storeName = storeData.find((item) => item.UUID === storeUUID).name;
+    storeName = storeData.find((item) => item.UUID === storeUUID)?.name;
+    storeName =
+      storeName === undefined || storeName === null || storeName === ""
+        ? "삭제된 가게"
+        : storeName;
   } else {
     storeName = description;
   }
@@ -110,6 +114,8 @@ const PointLogItem = ({
 
 const PointLogList = () => {
   const verifiToken = useSelector((state) => state.tokenR.verifiToken);
+
+  const loading = useSelector((state) => state.varR.loading);
   const dispatch = useDispatch();
   const [pointLogList, setPointLogList] = useState([]);
   useEffect(() => {
@@ -144,46 +150,51 @@ const PointLogList = () => {
         sx={{ display: "flex", flexDirection: "column", height: "100%" }}
       >
         <HeaderInner backArrow={true}>포인트 내역</HeaderInner>
-        {pointLogList.length > 0 ? (
-          <InBox
-            sx={{
-              my: 3,
-              flex: 1,
-              backgroundColor: "White.main",
-              overflowY: "auto",
-              "&::-webkit-scrollbar": {
-                display: "none",
-              },
-            }}
-          >
-            {pointLogList.map((item) => {
-              console.log(item);
-              return (
-                <PointLogItem
-                  key={uuidv4()}
-                  {...item}
-                  pointLogList={pointLogList}
-                  setPointLogList={setPointLogList}
-                />
-              );
-            })}
-          </InBox>
+
+        {!loading ? (
+          pointLogList.length > 0 ? (
+            <InBox
+              sx={{
+                my: 3,
+                flex: 1,
+                backgroundColor: "White.main",
+                overflowY: "auto",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+              }}
+            >
+              {pointLogList.map((item) => {
+                // console.log(item);
+                return (
+                  <PointLogItem
+                    key={uuidv4()}
+                    {...item}
+                    pointLogList={pointLogList}
+                    setPointLogList={setPointLogList}
+                  />
+                );
+              })}
+            </InBox>
+          ) : (
+            <InBox
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignContent: "center",
+                flexDirection: "column",
+                textAlign: "center",
+                flex: 1,
+                backgroundColor: "White.main",
+              }}
+            >
+              <TextHeader4 color="Black.main">
+                아직 포인트 내역이 없어요
+              </TextHeader4>
+            </InBox>
+          )
         ) : (
-          <InBox
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignContent: "center",
-              flexDirection: "column",
-              textAlign: "center",
-              flex: 1,
-              backgroundColor: "White.main",
-            }}
-          >
-            <TextHeader4 color="Black.main">
-              아직 포인트 내역이 없어요
-            </TextHeader4>
-          </InBox>
+          <Boxs variant="EmptyBox" />
         )}
       </FullBox>
     </Page>

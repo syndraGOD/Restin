@@ -16,19 +16,25 @@ import { BsFillRecordCircleFill } from "react-icons/bs";
 import tossPayImg from "@assets/Logo/tossLogo.png";
 import kakaoPayImg from "@assets/Logo/kakaoLogo.png";
 import { VscCircleLarge } from "react-icons/vsc";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
 import { DialogAlert, DialogOK } from "../../components/common/DialogOk";
 import { restinAPI } from "../../api/config";
 import { setuserData } from "@store/modules/userSlice";
 import * as PortOne from "@portone/browser-sdk/v2";
+import { sendMessageToRN } from "../../api/RN/RNsend";
+import { setLoading } from "../../store/modules/varSlice";
+import { v4 as uuidv4 } from "uuid";
+
+//다른 결제 페이지를 만들어야 한다면, 먼저 서버에 purchaseTicket(임시)를 만들고
+// 음 url/purchase?ticket=~~ 방식으로 접근 해서 티켓 데이터를 받아오는건 어떨까?
+// 티켓이 일정시간 이상 결제안되면 삭제시켜버리고 ㅇㅇ
 
 const PurchaseIng = () => {
   const userData = useSelector((state) => state.userR.userData);
   const storeDataAll = useSelector((state) => state.storeR.storeData);
   const auth_token = useSelector((state) => state.tokenR.verifiToken);
-
   const usageData = userData.usage;
   const storeData = storeDataAll.find(
     (store) => store.UUID === userData.usage.storeUUID
@@ -36,6 +42,7 @@ const PurchaseIng = () => {
 
   const [selectedPayment, setSelectedPayment] = useState("point");
   const [failedReason, setFailedReason] = useState("");
+
   const navi = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -51,21 +58,22 @@ const PurchaseIng = () => {
     }
   };
   const paymentFunction = async () => {
+    // dispatch(setLoading(true));
     const portOnePayment = async (data) => {
-      console.log("ㅎㅇ?");
-      const uid = Date.now().toString(16);
-      const response = await PortOne.requestPayment({
-        storeId: import.meta.env.VITE_PORTONE_STORE_ID,
-        paymentId: uid,
-        orderName: "주문명",
-        currency: "CURRENCY_KRW",
-        // redirectUrl: `http://test.restin.co.kr/`,
-        ...data,
+      const uid = uuidv4();
+      sendMessageToRN({
+        type: "purchase_portone",
+        payload: {
+          auth_token,
+          data: {
+            storeId: import.meta.env.VITE_PORTONE_STORE_ID,
+            paymentId: uid,
+            orderName: "서비스 이용",
+            currency: "CURRENCY_KRW",
+            ...data,
+          },
+        },
       });
-      if (response.code !== undefined) {
-        // 오류 발생
-        return alert(response.message);
-      }
     };
     if (selectedPayment === "point") {
       try {
@@ -85,18 +93,23 @@ const PurchaseIng = () => {
             `/purchase/finish?purchaseAmount=${data.purchaseAmount}&usageDurationMinutes=${data.usageDurationMinutes}&selectedPayment=${selectedPayment}`
           );
         } else {
-          setFailedReason(data.message || data.error);
+          setFailedReason(
+            "결제에 실패하였습니다. 오류일 수 있으니 만약 결제를 완료하신 상태면, 어플을 재부팅 후 확인해주세요"
+          );
           console.log(data.message || data.error);
           navi("#failedPurchase");
         }
       } catch (error) {
+        setFailedReason("오류가 발생하였습니다.");
         console.error("Error:", error);
+        navi("#failedPurchase");
       }
     } else if (selectedPayment === "tosspay") {
       const data = {
-        channelKey: import.meta.env.VITE_PORTONE_TOSSPAY_TEST,
+        channelKey: import.meta.env.VITE_PORTONE_TOSSPAY_PRODUCTION,
         totalAmount: parseInt(usageData.totalUsagePrice),
         payMethod: "EASY_PAY",
+        selectedPayment: "tosspay",
       };
       portOnePayment(data);
     } else if (selectedPayment === "kakaopay") {
@@ -104,13 +117,84 @@ const PurchaseIng = () => {
         channelKey: import.meta.env.VITE_PORTONE_KAKAOPAY_TEST,
         totalAmount: parseInt(usageData.totalUsagePrice),
         payMethod: "EASY_PAY",
+        selectedPayment: "kakaopay",
       };
       portOnePayment(data);
     }
+    // dispatch(setLoading(false));
   };
+  useEffect(() => {
+    // const receiver = platform === ios ? window : document;
+    const receiver = async (event) => {
+      // const loc = useLocation(); useLocation 값이 왼지는 모르겠으나
+      // 처음 참고한 그시점에서 고정되어버림 window사용
+
+      if (typeof window !== "undefined" && window.ReactNativeWebView) {
+        const { type, payload } = JSON.parse(event.data);
+        if (type === "portone_complete") {
+          try {
+            const { result, purchaseData } = payload;
+            console.log(purchaseData.selectedPayment);
+            const res = await fetch(`${restinAPI}/purchase/usage/portone`, {
+              mode: "cors",
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${auth_token}`,
+              },
+              body: JSON.stringify({
+                paymentId: result.paymentId,
+                paymentMethod: purchaseData.payMethod,
+                selectedPayment: purchaseData.selectedPayment,
+              }),
+            });
+            // if (res.status === 200) {
+            //   console.log('결제완료!', result);
+            // }
+            const RESdata = await res.json();
+            const { data, userData: New_userData } = RESdata;
+            if (res.status === 200) {
+              console.log("portone_complete", data);
+              dispatch(setuserData(New_userData));
+              navi(
+                `/purchase/finish?purchaseAmount=${data.purchaseAmount}&usageDurationMinutes=${data.usageDurationMinutes}&selectedPayment=${purchaseData.selectedPayment}`
+              );
+            } else {
+              setFailedReason(
+                "결제에 실패하였습니다. 오류일 수 있으니 만약 결제를 완료하신 상태면, 어플을 재부팅 후 확인해주세요"
+              );
+              console.log(data.message || data.error);
+              navi("#failedPurchase");
+            }
+          } catch (error) {
+            setFailedReason("오류가 발생하였습니다.");
+            console.error("Error:", error);
+            navi("#failedPurchase");
+          }
+        }
+      }
+    };
+    window.addEventListener("message", receiver);
+    document.addEventListener("message", receiver);
+    return () => {
+      window.removeEventListener("message", receiver);
+      document.removeEventListener("message", receiver);
+    };
+  }, []);
   return (
-    <FullBox sx={{ height: "100%", overflowY: "auto", position: "relative" }}>
-      <HeaderInner fixed={true}>결제</HeaderInner>
+    <FullBox
+      sx={{
+        height: "100%",
+        overflowY: "auto",
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "start",
+      }}
+    >
+      <HeaderInner fixed={true} backTo="/app/home">
+        결제
+      </HeaderInner>
       <InBox justifySelf="center">
         {/* 이용 내역 */}
         <Box sx={styles.section}>
@@ -168,6 +252,11 @@ const PurchaseIng = () => {
           <TextHeader4 color="Black" weight="Bold">
             결제 수단
           </TextHeader4>
+          {usageData.totalUsagePrice === 0 ? (
+            <TextBody color="Gray.c600">
+              ㄴ 결제금액이 0원일경우 포인트 결제 선택
+            </TextBody>
+          ) : null}
           <Box
             sx={{
               ...styles.paymentMethod,
@@ -214,29 +303,33 @@ const PurchaseIng = () => {
                 </TextBodySmall>
               </Box>
             </Box>
-            <Box
-              sx={styles.methodItem}
-              onClick={() => setSelectedPayment("tosspay")}
-            >
-              {selectedPayment === "tosspay" ? (
-                <BsFillRecordCircleFill
-                  color={theme.palette.PrimaryBrand.main}
-                  size={20}
-                />
-              ) : (
-                <VscCircleLarge size={20} color={theme.palette.Gray.c400} />
-              )}
-              <Box display="flex" alignItems="center" gap={1}>
-                <Box
-                  component="img"
-                  src={tossPayImg}
-                  alt="토스페이"
-                  height="20px"
-                />
-                <TextBodyLarge>토스페이</TextBodyLarge>
+            {usageData.totalUsagePrice === 0 ? null : (
+              <Box
+                sx={styles.methodItem}
+                onClick={() => setSelectedPayment("tosspay")}
+              >
+                {selectedPayment === "tosspay" ? (
+                  <BsFillRecordCircleFill
+                    color={theme.palette.PrimaryBrand.main}
+                    size={20}
+                  />
+                ) : (
+                  <VscCircleLarge size={20} color={theme.palette.Gray.c400} />
+                )}
+                {
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Box
+                      component="img"
+                      src={tossPayImg}
+                      alt="토스페이"
+                      height="20px"
+                    />
+                    <TextBodyLarge>토스페이</TextBodyLarge>
+                  </Box>
+                }
               </Box>
-            </Box>
-            <Box
+            )}
+            {/* <Box
               sx={styles.methodItem}
               onClick={() => setSelectedPayment("kakaopay")}
             >
@@ -257,7 +350,7 @@ const PurchaseIng = () => {
                 />
                 <TextBodyLarge>카카오페이</TextBodyLarge>
               </Box>
-            </Box>
+            </Box> */}
           </Box>
         </Box>
       </InBox>
@@ -333,7 +426,7 @@ const PurchaseIng = () => {
         h2="포인트가 부족해요"
         text={`충전 후 결제할까요?`}
         isok={() => {
-          navi("/point/charge");
+          navi("/point/charge", { replace: true });
         }}
       />
       <DialogAlert open="failedPurchase" h2="결제 실패">

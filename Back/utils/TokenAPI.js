@@ -13,7 +13,7 @@ const generateToken = (payload) => {
   const month = day * 30;
 
   const now = Math.floor(Date.now() / 1000); // 현재 시각 (초 단위)
-  const tokenExp = day * 1; // 1일을 초 단위로 환산
+  const tokenExp = day * 90; // 1일을 초 단위로 환산
   const expirationTime = now + tokenExp;
 
   const options = {

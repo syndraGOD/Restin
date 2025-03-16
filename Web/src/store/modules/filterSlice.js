@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   filter: {
-    line: "line1",
-    station: "수원",
+    line: "line2",
+    station: "신촌",
   },
 };
 
