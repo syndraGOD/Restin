@@ -9,8 +9,8 @@ lerna-debug.log*
 node_modules
 configFiles
 *.local
-firebaseConfig.js
-
+.env
+configFiles/*
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

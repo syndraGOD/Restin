@@ -18,6 +18,7 @@ const {
 } = require("../utils/CRUD_DATA.js");
 const { collection, doc, getDoc, setDoc } = require("firebase/firestore");
 const { db } = require("../configFiles/firebaseConfig.js");
+const { ADMIN_ACCOUNTS } = require("../configFiles/config.js");
 const { v4: uuidv4 } = require("uuid");
 
 // admin 라우터에만 세션 미들웨어 적용
@@ -40,26 +41,6 @@ router.use(
 router.use(express.static(path.join(__dirname)));
 
 // 여러 관리자 계정 정보
-const ADMIN_ACCOUNTS = [
-  {
-    adminId: "01072105819",
-    password: "gksdnf12@@",
-    name: "김한울",
-    role: "super",
-  },
-  {
-    adminId: "01066540149",
-    password: "11112222",
-    name: "Dobby",
-    role: "admin_normal",
-  },
-  {
-    adminId: "01023961736",
-    password: "a1234",
-    name: "BulDakBoggummyun",
-    role: "admin_normal",
-  },
-];
 
 // 관리자 인증 미들웨어
 const adminAuthMiddleware = (req, res, next) => {
