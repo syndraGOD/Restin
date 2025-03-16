@@ -6,11 +6,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-node_modules
 configFiles
+node_modules
 *.local
-.env
-configFiles/*
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
