@@ -19,3 +19,8 @@ node_modules
 *.njsproj
 *.sln
 *.sw?
+ProjectSettings.json
+slnx.sqlite
+VSWorkspaceState.json
+*.vsidx
+.wsuo

@@ -67,7 +67,8 @@ const user_smsVerifyMiddleware = async (req, res, next) => {
       if (
         phoneNumber === "01072105819" ||
         phoneNumber === "01066540149" ||
-        phoneNumber === "01023961736"
+        phoneNumber === "01023961736" ||
+        phoneNumber === "01027065225" 
       ) {
         verifiCode = 111111;
         req.body.verifiCode = verifiCode;
