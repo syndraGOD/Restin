@@ -1,7 +1,7 @@
 const data = [
   //가게 하나
   {
-    UUID: "", //입력X, 고유DB인식코드asdfqwer
+    UUID: "", //입력X, 고유DB인식코드asdfqwers
     id: 1, //가게 고유번호, 1~ 순차적으로증가
     signDate: null, //수정X, 가게를 Restin에 등록한 날짜
     name: "호우수원", // 가게 이름
