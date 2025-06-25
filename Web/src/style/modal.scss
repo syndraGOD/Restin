@@ -19,9 +19,10 @@
     display: flex;
     justify-content: space-between;
     font-size: 20px;
-    font-weight: 800;
+    font-weight: 600;
     margin-top: 4px;
     position: relative;
+    color: #2f2f2f;
   }
 
   .header_text {
@@ -31,6 +32,10 @@
   .close {
     position: absolute;
     right: 0;
+    img {
+      width: 20px;
+      font-weight: 600;
+    }
   }
 
   .subtext {
@@ -54,7 +59,7 @@
     border-radius: 16px;
     border: 1px solid #d1d1d1;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     color: #8b8b8b;
     padding: 16px;
   }
