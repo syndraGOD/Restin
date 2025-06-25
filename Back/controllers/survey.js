@@ -29,7 +29,7 @@ const createSurveyMiddleware = async (req, res, next) => {
     res.status(400).json({ message: `contents is null ${req.body}` });
     return;
   }
-  if (userDoc && contents?.length >= 5) {
+  if (userDoc && contents?.length >= 2) {
     const newSurveyDoc = {
       userId: userId,
       USE_FG: "Y",

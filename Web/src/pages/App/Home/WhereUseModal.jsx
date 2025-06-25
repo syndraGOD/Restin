@@ -52,7 +52,7 @@ const WhereUseModal = ({ onClose }) => {
                 placeholder="동네 이름, 역세권, ○○학교 앞 등"
                 value={contents}
                 onChange={(e) => setContents(e.target.value)}
-                minLength={5}
+                minLength={2}
               />
             </div>
             <div className="button_frame">
