@@ -1,4 +1,5 @@
 import "../../../style/modal.scss";
+import cancelSVG from "@assets/icons/close.svg";
 
 const WhereUseModal = () => {
   return (
@@ -8,7 +9,9 @@ const WhereUseModal = () => {
         <div className="dialog">
           <div className="header">
             <div className="header_text">지역을 알려주세요</div>
-            <div className="close">×</div>
+            <div className="close">
+              <img src={cancelSVG}></img>
+            </div>
           </div>
 
           <div className="subtext">
