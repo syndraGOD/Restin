@@ -32,6 +32,7 @@ import { VscCircleLarge } from "react-icons/vsc";
 import { AnnounceBanner } from "../../components/common/Banner.jsx";
 import Slider from "react-slick/lib/slider.js";
 import { restinAPI } from "../../api/config.js";
+import WhereUseModal from "./Home/WhereUseModal.jsx";
 
 // window.location.reload();
 const Home = () => {
@@ -419,6 +420,7 @@ const Home = () => {
           <Navigation select="home" />
         </Box>
       </Page>
+      <WhereUseModal />
     </>
   );
 };
