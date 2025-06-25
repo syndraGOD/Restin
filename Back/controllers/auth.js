@@ -42,7 +42,13 @@ const verifyTokenMiddleware = async (req, res, next) => {
     const secretKey = process.env.JWT_SECRET_KEY;
     const jwtDecoded = jwt.verify(userToken, secretKey);
     const userId = jwtDecoded.userId;
-    console.log(utcFromTimestamp(jwtDecoded.exp));
+    console.log(utcFromTimestamp(jwtDecoded.exp), userId);
+    if (!userId) {
+      res.status(401).json({
+        message: "userId is null",
+      });
+      return;
+    }
     req.userId = userId;
     next();
   } catch (error) {
@@ -68,7 +74,7 @@ const user_smsVerifyMiddleware = async (req, res, next) => {
         phoneNumber === "01072105819" ||
         phoneNumber === "01066540149" ||
         phoneNumber === "01023961736" ||
-        phoneNumber === "01027065225" 
+        phoneNumber === "01027065225"
       ) {
         verifiCode = 111111;
         req.body.verifiCode = verifiCode;

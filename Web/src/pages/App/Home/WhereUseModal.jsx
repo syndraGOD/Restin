@@ -1,7 +1,33 @@
 import "../../../style/modal.scss";
 import cancelSVG from "@assets/icons/close.svg";
+import { useState } from "react";
+import { restinAPI } from "../../../api/config";
+import { useSelector } from "react-redux";
 
-const WhereUseModal = () => {
+const WhereUseModal = ({ onClose }) => {
+  const auth_Token = useSelector((state) => state.tokenR.verifiToken);
+  const [contents, setContents] = useState("");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const fetchExistWantLocation = async () => {
+      const res = await fetch(`${restinAPI}/survey/submit/WHERE_USE_LOCATION`, {
+        mode: "cors",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: "Bearer " + auth_Token,
+        },
+        body: JSON.stringify({ contents }),
+      });
+      const awaitRes = await res.json();
+      if (res.status !== 200) {
+      } else {
+        console.log(awaitRes);
+      }
+      onClose();
+    };
+    fetchExistWantLocation();
+  };
   return (
     <>
       <div id="where_use_dialog">
@@ -18,22 +44,25 @@ const WhereUseModal = () => {
             레스틴을 어디서 사용하고 싶으세요?<br></br>알려주신 지역부터 카페를
             모집할게요!
           </div>
-          <div className="input_frame">
-            <textarea
-              id="locationWrite"
-              type="text"
-              placeholder="동네 이름, 역세권, ○○학교 앞 등"
-            />
-          </div>
-          <div className="button_frame">
-            <button>의견 보내기</button>
-          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="input_frame">
+              <textarea
+                id="locationWrite"
+                type="text"
+                placeholder="동네 이름, 역세권, ○○학교 앞 등"
+                value={contents}
+                onChange={(e) => setContents(e.target.value)}
+                minLength={5}
+              />
+            </div>
+            <div className="button_frame">
+              <button type="submit">의견 보내기</button>
+            </div>
+          </form>
         </div>
       </div>
     </>
   );
 };
-// 헤이룽 뭐가 안되나용 수진님은 제 마우스 위치 ㅂ여용/?네 보여요 전 안보여요
-// 뭔가 흔드는것 같은데 안 움직였어요 ㅇㅋㅇㅋ
 
 export default WhereUseModal;

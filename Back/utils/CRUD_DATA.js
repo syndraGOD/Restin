@@ -7,8 +7,26 @@ const {
   updateDoc,
   Timestamp,
   runTransaction,
+  setDoc,
 } = require("firebase/firestore");
 const { db } = require("../configFiles/firebaseConfig");
+
+async function queryWrite(collectionName, docName, data) {
+  try {
+    const docRef = doc(db, collectionName, docName);
+    const result = await setDoc(docRef, data);
+    return {
+      success: true,
+      data: result,
+    };
+  } catch (error) {
+    console.error("Query error:", error);
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+}
 
 // 컬렉션에서 userId로 쿼리하는 함수
 async function queryRead(collectionName, key, value, sorted) {
@@ -132,6 +150,7 @@ module.exports = {
   updateData,
   updateDataWithTransaction,
   getTimestamp,
+  queryWrite,
 };
 
 // 사용 예시:

@@ -11,6 +11,7 @@ const adminRouter = require("./admin/admin_routes.js"); //관리자 페이지 �
 const point = require("./routes/pointRoutes.js"); //point 관련 라우터
 const purchase = require("./routes/purchaseRoutes.js"); //purchase 관련 라우터
 const imgs = require("./routes/imgRoutes.js");
+const survey = require("./routes/surveyRoutes.js");
 const app = express();
 //
 // 라우터 설정
@@ -33,6 +34,7 @@ app.use(cors(corsOptions));
 //   }
 // });
 app.use(express.json({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use("/store", store); // 스토어 정보 CRUD 라우터
 app.use("/auth", auth); // 회원가입, 로그인 관련 라우터
 app.use("/user", user); // 유저가 인앱에서 하는 모든 행동에 관한 라우터
@@ -42,6 +44,7 @@ app.use("/api/admin", adminRouter); // 관리자 페이지
 app.use("/point", point); //point 관련 라우터
 app.use("/purchase", purchase); //purchase 관련 라우터
 app.use("/imgs", imgs); // 이미지 전송 라우터
+app.use("/survey", survey); // 설문 관련 라우터
 app.get((req, res) => {
   res.status(404).send("not founds");
 });
