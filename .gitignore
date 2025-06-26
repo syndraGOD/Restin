@@ -28,3 +28,4 @@ vendor
 *.cache
 .DS_Store
 Web/.firebase/hosting.ZGlzdA.cache
+Config/*
