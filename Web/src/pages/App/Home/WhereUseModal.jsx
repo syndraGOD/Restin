@@ -39,9 +39,9 @@ const WhereUseModal = ({ onClose }) => {
         <div className="dialog">
           <div className="header">
             <div className="header_text">지역을 알려주세요</div>
-            <div onClick={handleCloseBtn} className="close">
+            {/* <div onClick={handleCloseBtn} className="close"> 
               <img src={cancelSVG}></img>
-            </div>
+            </div> */}
           </div>
 
           <div className="subtext">
