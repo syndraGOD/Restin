@@ -1,6 +1,6 @@
 import "../../../style/modal.scss";
 import cancelSVG from "@assets/icons/close.svg";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { restinAPI } from "../../../api/config";
 import { useSelector } from "react-redux";
 
@@ -28,6 +28,10 @@ const WhereUseModal = ({ onClose }) => {
     };
     fetchExistWantLocation();
   };
+
+  const handleCloseBtn = () => {
+    onClose();
+  };
   return (
     <>
       <div id="where_use_dialog">
@@ -35,7 +39,7 @@ const WhereUseModal = ({ onClose }) => {
         <div className="dialog">
           <div className="header">
             <div className="header_text">지역을 알려주세요</div>
-            <div className="close">
+            <div onClick={handleCloseBtn} className="close">
               <img src={cancelSVG}></img>
             </div>
           </div>
@@ -49,10 +53,11 @@ const WhereUseModal = ({ onClose }) => {
               <textarea
                 id="locationWrite"
                 type="text"
-                placeholder="동네 이름, 역세권, ○○학교 앞 등"
+                placeholder="동네 이름, 역세권, ○○학교 앞 등&#13;&#10;자유롭게 작성해 주세요"
                 value={contents}
                 onChange={(e) => setContents(e.target.value)}
-                minLength={5}
+                minLength={2}
+                required
               />
             </div>
             <div className="button_frame">

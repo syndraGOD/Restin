@@ -29,11 +29,12 @@ const createSurveyMiddleware = async (req, res, next) => {
     res.status(400).json({ message: `contents is null ${req.body}` });
     return;
   }
-  if (userDoc && contents?.length >= 5) {
+  if (userDoc && contents?.length >= 2) {
+    const now = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
     const newSurveyDoc = {
       userId: userId,
       USE_FG: "Y",
-      REG_DT: new Date().toISOString().split(".")[0],
+      REG_DT: now.toISOString().split(".")[0],
       contents: contents,
       profile: userDoc.profile,
     };
