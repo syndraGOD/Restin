@@ -35,6 +35,10 @@ export const MobilePage = ({ children }) => {
     const handleResize = () => {
       setwindowViewHeight(window.visualViewport?.height || window.innerHeight);
       console.log("높이", window.visualViewport?.height || window.innerHeight);
+      window.scrollTo(0, 0);
+      setTimeout(() => {window.scrollTo(0, 0);}, 50);
+      setTimeout(() => {window.scrollTo(0, 0);}, 100);
+      setTimeout(() => {window.scrollTo(0, 0);}, 300);
     };
     window.visualViewport.addEventListener("resize", handleResize);
     return () => {

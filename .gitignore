@@ -26,3 +26,8 @@
 # *.sw?
 vendor
 .env*
+*.cache
+.DS_Store
+Web/.firebase/hosting.ZGlzdA.cache
+Config/*
+mobile/.DS_Store

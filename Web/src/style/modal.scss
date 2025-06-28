@@ -1,0 +1,105 @@
+#where_use_dialog {
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  .dialog {
+    width: 80%;
+    min-height: 200px;
+    padding: 20px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+    z-index: 2;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 4px;
+    position: relative;
+    color: #2f2f2f;
+    padding: 4px;
+  }
+
+  .header_text {
+    margin: auto;
+    padding: 4px 0 0 0;
+  }
+
+  .close {
+    position: absolute;
+    right: 0;
+    padding: 4px;
+    img {
+      width: 20px;
+      font-weight: 600;
+    }
+  }
+
+  .subtext {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 150%;
+    display: flex;
+    justify-content: center;
+    margin: 12px 0 16px 0;
+    color: #464646;
+    text-align: center;
+  }
+  .input_frame {
+    display: flex;
+    justify-content: center;
+  }
+  #locationWrite {
+    width: 100%;
+    height: 104px;
+    margin: 4px 0px 4px 0px;
+    border-radius: 16px;
+    border: 1px solid #d1d1d1;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 150%;
+    color: #747474;
+    padding: 16px;
+    box-sizing: border-box;
+    ::placeholder {
+      white-space: pre-line;
+    }
+  }
+  .button_frame {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    justify-content: center;
+  }
+  button {
+    width: 100%;
+    height: 56px;
+    background-color: #fa851e;
+    border: none;
+    border-radius: 16px;
+    margin: 12px 0px 0px 0px;
+    font-size: 16px;
+    font-weight: 800;
+    color: #ffffff;
+    padding: 0;
+  }
+
+  .dim {
+    position: fixed; /* 뷰포트 기준으로 고정 */
+    top: 0;
+    left: 0;
+    width: 100%; /* 뷰포트 전체 너비 */
+    height: 100%; /* 뷰포트 전체 높이 */
+    background-color: rgba($color: #000000, $alpha: 0.5); /* 반투명 검정 배경 */
+    z-index: 1; /* 모달 컨텐츠보다 낮은 z-index */
+    display: flex; /* Flexbox를 사용하여 내부 요소를 가운데 정렬할 수도 있지만, dim은 보통 단독 배경 */
+    justify-content: center;
+    align-items: center;
+  }
+}

@@ -32,6 +32,7 @@ import { VscCircleLarge } from "react-icons/vsc";
 import { AnnounceBanner } from "../../components/common/Banner.jsx";
 import Slider from "react-slick/lib/slider.js";
 import { restinAPI } from "../../api/config.js";
+import WhereUseModal from "./Home/WhereUseModal.jsx";
 
 // window.location.reload();
 const Home = () => {
@@ -61,53 +62,30 @@ const Home = () => {
   const [data, setData] = useState();
   const [SortPageOpen, setSortPageOpen] = useState(false);
   const [sortUser, sortUserSet] = useState(sortList.recommend);
+  const [whereUseModalOpen, setWhereUseModalOpen] = useState(false);
 
   const navi = useNavigate();
   // console.log(window.history);
   const dispatch = useDispatch();
   const myTheme = useTheme();
-  // const storeListGetAll = async (db) => {
-  //   if (storeData.length === 0) {
-  //     const colName = "STORE";
-  //     const col = collection(db, colName);
 
-  //     const temps = await getDocs(col);
-  //     const resData = [];
-  //     temps.forEach((item) => {
-  //       resData.push(item.data());
-  //     });
-  //     const getItemImgList = async (array) => {
-  //       const newImgList = await Promise.all(
-  //         array.map(async (item) => {
-  //           let imgArr = [];
-  //           const ref = `StoreImage/store(${item.id})`;
-  //           const itemImgList = await getImgList(ref);
-  //           await Promise.all(
-  //             itemImgList.items.map(async (img) => {
-  //               const imgURL = await getImg(img.fullPath);
-  //               imgArr.push(imgURL);
-  //             })
-  //           );
-  //           return { ...item, imgURL: imgArr };
-  //         })
-  //       );
-  //       dispatch(setStoreData(newImgList));
-  //     };
-  //     await getItemImgList(resData);
-  //   } else {
-  //     return;
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   console.log("이미지 다운로드 및 실행");
-  //   const init = async () => {
-  //     await storeListGetAll(db);
-  //     await storeListFilltering();
-  //     setLoading(true);
-  //   };
-  //   init();
-  // }, []);
+  useEffect(() => {
+    const fetchExistWantLocation = async () => {
+      const res = await fetch(`${restinAPI}/survey/exist/WHERE_USE_LOCATION`, {
+        mode: "cors",
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: "Bearer " + auth_Token,
+        },
+      });
+      const awaitRes = await res.json();
+      if (res.status !== 200) {
+        setWhereUseModalOpen(true);
+      }
+    };
+    fetchExistWantLocation();
+  }, []);
 
   const storeListFilltering = async () => {
     //필터링
@@ -236,48 +214,6 @@ const Home = () => {
               <IoIosArrowDown size={24} color={theme.palette.Gray.c900} />
             </Box>
           </InBox>
-          {/* <Box
-              sx={{
-                width: 1 / 2,
-                borderRadius: "0px",
-                borderRight: "1px solid #b0b0b0",
-                alignItems: "center",
-                padding: "15px 0px",
-                display: "flex",
-                justifyContent: "center",
-              }}
-              component={Link}
-              to={{
-                pathname: "filter",
-              }}
-            >
-              <img
-                src={SubwayIcons[filter.line.replace("line", "")]}
-                // {`/src/assets/subwayicons/line (${filter.line.replace(
-                //   "line",
-                //   ""
-                // )}).png`}
-                alt="subway line icons"
-                width={"24px"}
-                css={css`
-                  margin-right: 8px;
-                  border-radius: 10px;
-                `}
-              />
-              <TextBody weight="Bold" color="Black">
-                {filter.station}역
-              </TextBody>
-            </Box>
-            <Box
-              sx={{ width: 1 / 2, padding: "15px 0px", position: "relative" }}
-              onClick={() => {
-                setSortPageOpen(true);
-              }}
-            >
-              <TextBody weight="Bold" color="Black">
-                {sortUser.text}
-              </TextBody>
-            </Box> */}
 
           <DialogList
             title="정렬"
@@ -419,6 +355,13 @@ const Home = () => {
           <Navigation select="home" />
         </Box>
       </Page>
+      {whereUseModalOpen && (
+        <WhereUseModal
+          onClose={() => {
+            setWhereUseModalOpen(false);
+          }}
+        />
+      )}
     </>
   );
 };
