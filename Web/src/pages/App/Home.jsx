@@ -70,7 +70,7 @@ const Home = () => {
 
   useEffect(() => {
     const fetchExistWantLocation = async () => {
-      const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/survey/exist/WHERE_USE_LOCATION`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/survey/exist/WHERE_USE_LOCATION`, {
         mode: "cors",
         method: "GET",
         headers: {

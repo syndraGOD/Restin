@@ -65,7 +65,7 @@ const StoreDetail = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/user/usage/storeUsageCount`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/user/usage/storeUsageCount`, {
           mode: "cors",
           method: "POST",
           headers: {
@@ -106,7 +106,7 @@ const StoreDetail = () => {
 
   const nextBtnClick = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/user/usage/start`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/user/usage/start`, {
         mode: "cors",
         method: "POST",
         headers: {

@@ -30,7 +30,7 @@ const UseAgree = () => {
   const dispatch = useDispatch();
 
   const nextBtnClick = async () => {
-    const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/auth/register`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
       mode: "cors",
       method: "POST",
       headers: {

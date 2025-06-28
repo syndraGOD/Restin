@@ -17,7 +17,7 @@ export const AnnounceBanner = () => {
   const [AnnounceImgs, setAnnounceImgs] = useState([]);
   useEffect(() => {
     const getImgs = async () => {
-      const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/imgs/announce_list`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/imgs/announce_list`, {
         mode: "cors",
         method: "GET",
         headers: {

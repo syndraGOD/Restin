@@ -32,7 +32,7 @@ const UserInfoModify = () => {
 
   const userDataUpdate = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/user/userdata`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/user/userdata`, {
         mode: "cors",
         method: "PUT",
         headers: {

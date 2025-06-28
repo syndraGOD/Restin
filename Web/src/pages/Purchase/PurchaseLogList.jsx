@@ -86,7 +86,7 @@ const PurchaseLogList = () => {
     dispatch(setLoading(true));
     const fetchData = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/purchase/loglist`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/purchase/loglist`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

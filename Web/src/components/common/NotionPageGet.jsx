@@ -15,7 +15,7 @@ const GetNotionJSX = ({ loc }) => {
 
   useEffect(() => {
     const getNotion = async () => {
-      const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/notion/${loc}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/notion/${loc}`, {
         method: "GET",
       });
       const data = await res.json();

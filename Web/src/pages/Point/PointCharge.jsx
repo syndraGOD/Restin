@@ -40,7 +40,7 @@ const PointCharge = () => {
 
   const pointChargeRequest = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/point/request/charge`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/point/request/charge`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

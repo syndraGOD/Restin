@@ -29,6 +29,17 @@ export const MobilePage = ({ children }) => {
       type: "cacheClear",
       payload: {},
     });
+    
+    // if((window.VisualViewport?.width || window.innerWidth) > 500) {
+    //   root.style.setProperty('--vw', '5px');
+    // }else{
+    //   root.style.setProperty('--vw', (window.VisualViewport?.width || window.innerWidth)/100);
+    // }    
+    // if((window.VisualViewport?.height || window.innerHeight) > 500) {
+    //   root.style.setProperty('--vh', '11px');
+    // }else{
+    //   root.style.setProperty('--vh', (window.VisualViewport?.height || window.innerHeight)/100);
+    // }
     const handleResize = () => {
       setwindowViewHeight(window.visualViewport?.height || window.innerHeight);
       console.log("높이", window.visualViewport?.height || window.innerHeight);
@@ -213,57 +224,71 @@ export const MobilePage = ({ children }) => {
     };
   }, []);
 
-  return (
-    <div
-      className="MobilePage"
-      css={css`
-        :root {
-          --vh: 100%;
-        }
-        min-width: 360px;
-        mix-width: 500px;
-        width: 100vw;
-        max-width: 100vw;
-        max-height: 100vh;
-        overflow: hidden;
-        /* margin: 0px 6vw; */
-        height: ${windowViewHeight}px;
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        /* transform: translate(-50%, -50%); */
-        box-sizing: border-box;
-        //IOS설정
-      `}
-    >
-      {loading ? <LoadingPage /> : null}
-      {children}
-
-      {/* {console.log(
-        location.hash !== "" && NotionLocList[location.hash.replace("#", "")]
-      )} */}
-      <DialogPage
-        open={Boolean(
-          location.hash !== "" && NotionLocList[location.hash.replace("#", "")]
-        )}
+  const renderPage = () => {
+    return (
+      <div
+        className="MobilePage"
+        css={css`
+          :root {
+            --vh: 100%;
+          }
+          min-width: 360px;
+          mix-width: 500px;
+          width: 100vw;
+          max-width: 100vw;
+          max-height: 100vh;
+          overflow: hidden;
+          /* margin: 0px 6vw; */
+          height: ${windowViewHeight}px;
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          /* transform: translate(-50%, -50%); */
+          box-sizing: border-box;
+          //IOS설정
+        `}
       >
-        <GetNotionJSX loc={NotionLocList[location.hash.replace("#", "")]} />
-      </DialogPage>
-      <DialogOK
-        open="isMobileAppEnd"
-        h2="어플을 종료하시겠어요?"
-        text={`종료 키 또는 뒤로가기 추가 입력시 어플이 종료됩니다`}
-        isok={() => {
-          navi(-1);
-          sendMessageToRN({
-            type: "close",
-            payload: {},
-          });
-        }}
-        isoktext="종료하기"
-      ></DialogOK>
-    </div>
+        {loading ? <LoadingPage /> : null}
+        {children}
+
+        {/* {console.log(
+          location.hash !== "" && NotionLocList[location.hash.replace("#", "")]
+        )} */}
+        <DialogPage
+          open={Boolean(
+            location.hash !== "" && NotionLocList[location.hash.replace("#", "")]
+          )}
+        >
+          <GetNotionJSX loc={NotionLocList[location.hash.replace("#", "")]} />
+        </DialogPage>
+        <DialogOK
+          open="isMobileAppEnd"
+          h2="어플을 종료하시겠어요?"
+          text={`종료 키 또는 뒤로가기 추가 입력시 어플이 종료됩니다`}
+          isok={() => {
+            navi(-1);
+            sendMessageToRN({
+              type: "close",
+              payload: {},
+            });
+          }}
+          isoktext="종료하기"
+        ></DialogOK>
+      </div>
+    )
+  }
+
+  return (
+    (window.VisualViewport?.width || window.innerWidth) > 500 || 
+    process.env.NODE_ENV === 'production' && !window.ReactNativeWebView
+    ? (
+      <div>
+        pc 미지원 모바일 앱입니다.
+      </div>
+    ) : (
+      renderPage()
+    )
   );
 };
 export default MobilePage;

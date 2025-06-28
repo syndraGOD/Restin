@@ -74,7 +74,7 @@ const PurchaseIng = () => {
     };
     if (selectedPayment === "point") {
       try {
-        const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/purchase/usage/point`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/purchase/usage/point`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -132,7 +132,7 @@ const PurchaseIng = () => {
           try {
             const { result, purchaseData } = payload;
             console.log(purchaseData.selectedPayment);
-            const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/purchase/usage/portone`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/purchase/usage/portone`, {
               mode: "cors",
               method: "POST",
               headers: {

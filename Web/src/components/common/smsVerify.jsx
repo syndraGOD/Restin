@@ -47,7 +47,7 @@ export const Input_SMSVerify = ({
   const NextBtnClick = async (e) => {
     try {
       const phoneNumber = inputPhoneNumber.replaceAll(" ", "");
-      const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/auth/login_smsCodeVerify`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login_smsCodeVerify`, {
         mode: "cors",
         method: "GET",
         headers: {
@@ -103,7 +103,7 @@ export const Input_SMSVerify = ({
   const VerifiSendBtnClick = async () => {
     try {
       const phoneNumber = inputPhoneNumber.replaceAll(" ", "");
-      const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/auth/smsVerify`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/smsVerify`, {
         mode: "cors",
         method: "POST",
         headers: {

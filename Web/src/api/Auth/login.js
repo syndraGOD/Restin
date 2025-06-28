@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 // };
 
 // const user_register = async (profile) => {
-//   const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/auth/register`, {
+//   const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
 //     mode: "cors",
 //     method: "POST",
 //     headers: {
@@ -38,7 +38,7 @@ import { useNavigate } from "react-router-dom";
 // };
 
 // const user_tokenAccess = async () => {
-//   const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/auth/login`, {
+//   const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
 //     mode: "cors",
 //     method: "GET",
 //     headers: {
