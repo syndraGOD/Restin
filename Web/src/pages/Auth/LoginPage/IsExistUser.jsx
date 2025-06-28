@@ -1,21 +1,8 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
 import FullBox from "@components/common/FullBox";
 import HeaderInner from "@components/common/HeaderInner";
-import { TextBody, TextBodySmall, TextHeader2 } from "@components/designGuide";
-import { Page } from "@components/Page";
-import InBox from "@components/common/InBox";
-import { Box, Button, Input, InputAdornment, TextField } from "@mui/material";
-import theme from "../../../style/theme";
-import { DefaultBtn } from "@components/common/Btns";
 import { useEffect, useRef, useState } from "react";
-import { RxChatBubble } from "react-icons/rx";
-import { Form, useNavigate } from "react-router-dom";
 import { BgColorDefault } from "../../../components/common/Bg";
-import { restinAPI } from "../../../api/config";
-import { setuserData } from "../../../store/modules/userSlice";
-import { useDispatch } from "react-redux";
-import { setVerifiToken } from "../../../store/modules/tokenSlice";
 import { TextBox_header2 } from "../../../components/common/TextBox";
 import {
   Input_SMSVerify,

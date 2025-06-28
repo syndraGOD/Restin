@@ -15,17 +15,12 @@ import {
 } from "../../components/designGuide";
 import { IoIosArrowForward } from "react-icons/io";
 import Navigation from "../../components/common/Navigation";
-import TermsListPage from "./TermsOfUse/TermsListPage";
 import { useLocation, useNavigate } from "react-router-dom";
-import NotionLocList from "../../api/NotionLocList";
 import { BgColorDefault } from "../../components/common/Bg";
-import GetNotionJSX from "../../components/common/NotionPageGet";
-import { TextBox_header2 } from "../../components/common/TextBox";
 import { useDispatch, useSelector } from "react-redux";
 import { setuserData } from "../../store/modules/userSlice";
 import { setVerifiToken } from "../../store/modules/tokenSlice";
 import { DialogOK } from "../../components/common/DialogOk";
-import { restinAPI } from "../../api/config";
 import { sendMessageToRN } from "../../api/RN/RNsend";
 
 export const SettingInfoBox = ({ onClick, children }) => {

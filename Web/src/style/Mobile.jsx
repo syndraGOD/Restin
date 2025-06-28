@@ -6,12 +6,9 @@ import { DialogOK, DialogPage } from "../components/common/DialogOk";
 import GetNotionJSX from "../components/common/NotionPageGet";
 import NotionLocList from "../api/NotionLocList";
 import { useDispatch, useSelector } from "react-redux";
-import { Box } from "@mui/material";
-import theme from "./theme";
 import { setuserData } from "../store/modules/userSlice";
 import { setVerifiToken } from "../store/modules/tokenSlice";
 import { setStoreData } from "../store/modules/storeSlice";
-import { restinAPI } from "../api/config";
 import LoadingPage from "../pages/LoadingPage";
 import { sendMessageToRN } from "../api/RN/RNsend";
 import { setAnnounceImgs, setLoading } from "../store/modules/varSlice";
@@ -224,6 +221,7 @@ export const MobilePage = ({ children }) => {
           --vh: 100%;
         }
         min-width: 360px;
+        mix-width: 500px;
         width: 100vw;
         max-width: 100vw;
         max-height: 100vh;

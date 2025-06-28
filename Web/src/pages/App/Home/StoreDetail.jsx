@@ -24,7 +24,7 @@ import {
   TextHeader2,
   TextHeader3,
 } from "../../../components/designGuide";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
 import { Box, Button } from "@mui/material";
 import InnerBox from "../../../components/common/InnerBox";
 import { FaRegClock } from "react-icons/fa";
@@ -33,21 +33,13 @@ import { FaInstagram } from "react-icons/fa";
 import { today } from "../../../api/timeCheck";
 import { FaAngleDown } from "react-icons/fa6";
 import { useEffect, useState, useRef } from "react";
-import theme from "../../../style/theme";
-import NotionLocList from "../../../api/NotionLocList";
-import { restinAPI } from "../../../api/config";
 import { useDispatch, useSelector } from "react-redux";
 import { setuserData } from "../../../store/modules/userSlice";
-
-import GetNotionJSX from "../../../components/common/NotionPageGet";
 import HeaderInner from "../../../components/common/HeaderInner";
 import { GoCopy } from "react-icons/go";
 import { DefaultBtn } from "../../../components/common/Btns";
-// import UseGuide from "./UseGuide";
-import UseGuide from "./UseGuide.png";
 import { DialogOK } from "../../../components/common/DialogOk";
 import { sendMessageToRN } from "../../../api/RN/RNsend";
-import { BsTranslate } from "react-icons/bs";
 import { MdOutlineChair } from "react-icons/md";
 
 const StoreDetail = () => {

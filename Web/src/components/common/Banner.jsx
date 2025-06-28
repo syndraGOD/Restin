@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import Slider from "react-slick/lib/slider";
-import { restinAPI } from "../../api/config";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 

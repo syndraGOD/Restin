@@ -12,7 +12,6 @@ import { useEffect, useRef, useState } from "react";
 import { RxChatBubble } from "react-icons/rx";
 import { Form, useNavigate } from "react-router-dom";
 import { BgColorDefault } from "@components/common/Bg";
-import { restinAPI } from "@api/config";
 import { setuserData } from "@store/modules/userSlice";
 import { useDispatch } from "react-redux";
 import { setVerifiToken } from "@store/modules/tokenSlice";

@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { DefaultBtn } from "../../../components/common/Btns";
 import { DialogOK } from "../../../components/common/DialogOk";
 import { useLocation, useNavigate } from "react-router-dom";
-import { restinAPI } from "../../../api/config";
 import { setuserData } from "../../../store/modules/userSlice";
 
 const UserInfoModify = () => {

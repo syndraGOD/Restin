@@ -40,7 +40,6 @@ import PurchaseIng from "./pages/Purchase/PurchaseIng";
 import PurchaseFinish from "./pages/Purchase/PurchaseFinish";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor } from "./store";
-import { restinAPI } from "./api/config";
 import { setuserData } from "./store/modules/userSlice";
 import { setVerifiToken } from "./store/modules/tokenSlice";
 import { sendMessageToRN } from "./api/RN/RNsend";

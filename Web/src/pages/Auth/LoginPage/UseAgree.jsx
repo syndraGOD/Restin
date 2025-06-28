@@ -9,18 +9,13 @@ import { Box, Button } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import theme from "../../../style/theme";
 import { DefaultBtn } from "@components/common/Btns";
-import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import InfoBox from "../../../components/common/InfoBox";
 import { IoIosArrowForward } from "react-icons/io";
 import { BgColorDefault } from "../../../components/common/Bg";
-import NotionLocList from "../../../api/NotionLocList";
-import { restinAPI } from "../../../api/config";
 import { useDispatch, useSelector } from "react-redux";
 import { setuserData } from "../../../store/modules/userSlice";
-import GetNotionJSX from "../../../components/common/NotionPageGet";
 import { setVerifiToken } from "../../../store/modules/tokenSlice";
-import { CheckBox } from "@mui/icons-material";
 import { TextBox_header2 } from "../../../components/common/TextBox";
 import { BiSquareRounded } from "react-icons/bi";
 

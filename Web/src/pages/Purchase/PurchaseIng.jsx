@@ -20,11 +20,8 @@ import { useState, useEffect } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
 import { DialogAlert, DialogOK } from "../../components/common/DialogOk";
-import { restinAPI } from "../../api/config";
 import { setuserData } from "@store/modules/userSlice";
-import * as PortOne from "@portone/browser-sdk/v2";
 import { sendMessageToRN } from "../../api/RN/RNsend";
-import { setLoading } from "../../store/modules/varSlice";
 import { v4 as uuidv4 } from "uuid";
 
 //다른 결제 페이지를 만들어야 한다면, 먼저 서버에 purchaseTicket(임시)를 만들고

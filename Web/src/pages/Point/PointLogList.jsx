@@ -11,13 +11,10 @@ import {
 } from "../../components/designGuide";
 import { Page } from "../../components/Page";
 import HeaderInner from "../../components/common/HeaderInner";
-import { DefaultBtn } from "@components/common/Btns";
 import { useNavigate } from "react-router-dom";
-import { restinAPI } from "../../api/config";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../../store/modules/varSlice";
 import { useEffect, useState } from "react";
-import { ImportExport } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 
 const PointLogItem = ({

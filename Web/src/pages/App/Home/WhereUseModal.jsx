@@ -1,7 +1,6 @@
 import "../../../style/modal.scss";
 import cancelSVG from "@assets/icons/close.svg";
-import { useEffect, useRef, useState } from "react";
-import { restinAPI } from "../../../api/config";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 
 const WhereUseModal = ({ onClose }) => {

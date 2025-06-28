@@ -3,7 +3,6 @@ import "react-notion-x/src/styles.css";
 import "prismjs/themes/prism-tomorrow.css";
 import "katex/dist/katex.min.css";
 import { useEffect, useState } from "react";
-import { restinAPI } from "../../api/config";
 // import { Code } from "react-notion-x/build/third-party/code";
 // import { Collection } from "react-notion-x/build/third-party/collection";
 // import { Equation } from "react-notion-x/build/third-party/equation";

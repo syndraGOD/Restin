@@ -3,7 +3,6 @@ import {
   TextBodyLarge,
   TextHeader4,
   TextBody,
-  TextBodySmall,
   TextHeader3,
 } from "@components/designGuide";
 import FullBox from "@components/common/FullBox";
@@ -15,7 +14,6 @@ import checkIcon from "@assets/icons/restin_ok_307.png";
 import { IoCopyOutline } from "react-icons/io5";
 import theme from "@style/theme";
 import { useEffect, useState } from "react";
-import { restinAPI } from "../../api/config";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { sendMessageToRN } from "@api/RN/RNsend";

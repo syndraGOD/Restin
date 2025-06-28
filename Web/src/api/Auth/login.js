@@ -1,5 +1,4 @@
 import { useDispatch } from "react-redux";
-import { restinAPI } from "../config";
 import { setuserData } from "../../store/modules/userSlice";
 import { setVerifiToken } from "../../store/modules/tokenSlice";
 import { useNavigate } from "react-router-dom";

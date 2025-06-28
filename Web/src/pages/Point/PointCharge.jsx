@@ -18,7 +18,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { IoCopyOutline } from "react-icons/io5";
 import theme from "@style/theme";
 import { sendMessageToRN } from "@api/RN/RNsend";
-import { restinAPI } from "../../api/config";
 import { useSelector } from "react-redux";
 import { DialogAlert, DialogOK } from "../../components/common/DialogOk";
 
