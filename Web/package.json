@@ -1,11 +1,12 @@
 {
   "name": "web",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
-    "build": "vite build && firebase deploy",
+    "dev": "vite --host --mode development",
+    "build:dev": "vite build --mode staging && firebase deploy --project restinapi",
+    "build:prod": "vite build --mode production && firebase deploy --project restin-d570e",
     "lint": "eslint .",
     "preview": "vite preview"
   },
