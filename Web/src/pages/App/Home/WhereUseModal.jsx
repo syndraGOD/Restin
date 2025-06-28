@@ -10,7 +10,7 @@ const WhereUseModal = ({ onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const fetchExistWantLocation = async () => {
-      const res = await fetch(`${restinAPI}/survey/submit/WHERE_USE_LOCATION`, {
+      const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/survey/submit/WHERE_USE_LOCATION`, {
         mode: "cors",
         method: "POST",
         headers: {

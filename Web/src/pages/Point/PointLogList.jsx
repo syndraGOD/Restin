@@ -43,7 +43,7 @@ const PointLogItem = ({
     storeName = description;
   }
   const cancelCharge = async () => {
-    const res = await fetch(`${restinAPI}/point/request/charge`, {
+    const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/point/request/charge`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -122,7 +122,7 @@ const PointLogList = () => {
     dispatch(setLoading(true));
     const fetchData = async () => {
       try {
-        const res = await fetch(`${restinAPI}/point/loglist`, {
+        const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/point/loglist`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

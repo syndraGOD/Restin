@@ -48,7 +48,7 @@ export const Input_SMSVerify = ({
   const NextBtnClick = async (e) => {
     try {
       const phoneNumber = inputPhoneNumber.replaceAll(" ", "");
-      const res = await fetch(`${restinAPI}/auth/login_smsCodeVerify`, {
+      const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/auth/login_smsCodeVerify`, {
         mode: "cors",
         method: "GET",
         headers: {
@@ -103,9 +103,8 @@ export const Input_SMSVerify = ({
   // 우선은 디자이너 의도에 따라 개발
   const VerifiSendBtnClick = async () => {
     try {
-      console.log(`loc : ${restinAPI}/auth/smsVerify`);
       const phoneNumber = inputPhoneNumber.replaceAll(" ", "");
-      const res = await fetch(`${restinAPI}/auth/smsVerify`, {
+      const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/auth/smsVerify`, {
         mode: "cors",
         method: "POST",
         headers: {

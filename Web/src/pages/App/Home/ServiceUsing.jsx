@@ -49,7 +49,7 @@ const ServiceUsing = () => {
   const [useDurationTime, setuseDurationTime] = useState(0);
   const usageEndClick = async () => {
     try {
-      const res = await fetch(`${restinAPI}/user/usage/stop`, {
+      const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/user/usage/stop`, {
         mode: "cors",
         method: "POST",
         headers: {

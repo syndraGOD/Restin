@@ -63,7 +63,7 @@ export const MobilePage = ({ children }) => {
     const tokenLogin = async () => {
       if (auth_Token !== "") {
         try {
-          const res = await fetch(`${restinAPI}/auth/login`, {
+          const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/auth/login`, {
             mode: "cors",
             method: "GET",
             headers: {
@@ -102,7 +102,7 @@ export const MobilePage = ({ children }) => {
   useEffect(() => {
     const storeDataSet = async () => {
       try {
-        const res = await fetch(`${restinAPI}/imgs/announce_list`, {
+        const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/imgs/announce_list`, {
           mode: "cors",
           method: "GET",
           headers: {
@@ -123,7 +123,7 @@ export const MobilePage = ({ children }) => {
         console.log("공지 이미지 로드 에러", error);
       }
       try {
-        const res = await fetch(`${restinAPI}/store/getStoreData`, {
+        const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/store/getStoreData`, {
           mode: "cors",
           method: "GET",
           headers: {

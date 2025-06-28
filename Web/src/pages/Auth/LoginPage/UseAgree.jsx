@@ -35,7 +35,7 @@ const UseAgree = () => {
   const dispatch = useDispatch();
 
   const nextBtnClick = async () => {
-    const res = await fetch(`${restinAPI}/auth/register`, {
+    const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/auth/register`, {
       mode: "cors",
       method: "POST",
       headers: {
