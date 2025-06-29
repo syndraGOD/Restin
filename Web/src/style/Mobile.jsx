@@ -278,10 +278,10 @@ export const MobilePage = ({ children }) => {
       </div>
     )
   }
-
+console.log(process.env.NODE_ENV)
   return (
     (window.VisualViewport?.width || window.innerWidth) > 500 || 
-    process.env.NODE_ENV === 'production' && !window.ReactNativeWebView
+    (process.env.NODE_ENV === 'production' && !window.ReactNativeWebView)
     ? (
       <div>
         pc 미지원 모바일 앱입니다.

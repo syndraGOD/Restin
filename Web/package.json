@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host --mode development",
-    "build:dev": "vite build --mode staging && firebase deploy --project restinapi",
-    "build:prod": "vite build --mode production && firebase deploy --project restin-d570e",
+    "build:dev": "NODE_ENV=staging vite build --mode staging && firebase deploy --project restinapi",
+    "build:prod": "NODE_ENV=production vite build --mode production && firebase deploy --project restin-d570e",
     "lint": "eslint .",
     "preview": "vite preview"
   },
