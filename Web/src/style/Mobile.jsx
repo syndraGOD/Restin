@@ -71,7 +71,7 @@ export const MobilePage = ({ children }) => {
     const tokenLogin = async () => {
       if (auth_Token !== "") {
         try {
-          const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/auth/login`, {
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
             mode: "cors",
             method: "GET",
             headers: {
@@ -110,7 +110,7 @@ export const MobilePage = ({ children }) => {
   useEffect(() => {
     const storeDataSet = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/imgs/announce_list`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/imgs/announce_list`, {
           mode: "cors",
           method: "GET",
           headers: {
@@ -131,7 +131,7 @@ export const MobilePage = ({ children }) => {
         console.log("공지 이미지 로드 에러", error);
       }
       try {
-        const res = await fetch(`${import.meta.env.VITE_RESTIN_API}/store/getStoreData`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/store/getStoreData`, {
           mode: "cors",
           method: "GET",
           headers: {
@@ -279,16 +279,17 @@ export const MobilePage = ({ children }) => {
     )
   }
 console.log(process.env.NODE_ENV)
+console.log(`${import.meta.env.VITE_API_URL}`)
   return (
-    (window.VisualViewport?.width || window.innerWidth) > 500 || 
-    (process.env.NODE_ENV === 'production' && !window.ReactNativeWebView)
-    ? (
-      <div>
-        pc 미지원 모바일 앱입니다.
-      </div>
-    ) : (
+    // (window.VisualViewport?.width || window.innerWidth) > 500 || 
+    // (process.env.NODE_ENV === 'production' && !window.ReactNativeWebView)
+    // ? (
+    //   <div>
+    //     pc 미지원 모바일 앱입니다.
+    //   </div>
+    // ) : (
       renderPage()
-    )
+    // )
   );
 };
 export default MobilePage;
