@@ -18,6 +18,7 @@ import { setuserData } from "../../../store/modules/userSlice";
 import { setVerifiToken } from "../../../store/modules/tokenSlice";
 import { TextBox_header2 } from "../../../components/common/TextBox";
 import { BiSquareRounded } from "react-icons/bi";
+import { useState } from "react";
 
 const UseAgree = () => {
   const location = useLocation();
