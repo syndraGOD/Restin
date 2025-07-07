@@ -326,28 +326,31 @@ const PurchaseIng = () => {
                 }
               </Box>
             )}
-            {/* <Box
-              sx={styles.methodItem}
-              onClick={() => setSelectedPayment("kakaopay")}
-            >
-              {selectedPayment === "kakaopay" ? (
-                <BsFillRecordCircleFill
-                  color={theme.palette.PrimaryBrand.main}
-                  size={20}
-                />
-              ) : (
-                <VscCircleLarge size={20} color={theme.palette.Gray.c400} />
-              )}
-              <Box display="flex" alignItems="center" gap={1}>
+
+            {process.env.NODE_ENV !== "production" ? (
                 <Box
-                  component="img"
-                  src={kakaoPayImg}
-                  alt="카카오페이"
-                  height="20px"
-                />
-                <TextBodyLarge>카카오페이</TextBodyLarge>
+                sx={styles.methodItem}
+                onClick={() => setSelectedPayment("kakaopay")}
+              >
+                {selectedPayment === "kakaopay" ? (
+                  <BsFillRecordCircleFill
+                    color={theme.palette.PrimaryBrand.main}
+                    size={20}
+                  />
+                ) : (
+                  <VscCircleLarge size={20} color={theme.palette.Gray.c400} />
+                )}
+                <Box display="flex" alignItems="center" gap={1}>
+                  <Box
+                    component="img"
+                    src={kakaoPayImg}
+                    alt="카카오페이"
+                    height="20px"
+                  />
+                  <TextBodyLarge>카카오페이</TextBodyLarge>
+                </Box>
               </Box>
-            </Box> */}
+            ) : null}
           </Box>
         </Box>
       </InBox>
