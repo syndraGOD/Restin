@@ -230,6 +230,39 @@ const SettingPage = () => {
             >
               회원탈퇴
             </SettingInfoBox>
+            {
+              (process.env.NODE_ENV === 'production' && userData?.ADMIN_FG === 'Y') && 
+              <>
+                <SettingInfoBox
+                  css={css`
+                    margin-top: 50px;
+                    background-color: ${theme.palette.PrimaryBrand.main};
+                    color: ${theme.palette.White.main};
+                  `}
+                  onClick={() => {
+                    // setdeleteUserIdDialog(true);
+                    // navi("#deleteId");
+                    window.location.href = "https://dev.restin.co.kr/app/home";
+                  }}
+                >
+                  데브 접속
+                </SettingInfoBox>
+
+                <SettingInfoBox
+                  css={css`
+                    background-color: ${theme.palette.PrimaryBrand.main};
+                    color: ${theme.palette.White.main};
+                  `}
+                  onClick={() => {
+                    // setdeleteUserIdDialog(true);
+                    // navi("#deleteId");
+                    window.location.href = "https://restin.co.kr/admin";
+                  }}
+                >
+                  관리자 센터
+                </SettingInfoBox>
+              </>
+            }
           </InBox>
           <Box bgcolor="Gray.c200" width={"100%"} height="5px" mt={2}>
             {" "}

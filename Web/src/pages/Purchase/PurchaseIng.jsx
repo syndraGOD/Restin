@@ -103,7 +103,7 @@ const PurchaseIng = () => {
       }
     } else if (selectedPayment === "tosspay") {
       const data = {
-        channelKey: import.meta.env.VITE_PORTONE_TOSSPAY_PRODUCTION,
+        channelKey: import.meta.env.VITE_PORTONE_TOSSPAY,
         totalAmount: parseInt(usageData.totalUsagePrice),
         payMethod: "EASY_PAY",
         selectedPayment: "tosspay",
@@ -111,7 +111,7 @@ const PurchaseIng = () => {
       portOnePayment(data);
     } else if (selectedPayment === "kakaopay") {
       const data = {
-        channelKey: import.meta.env.VITE_PORTONE_KAKAOPAY_TEST,
+        channelKey: import.meta.env.VITE_PORTONE_KAKAOPAY,
         totalAmount: parseInt(usageData.totalUsagePrice),
         payMethod: "EASY_PAY",
         selectedPayment: "kakaopay",

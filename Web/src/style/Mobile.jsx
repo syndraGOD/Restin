@@ -12,6 +12,7 @@ import { setStoreData } from "../store/modules/storeSlice";
 import LoadingPage from "../pages/LoadingPage";
 import { sendMessageToRN } from "../api/RN/RNsend";
 import { setAnnounceImgs, setLoading } from "../store/modules/varSlice";
+import { theme } from "../style/theme";
 
 export const MobilePage = ({ children }) => {
   const userData = useSelector((state) => state.userR.userData);
@@ -27,7 +28,11 @@ export const MobilePage = ({ children }) => {
   useEffect(() => {
     sendMessageToRN({
       type: "cacheClear",
-      payload: {},
+      payload: {
+        ENV : process.env.NODE_ENV === 'staging' ? 'staging' : 'production',
+        REDIRECT_URL : import.meta.env.VITE_VIEW_URL,
+        API_URL : import.meta.env.VITE_API_URL,
+      },
     });
     
     // if((window.VisualViewport?.width || window.innerWidth) > 500) {
@@ -275,10 +280,27 @@ export const MobilePage = ({ children }) => {
           }}
           isoktext="종료하기"
         ></DialogOK>
+        {(process.env.NODE_ENV === 'staging' || process.env.NODE_ENV === 'development') && (
+          <div
+            css={css`
+              position: absolute;
+              top: 4px;
+              right: 4px;
+              background-color: ${theme.palette.Red.main};
+              color: ${theme.palette.White.main};
+              font-size: 16px;
+              padding: 5px;
+              border-radius: 12px;
+              z-index: 9999999999;
+            `}
+          >
+              {process.env.NODE_ENV === 'staging' ? 'DEV' : 'LOCAL'}
+          </div>
+        )}
       </div>
     )
   }
-console.log(process.env.NODE_ENV)
+  console.log(process.env.NODE_ENV)
 console.log(`${import.meta.env.VITE_API_URL}`)
   return (
     // (window.VisualViewport?.width || window.innerWidth) > 500 || 
