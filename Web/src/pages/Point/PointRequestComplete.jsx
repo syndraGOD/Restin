@@ -32,7 +32,7 @@ const PointRequestComplete = () => {
     });
   };
   useEffect(() => {
-    fetch(`${restinAPI}/point/request/state`, {
+    fetch(`${import.meta.env.VITE_API_URL}/point/request/state`, {
       headers: {
         Authorization: `Bearer ${auth_token}`,
       },
