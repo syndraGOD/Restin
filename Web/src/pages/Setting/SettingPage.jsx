@@ -48,6 +48,7 @@ export const SettingInfoBox = ({ onClick, children }) => {
   );
 };
 const SettingPage = () => {
+  const newDate = new Date().getTime();
   const navi = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -242,7 +243,7 @@ const SettingPage = () => {
                   onClick={() => {
                     // setdeleteUserIdDialog(true);
                     // navi("#deleteId");
-                    window.location.href = "https://dev.restin.co.kr/app/home";
+                    window.location.href = "https://dev.restin.co.kr/app/home?t=" + newDate;
                   }}
                 >
                   데브 접속
@@ -256,7 +257,7 @@ const SettingPage = () => {
                   onClick={() => {
                     // setdeleteUserIdDialog(true);
                     // navi("#deleteId");
-                    window.location.href = "https://restin.co.kr/admin";
+                    // window.location.href = "https://restin.co.kr/admin";
                   }}
                 >
                   관리자 센터
@@ -296,7 +297,7 @@ const SettingPage = () => {
               고객센터 : 070-8095-9289 (10:00~19:00)
             </TextBodySmall>
             <TextBodySmall color="Gray.c600"> </TextBodySmall>
-            <TextBodySmall color="Gray.c600">v1.05</TextBodySmall>
+            <TextBodySmall color="Gray.c600">v1.06</TextBodySmall>
           </InBox>
         </FullBox>
 
