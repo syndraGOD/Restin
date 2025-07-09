@@ -13,6 +13,7 @@ import LoadingPage from "../pages/LoadingPage";
 import { sendMessageToRN } from "../api/RN/RNsend";
 import { setAnnounceImgs, setLoading } from "../store/modules/varSlice";
 import { theme } from "../style/theme";
+import mixpanel from "mixpanel-browser";
 
 export const MobilePage = ({ children }) => {
   const userData = useSelector((state) => state.userR.userData);
@@ -112,6 +113,21 @@ export const MobilePage = ({ children }) => {
 
     tokenLogin();
   }, []);
+
+  useEffect(() => {
+    const mixpanelInit = async () => {
+      mixpanel.init(import.meta.env.VITE_MIXPANEL_TOKEN, {
+        debug: process.env.NODE_ENV !== 'production',
+        track_pageview: "url-with-path-and-query-string",
+        persistence: "localStorage",
+      });
+    };
+    if(process.env.NODE_ENV === 'production' ? window.ReactNativeWebView : true) {
+      mixpanelInit();
+    }
+  }, []);
+
+  // 공지사항 이미지 로드
   useEffect(() => {
     const storeDataSet = async () => {
       try {
